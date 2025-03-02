@@ -1,12 +1,12 @@
 #Variables
 COMPILER = g++
 CFLAGS = -Wall -g
-LDFLAGS = -lncurses
+LDFLAGS = -lncurses -I"./HEADER"
 
 SRC_DIR = ./SRC
 HEADER_DIR = ./HEADER
-OBJ_DIR = ./PROGRAM
-TARGET = ./my_program/demo.exe
+OBJ_DIR = ./BIN
+TARGET = ./PROGRAM/demo.exe
 
 # Source files
 SRC_FILES = $(wildcard $(SRC_DIR)/**/*.cpp) $(wildcard $(SRC_DIR)/*.cpp)
@@ -39,6 +39,6 @@ clean:
 
 
 # Dependency rules (optional but improves clarity)
-# $(OBJ_DIR)/COMPONENTS/ProxyServer.o: $(HEADER_DIR)/ProxyServer.hpp $(HEADER_DIR)/ClientHandler.hpp $(HEADER_DIR)/Logger.hpp
+$(OBJ_DIR)/COMPONENTS/Map.o: $(HEADER)/Common.hpp $(HEADER)/Map.hpp
 
 .PHONY: all clean run build
