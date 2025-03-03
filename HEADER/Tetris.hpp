@@ -2,13 +2,16 @@
 #define TETRIS_HPP
 
 #include <ncurses.h>
+
 #include "Player.hpp"
 
 class Tetris {
 private:
-    Player player;
+    Player* player;
+    WINDOW* win;
 public:
-    Tetris(WINDOW* win);
+    Tetris();
+    ~Tetris();
     void startGameOnePlayer();
 };
 #endif

@@ -1,7 +1,10 @@
 #include "Map.hpp"
 
-Map::Map() {
+Map::Map(WINDOW* _win) {
     for (int i = 0; i < HEIGHT; i++) map[i] = 0;
+    win = derwin(_win, 22, 12, 1, 7);
+    box(win, 0, 0);
+    display();
 }
 
 void Map::remove(uint8_t nLines) {
@@ -14,11 +17,19 @@ bool Map::add(uint8_t nLines) {
     return false;
 }
 
-void Map::display(WINDOW* win) {
+void Map::display() {
     for (int i = 0; i < HEIGHT; i++) 
         for (int j = WIDTH - 1; j >= 0; j--)
             if (getBit(map[i], j))
                 mvwaddch(win, i+1, j+1, '#');
             else mvwaddch(win, i+1, j+1, '.');
     wrefresh(win);
+}
+
+void Map::updateCur(CurrentBlock* cur) {
+    
+}
+
+bool Map::isValid() {
+    return true;
 }

@@ -1,22 +1,24 @@
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
 
-#include "Piece.hpp"
-#include "SetPiece.hpp"
-#include "Screen.hpp"
-#include "CurrentPiece.hpp"
+#include <ncurses.h>
+
+#include "Hold.hpp"
+#include "LinkListBlock.hpp"
+#include "Map.hpp"
+#include "CurrentBlock.hpp"
+#include "Infor.hpp"
 
 class Monitor {
 protected:
-    int8_t nLines, nPieces;
-    CurrentPiece *cur;
-    Piece *hold, *next;
+    CurrentBlock *curBlock;
+    Hold* hold;
+    LinkListBlock* next;
     Map* map;
-    static SetPiece setPiece;
-    Screen* screenPlayer;
+    Infor* infor;
+    WINDOW* win;
     
 public:
-    Monitor();
     Monitor(WINDOW* win);
     ~Monitor();
     bool moveProcessing();

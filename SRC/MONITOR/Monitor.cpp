@@ -1,19 +1,20 @@
 #include "Monitor.hpp"
 
-Monitor::Monitor(){}
-
-Monitor::Monitor(WINDOW* win) {
-    screenPlayer = new Screen(win);
-    nLines = nPieces = 0;
-    hold = nullptr;
-    *cur = CurrentPiece(*setPiece.get(0));
-    next = setPiece.get(1);
-    map = new Map();
+Monitor::Monitor(WINDOW* _win) {
+    win = _win;
+    hold = new Hold(win);
+    next = new LinkListBlock(win);
+    next->updateNext(curBlock);
+    map = new Map(win);
+    infor = new Infor(win);
 }
 
 Monitor::~Monitor(){
+    delete curBlock;
+    delete hold;
+    delete next;
     delete map;
-    delete screenPlayer;
+    delete infor;
 }
 
 bool Monitor::moveProcessing() {
@@ -23,12 +24,16 @@ bool Monitor::moveProcessing() {
             return false;
             break;
         case 'a':
-            return cur->moveLeft(map);
+            curBlock->moveDown();
+            break;
         case 'd':
-            return cur->moveRight(map);
+            curBlock->moveRight();
+            break;
         case 's':
-            return cur->moveDown(map);
+            curBlock->moveDown();
+            break;
         default:
             return false;
     }
+    return true;
 }

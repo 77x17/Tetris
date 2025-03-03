@@ -6,11 +6,9 @@
 #define HEIGHT 20
 #define WIDTH 10
 
-#define PIECE_EDGE 4
+#define BLOCK_EDGE 4
 
-#define SIZEPIECE 16
-
-#define LINE 0x0F00
+#define SIZEBLOCK 16
 
 
 #endif
