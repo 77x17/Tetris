@@ -4,7 +4,10 @@ BlockEle::BlockEle() { p = nullptr; next = nullptr; }
 BlockEle::BlockEle(Block* tmp) { p = tmp; next = nullptr; }
 
 LinkListBlock::LinkListBlock(WINDOW* _win) {
-    win = derwin(_win, 14, 6, 0, 20);
+    win = derwin(_win, 14, 6, 1, 24); 
+    box(win, 0, 0);
+    mvwaddstr(win, 0, 1, "NEXT");
+    wrefresh(win);
     head = tail = new BlockEle(BlockFactory::createRandomBlock());
 
     for (int i = 1; i <= 3; i++) {

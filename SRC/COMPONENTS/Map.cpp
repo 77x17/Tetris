@@ -2,7 +2,7 @@
 
 Map::Map(WINDOW* _win) {
     for (int i = 0; i < HEIGHT; i++) map[i] = 0;
-    win = derwin(_win, 22, 12, 1, 7);
+    win = derwin(_win, 22, 12, 1, 10);
     box(win, 0, 0);
     display();
 }
