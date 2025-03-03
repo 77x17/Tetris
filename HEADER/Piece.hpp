@@ -6,20 +6,25 @@
 
 #include "Map.hpp"
 #include "Common.hpp"
+#include "Screen.hpp"
 
 class Piece {
-private:
-    uint8_t posX, posY;
-    static uint8_t speed;
+protected:
     uint16_t shape;
     char symbol;
+    static uint8_t speed;
+
+    uint8_t cnt;
+    Piece* nextPiece;
 public:
-    Piece(uint16_t shape);
+    Piece(int numPlayer, uint16_t shape);
+    Piece(const Piece &a);
+    ~Piece();
     Piece& operator=(const Piece &a);
-    virtual ~Piece();
-    bool moveDown(Map* map);
-    bool moveLeft(Map* map);
-    bool moveRight(Map* map);
+    void draw(Screen *screen, char ch, uint8_t posY, uint8_t posX);
+
+    friend class SetPiece;
+    friend class CurrentPiece;
 };
 
 #endif

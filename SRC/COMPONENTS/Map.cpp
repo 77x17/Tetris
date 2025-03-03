@@ -1,6 +1,8 @@
 #include "Map.hpp"
 
-Map::Map() {}
+Map::Map() {
+    for (int i = 0; i < HEIGHT; i++) map[i] = 0;
+}
 
 void Map::remove(uint8_t nLines) {
     
@@ -13,13 +15,10 @@ bool Map::add(uint8_t nLines) {
 }
 
 void Map::display(WINDOW* win) {
-    #define getBit(bit, i) (((bit) >> (i))&1)
-
     for (int i = 0; i < HEIGHT; i++) 
         for (int j = WIDTH - 1; j >= 0; j--)
             if (getBit(map[i], j))
-                mvwaddch(win, i, j, '#');
-            else mvwaddch(win, i, j, '.');
-    #undef getBit
+                mvwaddch(win, i+1, j+1, '#');
+            else mvwaddch(win, i+1, j+1, '.');
     wrefresh(win);
 }

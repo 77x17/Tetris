@@ -1,30 +1,30 @@
 #include "SetPiece.hpp"
 
-SetInPiece::SetInPiece(int numPlayer, uint16_t _shape):Piece(_shape) {
-    cnt = numPlayer; nextPiece = nullptr;
-}
+// SetInPiece::SetInPiece(int numPlayer, uint16_t _shape):Piece(_shape) {
+//     cnt = numPlayer; nextPiece = nullptr;
+// }
 
-SetInPiece::~SetInPiece() {}
+// SetInPiece::~SetInPiece() {}
 
 SetPiece::SetPiece(int nPlayer) {
     nPlayer = nPlayer;
-    head = tail = nullptr;
+    updateNext();
 }
 
 SetPiece::~SetPiece() {
     if (head == nullptr) return;
     while (head) {
-        SetInPiece* p = head; head = head->nextPiece;
+        Piece* p = head; head = head->nextPiece;
         delete p; 
     }
     head = tail = nullptr;
 }
 
-SetInPiece* SetPiece::getNewNode(int type) {
+Piece* SetPiece::getNewNode(int type) {
     uint16_t pieceType = -1;
     switch (type) {
     case 1:
-        return new SetInPiece(nPlayer, LINE);
+        return new Piece(nPlayer, LINE);
     default:
         return nullptr;
     }
@@ -41,13 +41,13 @@ void SetPiece::updateNext() {
     }
     tail->nextPiece = getNewNode(1);
     while (head->cnt == 0) {
-        SetInPiece* p = head; head = head->nextPiece;
+        Piece* p = head; head = head->nextPiece;
         delete p;
     }
 }
 
-SetInPiece* SetPiece::get(int num) {
-    SetInPiece* ans = this->head;
+Piece* SetPiece::get(int num) {
+    Piece* ans = this->head;
     while (num--) ans = ans->nextPiece;
     return ans;
 }

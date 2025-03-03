@@ -4,14 +4,17 @@
 #include "Piece.hpp"
 #include "SetPiece.hpp"
 #include "Screen.hpp"
+#include "CurrentPiece.hpp"
 
 class Monitor {
-private:
+protected:
     int8_t nLines, nPieces;
-    Piece *hold, *cur, *next;
+    CurrentPiece *cur;
+    Piece *hold, *next;
     Map* map;
     static SetPiece setPiece;
-    Screen screenPlayer;
+    Screen* screenPlayer;
+    
 public:
     Monitor();
     Monitor(WINDOW* win);

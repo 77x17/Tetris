@@ -3,7 +3,10 @@
 
 #include <cstdint>
 #include <ncurses.h>
+
+#include "Common.hpp"
 #include "Piece.hpp"
+#include "CurrentPiece.hpp"
 #include "SetPiece.hpp"
 #include "Map.hpp"
 
@@ -17,6 +20,7 @@ public:
     void drawHold(Piece* piece);
     // void showInfor();
     void drawMap(Map* map);
+    void drawPiece(uint16_t shape, char c, uint8_t posY, uint8_t posX);
     // void drawNext(PieceInSet* piece, int8_t number = 4);
 };
 
