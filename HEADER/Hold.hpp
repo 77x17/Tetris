@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#include "Block.hpp"
+class Block; 
 
 class Hold {
 private:

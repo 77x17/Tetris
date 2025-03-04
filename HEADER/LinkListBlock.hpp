@@ -5,18 +5,18 @@
 #include <ncurses.h>
 
 #include "Common.hpp"
-#include "Block.hpp"
-#include "BlockFactory.hpp"
-#include "CurrentBlock.hpp"
+
+class BlockEle;
+class Block;
+class CurrentBlock;
 
 class BlockEle{
 private:
-    Block* p;
+    Block* block;
     BlockEle* next;
 public:
     BlockEle();
     BlockEle(Block* p);
-    BlockEle* operator=(const Block* &BlockEle);
     friend class LinkListBlock;
 };
 
@@ -29,7 +29,8 @@ private:
 public:
     LinkListBlock(WINDOW* win);
     ~LinkListBlock();
-    void updateNext(CurrentBlock* cur);
+    CurrentBlock* updateNext();
+    void draw();
 };
 
 #endif

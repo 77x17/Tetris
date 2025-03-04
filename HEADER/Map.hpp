@@ -5,21 +5,29 @@
 #include <cstdint>
 
 #include "Common.hpp"
-#include "CurrentBlock.hpp"
+
+class Block;
+class CurrentBlock;
 
 class Map {
 private:
     uint16_t map[HEIGHT];
     WINDOW* win;
+    WINDOW* subbox;
+
+    void remove(uint8_t nLines);
 public:
     Map(WINDOW*);
-    void remove(uint8_t nLines);
+    ~Map();
+    
     bool add(uint8_t nLines);
 
-    void display();
-    void updateCur(CurrentBlock* cur);
+    void draw();
+    void drawCur(Block* block, int Y, int X, uint8_t isOn);
 
-    bool isValid();
+    uint8_t update(uint16_t shape, int Y, int X);
+    bool isValid(uint16_t shape, int Y, int X);
+
 };
 
 #endif

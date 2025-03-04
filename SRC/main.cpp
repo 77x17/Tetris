@@ -1,5 +1,6 @@
 #include "Common.hpp"
 #include "Tetris.hpp"
+#include "Block.hpp"
 
 uint8_t Block::speed = 1;
 

@@ -4,9 +4,9 @@
 #include <ncurses.h>
 #include <cstdint>
 
-#include <ncurses.h>
-#include "Common.hpp"
-#include "Block.hpp"
+class Block;
+class Map;
+
 
 class CurrentBlock {
 private:
@@ -14,13 +14,16 @@ private:
     int8_t posX, posY;
 
 public:
-    CurrentBlock(Block *a);
+    CurrentBlock(Block *p);
+    ~CurrentBlock();
 
-    void moveDown();
-    void moveLeft();
-    void moveRight();
+    bool moveDown(Map *map);
+    bool moveLeft(Map *map);
+    bool moveRight(Map* map);
 
-    void draw(WINDOW* win, char c);
+    uint8_t put(Map* map);
+    void draw(Map* map);
+    bool isValid(Map* map);
 };
 
 #endif

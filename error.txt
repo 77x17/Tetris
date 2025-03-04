@@ -1,0 +1,5 @@
+SRC/COMPONENTS/LinkListBlock.cpp: In destructor ‘LinkListBlock::~LinkListBlock()’:
+SRC/COMPONENTS/LinkListBlock.cpp:24:9: warning: deleting object of abstract class type ‘Block’ which has non-virtual destructor will cause undefined behavior [-Wdelete-non-virtual-dtor]
+   24 |         delete tmp->p; // this is a block create in factory and it is not automatically deleted.
+      |         ^~~~~~~~~~~~~
+HERE!LINE 31

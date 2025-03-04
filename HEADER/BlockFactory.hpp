@@ -3,7 +3,7 @@
 
 #include <random>
 
-#include "Block.hpp"
+class Block; 
 
 class BlockFactory {
 public:

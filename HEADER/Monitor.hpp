@@ -3,19 +3,19 @@
 
 #include <ncurses.h>
 
-#include "Hold.hpp"
-#include "LinkListBlock.hpp"
-#include "Map.hpp"
-#include "CurrentBlock.hpp"
-#include "Infor.hpp"
+class Hold;
+class LinkListBlock;
+class Map;
+class Infor;
+class CurrentBlock;
 
 class Monitor {
 protected:
-    CurrentBlock *curBlock;
     Hold* hold;
-    LinkListBlock* next;
+    CurrentBlock* curBlock;
     Map* map;
     Infor* infor;
+    LinkListBlock* next;
     WINDOW* win;
     
 public:

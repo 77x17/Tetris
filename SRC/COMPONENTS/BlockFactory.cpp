@@ -1,5 +1,7 @@
 #include "BlockFactory.hpp"
 
+#include "Block.hpp"
+
 Block* BlockFactory::createRandomBlock() {
     return new IBlock();
     // // Danh sách các loại block
