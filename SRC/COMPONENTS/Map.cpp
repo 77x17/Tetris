@@ -20,7 +20,7 @@ Map::Map(WINDOW* _win) {
 
     win = derwin(_win, 25, 20, 3, 9); // modify
     subbox = derwin(win, 21, 12, 4, 3);
-    wborder(subbox, '|', '|', ' ', '-', '|', '|', '+', '+');
+    wborder(subbox, ACS_VLINE, ACS_VLINE, ' ', ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
     wrefresh(subbox);
     draw();
 }
