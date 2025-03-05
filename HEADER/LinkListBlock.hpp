@@ -25,7 +25,10 @@ private:
     BlockEle* head;
     BlockEle* tail;
     WINDOW* win;
-
+    uint8_t nEle;
+    
+    void addEle();
+    
 public:
     LinkListBlock(WINDOW* win);
     ~LinkListBlock();

@@ -11,7 +11,8 @@ Hold::Hold(WINDOW* _win) {
 }
 
 Hold::~Hold() { 
-    if (block) delete block;
+    if (block) delete block; 
+    block = nullptr;
     delwin(win); 
 }
 

@@ -8,6 +8,8 @@ int main(int argc, char **argv) {
     initscr();
     cbreak();
     curs_set(0);
+    keypad(stdscr, TRUE);
+    
     Tetris tetris;
     tetris.startGameOnePlayer();
 

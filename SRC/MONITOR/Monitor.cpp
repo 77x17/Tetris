@@ -16,27 +16,32 @@ Monitor::Monitor(WINDOW* _win) {
 }
 
 Monitor::~Monitor(){
-    delete curBlock;
-    delete hold;
-    delete next;
-    delete map;
-    delete infor;
+    if (curBlock) {delete curBlock; curBlock = nullptr;}
+    if (hold) {delete hold; hold = nullptr;}
+    if (next) {delete next; next = nullptr;}
+    if (map) {delete map; map = nullptr;}
+    if (infor) {delete infor; infor = nullptr;}
 }
 
 bool Monitor::moveProcessing() {
     nodelay(stdscr, TRUE);
-    bool flag = false;
 
     switch (getch()) {
         case ERR:
             return false;
             break;
         case 'a':
+        case KEY_LEFT:
             return curBlock->moveLeft(map);
         case 'd':
+        case KEY_RIGHT:
             return curBlock->moveRight(map);
         case 's':
+        case KEY_DOWN:
             return curBlock->moveDown(map);
+        case 'w':
+        case KEY_UP:
+            return curBlock->rotateLeft(map);
         default:
             return false;
     }

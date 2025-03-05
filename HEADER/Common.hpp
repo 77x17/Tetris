@@ -2,15 +2,18 @@
 #define COMMON_H
 
 
-#define HEIGHT 20
+#define HEIGHT 24
 #define WIDTH 10
-#define WIDTHREAL 16
+
 
 #define BLOCK_EDGE 4
 
 #define getBit(bit, i) (((bit) >> (i))&1)
 #define MASK(x) (1ll << (x))
-#define getMask(mask, i) (((mask) >> (X)) & (MASK(BLOCK_EDGE) - 1))
+#define FULLMASK(x) (MASK(x) - 1)
+
+#define getMask(mask, i) (((mask) >> (i)) & FULLMASK(BLOCK_EDGE))
+#define getLine(shape, i) getMask(shape, (3 - i) * BLOCK_EDGE)
 
 #define SIZEBLOCK 16
 

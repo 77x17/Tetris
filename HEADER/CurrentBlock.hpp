@@ -21,9 +21,12 @@ public:
     bool moveLeft(Map *map);
     bool moveRight(Map* map);
 
+    bool rotateLeft(Map* map);
+    bool rotateRight(Map* map);
+
     uint8_t put(Map* map);
     void draw(Map* map);
-    bool isValid(Map* map);
+    bool isValid(uint16_t shape, Map* map);
 };
 
 #endif

@@ -8,17 +8,23 @@
 BlockEle::BlockEle() { block = nullptr; next = nullptr; }
 BlockEle::BlockEle(Block* tmp) { block = tmp; next = nullptr; }
 
-LinkListBlock::LinkListBlock(WINDOW* _win) {
-    win = derwin(_win, 14, 6, 2, 24); 
-    box(win, 0, 0);
-    mvwaddstr(win, 0, 1, "NEXT");
-    wrefresh(win);
-    head = tail = new BlockEle(BlockFactory::createRandomBlock());
-
-    for (int i = 1; i <= 3; i++) {
+void LinkListBlock::addEle() {
+    if (tail == nullptr) head = tail = new BlockEle(BlockFactory::createRandomBlock());
+    else {
         tail->next = new BlockEle(BlockFactory::createRandomBlock());
         tail = tail->next;
     }
+    nEle++;
+}
+
+LinkListBlock::LinkListBlock(WINDOW* _win) {
+    win = derwin(_win, 14, 6, 2, 24);
+    box(win, 0, 0);
+    mvwaddstr(win, 0, 1, "NEXT");
+    wrefresh(win);
+    
+    for (int i = 1; i <= 3; i++)
+        addEle();
 }
 
 LinkListBlock::~LinkListBlock() {
@@ -36,8 +42,9 @@ CurrentBlock* LinkListBlock::updateNext() {
 
     BlockEle* p = head; 
     head = head->next;
-    delete p;
-    
+    delete p; 
+    if (--nEle < 3) addEle();
+    draw();
     return cur;
 }
 

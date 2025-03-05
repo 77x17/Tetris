@@ -11,11 +11,11 @@ class CurrentBlock;
 
 class Map {
 private:
-    uint16_t map[HEIGHT];
+    uint16_t map[HEIGHT + 1];
     WINDOW* win;
     WINDOW* subbox;
 
-    void remove(uint8_t nLines);
+    void remove(uint8_t pos);
 public:
     Map(WINDOW*);
     ~Map();

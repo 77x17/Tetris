@@ -3,11 +3,19 @@
 
 
 void Block::draw(WINDOW* win, uint8_t y, uint8_t x, uint8_t isOn) {
+    if (win == nullptr) {
+        mvaddstr(0, 0, "Nani?");
+        return;
+    }
     char ch = (isOn ? symbol : '.');
     uint16_t shape = getShape();
     for (int i = 0; i < SIZEBLOCK; i++)
-        if (getBit(shape, i))
-            mvwaddch(win, y + i / BLOCK_EDGE, x + i % BLOCK_EDGE, ch);
+    for (int i = 0; i < BLOCK_EDGE; i++) {
+        int mask = getLine(shape, i);
+        for (int j = 0; j < BLOCK_EDGE; j++)
+            if (getBit(mask, j))
+                mvwaddch(win, y + i, x + j, ch);
+    }
     wrefresh(win);
 }
 
