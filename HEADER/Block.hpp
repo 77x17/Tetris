@@ -12,6 +12,9 @@ protected:
     char symbol;
 
 public:
+    Block();
+    ~Block();
+
     void draw(WINDOW* win, uint8_t y, uint8_t x, uint8_t isOn);
     uint16_t getShape();
     uint16_t getRotateLeft();
@@ -22,10 +25,42 @@ public:
 };
 
 class IBlock:public Block {
-private:
 public:
     IBlock();
-    ~IBlock();
+};
+
+class LBlock:public Block {
+public:
+    LBlock();
+};
+
+
+class PBlock:public Block {
+public:
+    PBlock();
+};
+
+
+class OBlock:public Block {
+public:
+    OBlock();
+};
+
+
+class ZBlock:public Block {
+public:
+    ZBlock();
+};
+
+
+class SBlock:public Block {
+public:
+    SBlock();
+};
+
+class TBlock:public Block {
+public:
+    TBlock();
 };
 
 #endif

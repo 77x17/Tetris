@@ -2,6 +2,15 @@
 #include "Common.hpp"
 
 
+Block::Block() {
+    stateID = 0;
+    state = new uint16_t[4]();
+}
+
+Block::~Block() {
+    delete[] state;
+}
+
 void Block::draw(WINDOW* win, uint8_t y, uint8_t x, uint8_t isOn) {
     char ch = (isOn ? symbol : '.');
     uint16_t shape = getShape();
@@ -23,12 +32,37 @@ void Block::rotateRight() { stateID = (stateID + 1) % 4; }
 
 uint16_t Block::getShape() { return state[stateID]; }
 
-IBlock::IBlock() {
-    stateID = 0; symbol = '#';
-    state = new uint16_t[4]();
+IBlock::IBlock(): Block() {
+    symbol = '#';
     state[0] = 0x0F00; state[1] = 0x2222; state[2] = 0x00F0; state[3] = 0x4444;
 }
 
-IBlock::~IBlock() {
-    delete[] state;
+LBlock::LBlock(): Block() {
+    symbol = '#';
+    state[0] = 0x0E80; state[1] = 0xC440; state[2] = 0x2E00; state[3] = 0x4460;
+}
+
+PBlock::PBlock(): Block() { // FIN
+    symbol = '#';
+    state[0] = 0x0E20; state[1] = 0x44C0; state[2] = 0x8E00; state[3] = 0x6440;
+}
+
+OBlock::OBlock(): Block() {
+    symbol = '#';
+    state[0] = 0x0660; state[1] = 0x0660; state[2] = 0x0660; state[3] = 0x0660;
+}
+
+ZBlock::ZBlock(): Block() {
+    symbol = '#';
+    state[0] = 0x0C60; state[1] = 0x2640; state[2] = 0x0C60; state[3] = 0x2640;
+}
+
+SBlock::SBlock(): Block() {
+    symbol = '#';
+    state[0] = 0x06C0; state[1] = 0x4620; state[2] = 0x06C0; state[3] = 0x4620;
+}
+
+TBlock::TBlock(): Block() {
+    symbol = '#';
+    state[0] = 0x0E40; state[1] = 0x4C40; state[2] = 0x4E00; state[3] = 0x4640;
 }
