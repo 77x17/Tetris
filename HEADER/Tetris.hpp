@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#include "Player.hpp"
+class Player;
 
 class Tetris {
 private:

@@ -3,10 +3,6 @@
 
 
 void Block::draw(WINDOW* win, uint8_t y, uint8_t x, uint8_t isOn) {
-    if (win == nullptr) {
-        mvaddstr(0, 0, "Nani?");
-        return;
-    }
     char ch = (isOn ? symbol : '.');
     uint16_t shape = getShape();
     for (int i = 0; i < SIZEBLOCK; i++)

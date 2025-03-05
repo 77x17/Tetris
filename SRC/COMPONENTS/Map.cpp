@@ -60,9 +60,9 @@ void Map::draw() {
 uint8_t Map::update(uint16_t shape, int Y, int X) {
     uint8_t cnt = 0;
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT) {
-        map[Y + i - cnt] ^= (getLine(shape, i) << (X + NUMOFFSET));
-        if (((map[Y + i - cnt] & FULLMASK(REALWIDTH)) ^ FULLMASK(REALWIDTH)) == 0) {
-            remove(Y + i - cnt);
+        map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
+        if (((map[Y + i] & FULLMASK(REALWIDTH)) ^ FULLMASK(REALWIDTH)) == 0) {
+            remove(Y + i);
             cnt++;
         }
     }

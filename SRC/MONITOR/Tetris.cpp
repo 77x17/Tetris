@@ -1,6 +1,6 @@
 #include "Tetris.hpp"
 
-#include <iostream>
+#include "Player.hpp"
 
 Tetris::Tetris() {
     int h, w;
