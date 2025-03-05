@@ -29,11 +29,12 @@ private:
     
     void addEle();
     
-public:
+    public:
     LinkListBlock(WINDOW* win);
     ~LinkListBlock();
     Block* updateNext();
     void draw();
+    void clean();
 };
 
 #endif

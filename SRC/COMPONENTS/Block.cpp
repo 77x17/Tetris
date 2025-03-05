@@ -11,8 +11,8 @@ Block::~Block() {
     delete[] state;
 }
 
-void Block::draw(WINDOW* win, uint8_t y, uint8_t x, uint8_t isOn) {
-    char ch = (isOn ? symbol : '.');
+void Block::draw(WINDOW* win, uint8_t y, uint8_t x, chtype c) {
+    chtype ch = ((c == (chtype)(-1)) ? symbol : c);
     uint16_t shape = getShape();
     for (int i = 0; i < SIZEBLOCK; i++)
     for (int i = 0; i < BLOCK_EDGE; i++) {

@@ -9,13 +9,13 @@ protected:
     static uint8_t speed;
     uint16_t *state;
     uint8_t stateID;
-    char symbol;
+    chtype symbol;
 
 public:
     Block();
     ~Block();
 
-    void draw(WINDOW* win, uint8_t y, uint8_t x, uint8_t isOn);
+    void draw(WINDOW* win, uint8_t y, uint8_t x, chtype ch);
     uint16_t getShape();
     uint16_t getRotateLeft();
     uint16_t getRotateRight();

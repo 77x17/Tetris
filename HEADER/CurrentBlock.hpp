@@ -28,10 +28,11 @@ public:
     bool rotateLeft(Map* map);
     bool rotateRight(Map* map);
 
-    bool swap(Hold* hold);
+    void swap(Hold* hold);
 
     uint8_t put(Map* map);
-    void draw(Map* map, bool isOn);
+    void draw(Map* map);
+    void erase(Map* map);
     bool isValid(uint16_t shape, Map* map);
 };
 

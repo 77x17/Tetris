@@ -38,6 +38,8 @@ LinkListBlock::~LinkListBlock() {
 }
 
 Block* LinkListBlock::updateNext() {
+    clean();
+
     Block* cur = head->block; 
 
     BlockEle* p = head; 
@@ -51,7 +53,15 @@ Block* LinkListBlock::updateNext() {
 void LinkListBlock::draw() {
     BlockEle *p = head;
     for (int i = 0; i < 3; i++) {
-        p->block->draw(win, 1 + i * 4, 1, true);
+        p->block->draw(win, 1 + i * 4, 1, -1);
+        p = p->next;
+    }
+}
+
+void LinkListBlock::clean() {
+    BlockEle *p = head;
+    for (int i = 0; i < 3; i++) {
+        p->block->draw(win, 1 + i * 4, 1, ' ');
         p = p->next;
     }
 }

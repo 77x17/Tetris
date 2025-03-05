@@ -18,7 +18,7 @@ Hold::~Hold() {
 
 Block* Hold::interchange(Block* p) {
     Block* tmp = block; block = p;
-    return block;
+    return tmp;
 }
 
 bool Hold::canHold() {
@@ -29,5 +29,9 @@ void Hold::lock() { holdPosible = false; }
 void Hold::unlock() { holdPosible = true; }
 
 void Hold::draw() {
-    if (block) block->draw(win, 1, 1, 1);
+    if (block) block->draw(win, 1, 1, -1);
+}
+
+void Hold::erase() {
+    if (block) block->draw(win, 1, 1, ' ');
 }

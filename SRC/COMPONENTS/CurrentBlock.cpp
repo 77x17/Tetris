@@ -23,32 +23,32 @@ void CurrentBlock::setter(Block* p) {
 bool CurrentBlock::moveDown(Map* map) {
     posY++;
     if (!isValid(block->getShape(), map)) { posY--; return false; }
-    map->drawCur(block, posY - 1, posX, false);
-    map->drawCur(block, posY, posX, true);
+    map->eraseCur(block, posY - 1, posX);
+    map->drawCur(block, posY, posX);
     return true;
 }
 
 bool CurrentBlock::moveLeft(Map* map) {
     posX--;
     if (!isValid(block->getShape(), map)) { posX++; return false; }
-    map->drawCur(block, posY, posX + 1, false);
-    map->drawCur(block, posY, posX, true);
+    map->eraseCur(block, posY, posX + 1);
+    map->drawCur(block, posY, posX);
     return true;
 }
 
 bool CurrentBlock::moveRight(Map* map) {
     posX++;
     if (!isValid(block->getShape(), map)) { posX--; return false; }
-    map->drawCur(block, posY, posX - 1, false);
-    map->drawCur(block, posY, posX, true);
+    map->eraseCur(block, posY, posX - 1);
+    map->drawCur(block, posY, posX);
     return true;
 }
 
 bool CurrentBlock::rotateLeft(Map* map) {
     if (!isValid(block->getRotateLeft(), map)) return false;
-    map->drawCur(block, posY, posX, false);
+    map->eraseCur(block, posY, posX);
     block->rotateLeft();
-    map->drawCur(block, posY, posX, true);
+    map->drawCur(block, posY, posX);
     return true;
 }
 
@@ -57,13 +57,16 @@ bool CurrentBlock::rotateRight(Map* map) {
     return true;
 }
 
-bool CurrentBlock::swap(Hold* hold) {
+void CurrentBlock::swap(Hold* hold) {
     this->setter(hold->interchange(block));
-    return (block != nullptr);
 }
 
-void CurrentBlock::draw(Map* map, bool isOn) {
-    map->drawCur(block, posY, posX, isOn);
+void CurrentBlock::draw(Map* map) {
+    map->drawCur(block, posY, posX);
+}
+
+void CurrentBlock::erase(Map* map) {
+    map->eraseCur(block, posY, posX);
 }
 
 bool CurrentBlock::isValid(uint16_t shape, Map* map) {

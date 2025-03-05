@@ -43,8 +43,12 @@ bool Map::add(uint8_t nLines) {
     return false;
 }
 
-void Map::drawCur(Block* block, int Y, int X, uint8_t isOn) {
-    block->draw(win, Y + OFFSETY, X + OFFSETX, isOn);
+void Map::drawCur(Block* block, int Y, int X) {
+    block->draw(win, Y + OFFSETY, X + OFFSETX, -1);
+}
+
+void Map::eraseCur(Block* block, int Y, int X) {
+    block->draw(win, Y + OFFSETY, X + OFFSETX, ' ');
 }
 
 void Map::draw() {
@@ -53,7 +57,7 @@ void Map::draw() {
             if (getBit(map[i], j+NUMOFFSET))
                 mvwaddch(win, i + OFFSETY, j + OFFSETX, '#');
             else if (i + OFFSETY >= BLOCK_EDGE)
-                mvwaddch(win, i+OFFSETY, j+OFFSETX, '.');
+                mvwaddch(win, i+OFFSETY, j+OFFSETX, ' ');
     wrefresh(win);
 }
 

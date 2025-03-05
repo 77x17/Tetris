@@ -46,9 +46,11 @@ bool Monitor::moveProcessing() {
             if (hold->canHold() == false) 
                 return false;
             hold->lock();
-            curBlock->draw(map, false);
+            hold->erase();
+            curBlock->erase(map);
             curBlock->swap(hold);
             hold->draw();
+            return true;
         default:
             return false;
     }

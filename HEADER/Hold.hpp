@@ -18,6 +18,7 @@ public:
     void lock();
     void unlock();
     void draw();
+    void erase();
 };
 
 #endif

@@ -19,7 +19,7 @@ void Player::start() {
     
     hold->unlock();
     next->draw(); 
-    curBlock->draw(map, true);
+    curBlock->draw(map);
 
     auto moveDown = [&]() {
         while (isRunning) {
