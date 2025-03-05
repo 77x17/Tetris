@@ -11,7 +11,7 @@ Monitor::Monitor(WINDOW* _win) {
     map = new Map(win);
     hold = new Hold(win);
     next = new LinkListBlock(win);
-    curBlock = next->updateNext();
+    curBlock = new CurrentBlock(next->updateNext());
     infor = new Infor(win);
 }
 
@@ -42,6 +42,13 @@ bool Monitor::moveProcessing() {
         case 'w':
         case KEY_UP:
             return curBlock->rotateLeft(map);
+        case 'c':
+            if (hold->canHold() == false) 
+                return false;
+            hold->lock();
+            curBlock->draw(map, false);
+            curBlock->swap(hold);
+            hold->draw();
         default:
             return false;
     }

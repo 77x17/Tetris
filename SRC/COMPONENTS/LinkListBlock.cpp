@@ -37,8 +37,8 @@ LinkListBlock::~LinkListBlock() {
     head = tail = nullptr;
 }
 
-CurrentBlock* LinkListBlock::updateNext() {
-    CurrentBlock* cur = new CurrentBlock(head->block); 
+Block* LinkListBlock::updateNext() {
+    Block* cur = head->block; 
 
     BlockEle* p = head; 
     head = head->next;

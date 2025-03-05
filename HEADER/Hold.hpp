@@ -8,10 +8,15 @@ class Block;
 class Hold {
 private:
     Block* block;
+    bool holdPosible;
     WINDOW* win;
 public:
     Hold(WINDOW* win);
     ~Hold();
+    Block* interchange(Block* p);
+    bool canHold();
+    void lock();
+    void unlock();
     void draw();
 };
 

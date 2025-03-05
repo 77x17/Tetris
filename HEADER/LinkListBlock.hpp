@@ -32,7 +32,7 @@ private:
 public:
     LinkListBlock(WINDOW* win);
     ~LinkListBlock();
-    CurrentBlock* updateNext();
+    Block* updateNext();
     void draw();
 };
 

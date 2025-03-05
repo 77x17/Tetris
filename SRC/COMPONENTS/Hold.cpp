@@ -16,6 +16,18 @@ Hold::~Hold() {
     delwin(win); 
 }
 
+Block* Hold::interchange(Block* p) {
+    Block* tmp = block; block = p;
+    return block;
+}
+
+bool Hold::canHold() {
+    return holdPosible;
+}
+
+void Hold::lock() { holdPosible = false; }
+void Hold::unlock() { holdPosible = true; }
+
 void Hold::draw() {
-    block->draw(win, 1, 1, 1);
+    if (block) block->draw(win, 1, 1, 1);
 }

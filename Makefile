@@ -52,6 +52,6 @@ $(OBJ_DIR)/COMPONENTS/Map.o: $(HEADER_DIR)/Common.hpp $(HEADER_DIR)/CurrentBlock
 $(OBJ_DIR)/COMPONENTS/LinkListBlock.o: $(HEADER_DIR)/LinkListBlock.hpp $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/BlockFactory.hpp $(HEADER_DIR)/CurrentBlock.hpp
 $(OBJ_DIR)/COMPONENTS/Infor.o: $(HEADER_DIR)/Infor.hpp
 $(OBJ_DIR)/COMPONENTS/Hold.o: $(HEADER_DIR)/Hold.hpp $(HEADER_DIR)/Block.hpp
-$(OBJ_DIR)/COMPONENTS/CurrentBlock.o: $(HEADER_DIR)/CurrentBlock.hpp $(HEADER_DIR)/Common.hpp $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/Map.hpp 
+$(OBJ_DIR)/COMPONENTS/CurrentBlock.o: $(HEADER_DIR)/CurrentBlock.hpp $(HEADER_DIR)/Common.hpp $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/Map.hpp  $(HEADER_DIR)/Hold.hpp 
 $(OBJ_DIR)/COMPONENTS/BlockFactory.o: $(HEADER_DIR)/BlockFactory.hpp $(HEADER_DIR)/Block.hpp
 $(OBJ_DIR)/COMPONENTS/Block.o: $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/Common.hpp

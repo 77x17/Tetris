@@ -3,11 +3,21 @@
 #include "Common.hpp"
 #include "Block.hpp"
 #include "Map.hpp"
+#include "Hold.hpp"
 
 CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH / 2 - BLOCK_EDGE/2), posY(0){}
 
 CurrentBlock::~CurrentBlock() {
     delete block; block = nullptr;
+}
+
+bool CurrentBlock::isEmpty() {
+    return (block == nullptr);
+}
+
+void CurrentBlock::setter(Block* p) {
+    block = p;
+    posX = WIDTH / 2 - BLOCK_EDGE/2; posY = 0;
 }
 
 bool CurrentBlock::moveDown(Map* map) {
@@ -47,8 +57,13 @@ bool CurrentBlock::rotateRight(Map* map) {
     return true;
 }
 
-void CurrentBlock::draw(Map* map) {
-    map->drawCur(block, posY, posX, 1);
+bool CurrentBlock::swap(Hold* hold) {
+    this->setter(hold->interchange(block));
+    return (block != nullptr);
+}
+
+void CurrentBlock::draw(Map* map, bool isOn) {
+    map->drawCur(block, posY, posX, isOn);
 }
 
 bool CurrentBlock::isValid(uint16_t shape, Map* map) {

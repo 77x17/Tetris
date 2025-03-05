@@ -3,6 +3,7 @@
 #include "LinkListBlock.hpp"
 #include "Map.hpp"
 #include "CurrentBlock.hpp"
+#include "Hold.hpp"
 
 #include <thread>
 #include <atomic>
@@ -16,23 +17,21 @@ void Player::start() {
     std::atomic<bool> isRunning{true};
     std::mutex mtx;
     
+    hold->unlock();
     next->draw(); 
-    curBlock->draw(map);
+    curBlock->draw(map, true);
 
     auto moveDown = [&]() {
         while (isRunning) {
             std::this_thread::sleep_for(std::chrono::milliseconds(timeout.load()));
             
             mtx.lock();
-            
             if (curBlock && !curBlock->moveDown(map)) {
+                hold->unlock();
                 curBlock->put(map);
-                delete curBlock;
-                curBlock = next->updateNext();
+                curBlock->setter(next->updateNext());
             }
-            if (curBlock == nullptr) isRunning = false;
             mtx.unlock();
-            
         }
     };
 
@@ -41,8 +40,11 @@ void Player::start() {
 
     while (isRunning) {
         mtx.lock();
-        if (moveProcessing())
+        if (moveProcessing()) {
+            if (curBlock->isEmpty()) 
+                curBlock->setter(next->updateNext());
             timeout = 500;
+        }
         mtx.unlock();
     }
 }
