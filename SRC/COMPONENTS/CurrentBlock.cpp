@@ -44,6 +44,18 @@ bool CurrentBlock::moveRight(Map* map) {
     return true;
 }
 
+bool CurrentBlock::hardDrop(Map *map) {
+    while (not collisionBottom(map)) {
+        posY++;
+    }
+    
+    return true;
+}
+
+bool CurrentBlock::collisionBottom(Map *map) {
+    return map->isValid(block->getShape(), posY + 1, posX);
+}
+
 bool CurrentBlock::rotateLeft(Map* map) {
     if (!isValid(block->getRotateLeft(), map)) return false;
     map->eraseCur(block, posY, posX);

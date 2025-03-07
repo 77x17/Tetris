@@ -18,11 +18,12 @@ protected:
     Infor* infor;
     LinkListBlock* next;
     sf::RenderWindow *window;
+    sf::Clock         clock;
     
 public:
     Monitor(sf::RenderWindow *newWindow);
     ~Monitor();
-    bool moveProcessing();
+    bool processEvents();
     virtual void start()=0;
 };
 

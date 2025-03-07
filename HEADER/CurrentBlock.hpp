@@ -23,7 +23,10 @@ public:
 
     bool moveDown(Map *map);
     bool moveLeft(Map *map);
-    bool moveRight(Map* map);
+    bool moveRight(Map *map);
+    bool hardDrop(Map *map);
+
+    bool collisionBottom(Map *map);
 
     bool rotateLeft(Map* map);
     bool rotateRight(Map* map);
