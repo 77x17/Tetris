@@ -3,6 +3,7 @@
 
 // #include <ncurses.h>
 #include <cstdint>
+#include <SFML/Graphics.hpp>
 
 class Block;
 class Map;
@@ -34,8 +35,7 @@ public:
     void swap(Hold* hold);
 
     uint8_t put(Map* map);
-    void draw(Map* map);
-    void erase(Map* map);
+    void draw(sf::RenderWindow *window);
     bool isValid(uint16_t shape, Map* map);
 };
 

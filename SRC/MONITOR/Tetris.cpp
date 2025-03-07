@@ -11,8 +11,8 @@ Tetris::Tetris() {
 }
 
 Tetris::~Tetris() {
-    delete player;
-    delete window;
+    // delete player;
+    // delete window;
 }
 
 void Tetris::startGameOnePlayer() {

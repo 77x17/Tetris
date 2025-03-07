@@ -18,6 +18,7 @@ public:
     bool canHold();
     void lock();
     void unlock();
+    void drawOutline(sf::RenderWindow *window);
     void draw();
     void erase();
 };

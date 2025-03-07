@@ -50,10 +50,25 @@ Block* LinkListBlock::updateNext() {
     return cur;
 }
 
+void LinkListBlock::drawOutline(sf::RenderWindow *window) {
+    sf::RectangleShape line(sf::Vector2f(NEXT_WIDTH * BLOCK_SIZE, 1));
+    line.setFillColor(sf::Color(200, 200, 200, 150)); // Gray
+    line.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y + 0           * BLOCK_SIZE);
+    window->draw(line);
+    line.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y + NEXT_HEIGHT * BLOCK_SIZE);
+    window->draw(line);
+    
+    line.setSize(sf::Vector2f(1, NEXT_HEIGHT * BLOCK_SIZE));
+    line.setPosition(NEXT_POSITION_X + 0          * BLOCK_SIZE, NEXT_POSITION_Y);
+    window->draw(line);
+    line.setPosition(NEXT_POSITION_X + NEXT_WIDTH * BLOCK_SIZE, NEXT_POSITION_Y);
+    window->draw(line);
+}
+
 void LinkListBlock::draw() {
     BlockEle *p = head;
     for (int i = 0; i < 3; i++) {
-        p->block->draw(window, 1 + i * 4, 1, -1);
+        p->block->draw(window, 1 + i * 4, 1);
         p = p->next;
     }
 }
@@ -61,7 +76,7 @@ void LinkListBlock::draw() {
 void LinkListBlock::clean() {
     BlockEle *p = head;
     for (int i = 0; i < 3; i++) {
-        p->block->draw(window, 1 + i * 4, 1, ' ');
+        p->block->draw(window, 1 + i * 4, 1);
         p = p->next;
     }
 }

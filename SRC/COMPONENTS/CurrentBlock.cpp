@@ -73,12 +73,8 @@ void CurrentBlock::swap(Hold* hold) {
     this->setter(hold->interchange(block));
 }
 
-void CurrentBlock::draw(Map* map) {
-    map->drawCur(block, posY, posX);
-}
-
-void CurrentBlock::erase(Map* map) {
-    map->eraseCur(block, posY, posX);
+void CurrentBlock::draw(sf::RenderWindow *window) {
+    block->draw(window, posY, posX);
 }
 
 bool CurrentBlock::isValid(uint16_t shape, Map* map) {

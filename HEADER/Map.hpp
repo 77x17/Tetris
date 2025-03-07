@@ -23,6 +23,7 @@ public:
     bool add(uint8_t nLines);
 
     void draw();
+    void drawOutline(sf::RenderWindow* window);
     void drawCur(Block* block, int Y, int X);
     void eraseCur(Block* block, int Y, int X);
 

@@ -23,7 +23,7 @@ Monitor::~Monitor(){
     if (infor) {delete infor; infor = nullptr;}
 }
 
-bool Monitor::processEvents() {
+void Monitor::processEvents() {
     sf::Event event;
     while (window->pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
@@ -60,23 +60,7 @@ bool Monitor::processEvents() {
                 curBlock->swap(hold);
 
                 clock.restart();
-                
-                // if (board.holdPieceShapeType == -1) {
-                //     board.setHoldPiece(tetromino);
-                //     tetromino.generateTetromino();
-                // } else {
-                //     tetromino.swapHoldPiece(board.holdPieceShapeType);
-                //     clock.restart();
-                // }
             }
-        } else if (event.type == sf::Event::KeyReleased) {
-            if (event.key.code == sf::Keyboard::Left) {
-                moveLeft = false;
-            } else if (event.key.code == sf::Keyboard::Right) {
-                moveRight = false;
-            } else if (event.key.code == sf::Keyboard::Up) {
-                rotateFlag = false;
-            }
-        }
+        } 
     }
 }

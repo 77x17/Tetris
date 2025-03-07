@@ -8,6 +8,7 @@
 #define OFFRIGHT 12
 #define NUMOFFSET 2
 #define REALWIDTH 14
+
 // **--------** REALWIDTH
 // ** NUMOFFSET 
 // **-------- OFFRIGHT
@@ -18,17 +19,25 @@ Map::Map(sf::RenderWindow* newWindow) {
     for (int i = 0; i < HEIGHT; i++) map[i] = EMPTYLINE();
     map[HEIGHT] = FULLMASK(REALWIDTH);
 
-    window = newWindow; // derwin(_win, 25, 20, 3, 9); // modify
-    // subbox = derwin(win, 21, 12, 4, 3);
-    // wborder(subbox, ACS_VLINE, ACS_VLINE, ' ', ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-    // wrefresh(subbox);
+    window = newWindow; 
     draw();
 }
 
-Map::~Map() {
-    // wclear(win); wclear(subbox);
-    // delwin(subbox); subbox = nullptr;
-    // delwin(win); win = nullptr;
+Map::~Map() {}
+
+void Map::drawOutline(sf::RenderWindow* window) {
+    sf::RectangleShape line(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE, 1));
+    line.setFillColor(sf::Color(200, 200, 200, 150)); // Gray
+    for (int i = 0; i <= GRID_HEIGHT; i++) {
+        line.setPosition(GRID_POSITION_X, GRID_POSITION_Y + i * BLOCK_SIZE);
+        window->draw(line);
+    }
+
+    line.setSize(sf::Vector2f(1, GRID_HEIGHT * BLOCK_SIZE));
+    for (int i = 0; i <= GRID_WIDTH; i++) {
+        line.setPosition(GRID_POSITION_X + i * BLOCK_SIZE, GRID_POSITION_Y);
+        window->draw(line);
+    }
 }
 
 void Map::remove(uint8_t pos) {
@@ -44,11 +53,11 @@ bool Map::add(uint8_t nLines) {
 }
 
 void Map::drawCur(Block* block, int Y, int X) {
-    block->draw(window, Y + OFFSETY, X + OFFSETX, -1);
+    block->draw(window, Y + OFFSETY, X + OFFSETX);
 }
 
 void Map::eraseCur(Block* block, int Y, int X) {
-    block->draw(window, Y + OFFSETY, X + OFFSETX, ' ');
+    block->draw(window, Y + OFFSETY, X + OFFSETX);
 }
 
 void Map::draw() {

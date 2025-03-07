@@ -1,4 +1,5 @@
 #include "Block.hpp"
+
 #include "Common.hpp"
 
 
@@ -11,18 +12,22 @@ Block::~Block() {
     delete[] state;
 }
 
-void Block::draw(sf::RenderWindow* window, uint8_t y, uint8_t x, char c) {
-    char ch = ((c == (char)(-1)) ? symbol : c);
+void Block::draw(sf::RenderWindow* window, uint8_t y, uint8_t x) {
+    sf::RectangleShape block;
+    block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
+    block.setFillColor(sf::Color::Cyan);
+
     uint16_t shape = getShape();
     for (int i = 0; i < SIZEBLOCK; i++)
     for (int i = 0; i < BLOCK_EDGE; i++) {
         int mask = getLine(shape, i);
-        for (int j = 0; j < BLOCK_EDGE; j++)
-            if (getBit(mask, j))
-                return; // -1
-                // mvwaddch(win, y + i, x + j, ch);
+        for (int j = 0; j < BLOCK_EDGE; j++) {
+            if (getBit(mask, j)) {
+                block.setPosition(sf::Vector2f(GRID_POSITION_X + j * BLOCK_SIZE + 1, GRID_POSITION_Y + i * BLOCK_SIZE + 1));
+                window->draw(block);
+            }
+        }
     }
-    // wrefresh(win);
 }
 
 uint16_t Block::getRotateLeft() { return state[(stateID + 3) % 4]; }

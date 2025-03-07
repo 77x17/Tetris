@@ -23,7 +23,7 @@ protected:
 public:
     Monitor(sf::RenderWindow *newWindow);
     ~Monitor();
-    bool processEvents();
+    void processEvents();
     virtual void start()=0;
 };
 

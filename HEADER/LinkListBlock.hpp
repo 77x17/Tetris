@@ -34,6 +34,7 @@ private:
     LinkListBlock(sf::RenderWindow* window);
     ~LinkListBlock();
     Block* updateNext();
+    void drawOutline(sf::RenderWindow *window);
     void draw();
     void clean();
 };

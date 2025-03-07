@@ -7,7 +7,6 @@
 
 class Block {
 protected:
-    static uint8_t speed;
     uint16_t *state;
     uint8_t stateID;
     char symbol;
@@ -16,7 +15,7 @@ public:
     Block();
     ~Block();
 
-    void draw(sf::RenderWindow* window, uint8_t y, uint8_t x, char ch);
+    void draw(sf::RenderWindow *window, uint8_t y, uint8_t x);
     uint16_t getShape();
     uint16_t getRotateLeft();
     uint16_t getRotateRight();
