@@ -43,47 +43,47 @@ IBlock::IBlock(): Block() {
     symbol = '#';
     state[0] = 0x0F00; state[1] = 0x2222; state[2] = 0x00F0; state[3] = 0x4444;
     paddingX = 0;
-    paddingY = 0;
+    paddingY = -BLOCK_SIZE;
 }
 
 LBlock::LBlock(): Block() {
     symbol = '#';
-    state[0] = 0x0E80; state[1] = 0xC440; state[2] = 0x2E00; state[3] = 0x4460;
-    paddingX = 0;
-    paddingY = 0;
+    state[0] = 0x0740; state[1] = 0x6220; state[2] = 0x1700; state[3] = 0x2230;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = BLOCK_SIZE / 2;
 }
 
 JBlock::JBlock(): Block() { 
     symbol = '#';
-    state[0] = 0x0E20; state[1] = 0x44C0; state[2] = 0x8E00; state[3] = 0x6440;
-    paddingX = 0;
-    paddingY = 0;
+    state[0] = 0x0710; state[1] = 0x2260; state[2] = 0x4700; state[3] = 0x3220;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = BLOCK_SIZE / 2;
 }
 
 OBlock::OBlock(): Block() {
     symbol = '#';
     state[0] = 0x0660; state[1] = 0x0660; state[2] = 0x0660; state[3] = 0x0660;
     paddingX = 0;
-    paddingY = 0;
+    paddingY = -BLOCK_SIZE / 2;
 }
 
 ZBlock::ZBlock(): Block() {
     symbol = '#';
-    state[0] = 0x0C60; state[1] = 0x2640; state[2] = 0x0C60; state[3] = 0x2640;
-    paddingX = 0;
-    paddingY = 0;
+    state[0] = 0x0630; state[1] = 0x1320; state[2] = 0x0630; state[3] = 0x1320;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = -BLOCK_SIZE / 2;
 }
 
 SBlock::SBlock(): Block() {
     symbol = '#';
-    state[0] = 0x06C0; state[1] = 0x4620; state[2] = 0x06C0; state[3] = 0x4620;
-    paddingX = 0;
-    paddingY = 0;
+    state[0] = 0x0360; state[1] = 0x2310; state[2] = 0x0360; state[3] = 0x2310;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = -BLOCK_SIZE / 2;
 }
 
 TBlock::TBlock(): Block() {
     symbol = '#';
-    state[0] = 0x0E40; state[1] = 0x4C40; state[2] = 0x4E00; state[3] = 0x4640;
-    paddingX = 0;
-    paddingY = 0;
+    state[0] = 0x0720; state[1] = 0x2620; state[2] = 0x2700; state[3] = 0x2320;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = BLOCK_SIZE / 2;
 }
