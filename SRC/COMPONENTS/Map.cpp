@@ -13,14 +13,11 @@
 // ** NUMOFFSET 
 // **-------- OFFRIGHT
 
-#define EMPTYLINE() (FULLMASK(NUMOFFSET) ^ (FULLMASK(NUMOFFSET) << OFFRIGHT))
+#define EMPTYLINE (FULLMASK(NUMOFFSET) ^ (FULLMASK(NUMOFFSET) << OFFRIGHT))
 
-Map::Map(sf::RenderWindow* newWindow) {
-    for (int i = 0; i < HEIGHT; i++) map[i] = EMPTYLINE();
+Map::Map() {
+    for (int i = 0; i < HEIGHT; i++) map[i] = EMPTYLINE;
     map[HEIGHT] = FULLMASK(REALWIDTH);
-
-    window = newWindow; 
-    draw();
 }
 
 Map::~Map() {}
@@ -43,7 +40,7 @@ void Map::drawOutline(sf::RenderWindow* window) {
 void Map::remove(uint8_t pos) {
     for (int i = pos - 1; i >= 0; i--) 
         map[i + 1] = map[i];
-    map[0] = EMPTYLINE();
+    map[0] = EMPTYLINE;
 }
 
 // the function adds nlines to map 
@@ -52,15 +49,15 @@ bool Map::add(uint8_t nLines) {
     return false;
 }
 
-void Map::drawCur(Block* block, int Y, int X) {
-    block->draw(window, Y + OFFSETY, X + OFFSETX);
-}
+// void Map::drawCur(Block* block, int Y, int X) {
+//     block->draw(window, Y + OFFSETY, X + OFFSETX);
+// }
 
-void Map::eraseCur(Block* block, int Y, int X) {
-    block->draw(window, Y + OFFSETY, X + OFFSETX);
-}
+// void Map::eraseCur(Block* block, int Y, int X) {
+//     block->draw(window, Y + OFFSETY, X + OFFSETX);
+// }
 
-void Map::draw() {
+void Map::draw(sf::RenderWindow *window) {
     // for (int i = 0; i < HEIGHT; i++) 
     //     for (int j = 0; j < WIDTH; j++)
     //         if (getBit(map[i], j + NUMOFFSET))
@@ -68,6 +65,15 @@ void Map::draw() {
     //         else if (i + OFFSETY >= BLOCK_EDGE)
     //             mvwaddch(win, i + OFFSETY, j + OFFSETX, ' ');
     // wrefresh(win);
+    sf::RectangleShape block;
+    block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
+    block.setFillColor(sf::Color::White); 
+    for (int i = 0; i < HEIGHT; i++) {
+        for (int j = 0; j < WIDTH; j++) if (getBit(map[i], j + NUMOFFSET)) {
+            block.setPosition(GRID_POSITION_X + j * BLOCK_SIZE + 1, GRID_POSITION_Y + i * BLOCK_SIZE + 1);
+            window->draw(block);
+        }
+    }
 }
 
 uint8_t Map::update(uint16_t shape, int Y, int X) {
@@ -79,7 +85,6 @@ uint8_t Map::update(uint16_t shape, int Y, int X) {
             cnt++;
         }
     }
-    draw();
     return cnt;
 }
 

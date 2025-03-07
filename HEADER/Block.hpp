@@ -10,18 +10,21 @@ protected:
     uint16_t *state;
     uint8_t stateID;
     char symbol;
+    int paddingX, paddingY;
 
 public:
     Block();
     ~Block();
 
-    void draw(sf::RenderWindow *window, uint8_t y, uint8_t x);
+    void draw(sf::RenderWindow *window, int8_t y, int8_t x, int offsetY, int offsetX, bool padding);
     uint16_t getShape();
     uint16_t getRotateLeft();
     uint16_t getRotateRight();
 
     void rotateLeft();
     void rotateRight();
+
+    void resetState();
 };
 
 class IBlock:public Block {
@@ -35,9 +38,9 @@ public:
 };
 
 
-class PBlock:public Block {
+class JBlock:public Block {
 public:
-    PBlock();
+    JBlock();
 };
 
 

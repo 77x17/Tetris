@@ -14,13 +14,17 @@ class CurrentBlock {
 private:
     Block* block;
     int8_t posX, posY;
+    int8_t shadowPosY;
 
+    void shadowHardDrop(Map *map);
 public:
+    CurrentBlock();
     CurrentBlock(Block *p);
     ~CurrentBlock();
 
     bool isEmpty();
     void setter(Block* p);
+    bool resetPosition(Map *map);
 
     bool moveDown(Map *map);
     bool moveLeft(Map *map);

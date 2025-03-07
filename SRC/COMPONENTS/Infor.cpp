@@ -1,8 +1,6 @@
 #include "Infor.hpp"
 
-Infor::Infor(sf::RenderWindow* newWindow) {
-    window = newWindow; //derwin(_win, 5, 5, 1, 10);
-    // wrefresh(win);
+Infor::Infor() {
 }
 
 void Infor::addLine() {

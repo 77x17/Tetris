@@ -10,14 +10,15 @@ constexpr float DROP_TIME = 0.5f;
 Player::Player(sf::RenderWindow *window) : Monitor(window) {}
 
 void Player::start() {
-    hold->unlock();
-    next->draw(); 
+    next->draw(window); 
+    curBlock->setter(next->updateNext());
+    curBlock->resetPosition(map);
     curBlock->draw(window);
 
     while (window->isOpen()) {
         processEvents();
-        update();
         render();
+        update();
     }
 }
 
@@ -31,6 +32,9 @@ void Player::update() {
             //     board     = Board();
             // }
             curBlock->setter(next->updateNext());
+            curBlock->resetPosition(map);
+            
+            hold->unlock();
         }
         
         clock.restart();
@@ -44,9 +48,9 @@ void Player::render() {
     hold->drawOutline(window);
     next->drawOutline(window);
     curBlock->draw(window);
-    // hold    ->draw(map);
-    // next    ->draw(map);
-    // map->draw();
+    hold    ->draw(window);
+    next    ->draw(window);
+    map     ->draw(window);
      
     window->display();
 }

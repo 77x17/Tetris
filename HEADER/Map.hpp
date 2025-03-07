@@ -13,19 +13,18 @@ class CurrentBlock;
 class Map {
 private:
     uint16_t map[HEIGHT + 1];
-    sf::RenderWindow* window;
 
     void remove(uint8_t pos);
 public:
-    Map(sf::RenderWindow* newWindow);
+    Map();
     ~Map();
     
     bool add(uint8_t nLines);
 
-    void draw();
+    void draw(sf::RenderWindow* window);
     void drawOutline(sf::RenderWindow* window);
-    void drawCur(Block* block, int Y, int X);
-    void eraseCur(Block* block, int Y, int X);
+    // void drawCur(Block* block, int Y, int X);
+    // void eraseCur(Block* block, int Y, int X);
 
     uint8_t update(uint16_t shape, int Y, int X);
     bool isValid(uint16_t shape, int Y, int X);

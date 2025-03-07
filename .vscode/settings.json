@@ -6,6 +6,7 @@
         "unordered_map": "cpp",
         "vector": "cpp",
         "cstdint": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "new": "cpp"
     }
 }

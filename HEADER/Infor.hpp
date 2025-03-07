@@ -7,9 +7,8 @@
 class Infor {
 private:
     uint8_t nLines, nBlock;
-    sf::RenderWindow* window;
 public:
-    Infor(sf::RenderWindow* newWindow);
+    Infor();
     void addLine();
     void addBlock();
     void draw();

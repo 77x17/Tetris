@@ -10,17 +10,15 @@ class Hold {
 private:
     Block* block;
     bool holdPosible;
-    sf::RenderWindow* window;
 public:
-    Hold(sf::RenderWindow* window);
+    Hold();
     ~Hold();
     Block* interchange(Block* p);
     bool canHold();
     void lock();
     void unlock();
     void drawOutline(sf::RenderWindow *window);
-    void draw();
-    void erase();
+    void draw(sf::RenderWindow *window);
 };
 
 #endif

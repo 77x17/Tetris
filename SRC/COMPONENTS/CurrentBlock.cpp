@@ -5,6 +5,8 @@
 #include "Map.hpp"
 #include "Hold.hpp"
 
+CurrentBlock::CurrentBlock() : block(nullptr) {}
+
 CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH / 2 - BLOCK_EDGE/2), posY(0){}
 
 CurrentBlock::~CurrentBlock() {
@@ -17,50 +19,71 @@ bool CurrentBlock::isEmpty() {
 
 void CurrentBlock::setter(Block* p) {
     block = p;
-    posX = WIDTH / 2 - BLOCK_EDGE/2; posY = 0;
+}
+
+bool CurrentBlock::resetPosition(Map *map) {
+    posX = WIDTH / 2 - BLOCK_EDGE / 2; posY = 0;
+
+    shadowHardDrop(map);
+
+    return true;
 }
 
 bool CurrentBlock::moveDown(Map* map) {
+    if (not map->isValid(block->getShape(), posY + 1, posX)) 
+        return false; 
+
     posY++;
-    if (!isValid(block->getShape(), map)) { posY--; return false; }
-    map->eraseCur(block, posY - 1, posX);
-    map->drawCur(block, posY, posX);
+
     return true;
 }
 
 bool CurrentBlock::moveLeft(Map* map) {
+    if (not map->isValid(block->getShape(), posY, posX - 1)) 
+        return false; 
+
     posX--;
-    if (!isValid(block->getShape(), map)) { posX++; return false; }
-    map->eraseCur(block, posY, posX + 1);
-    map->drawCur(block, posY, posX);
+
+    shadowHardDrop(map);
+
     return true;
 }
 
 bool CurrentBlock::moveRight(Map* map) {
+    if (not map->isValid(block->getShape(), posY, posX + 1)) 
+        return false; 
+    
     posX++;
-    if (!isValid(block->getShape(), map)) { posX--; return false; }
-    map->eraseCur(block, posY, posX - 1);
-    map->drawCur(block, posY, posX);
+
+    shadowHardDrop(map);
+
     return true;
 }
 
 bool CurrentBlock::hardDrop(Map *map) {
-    while (not collisionBottom(map)) {
-        posY++;
-    }
-    
+    posY = shadowPosY;
+
     return true;
 }
 
+void CurrentBlock::shadowHardDrop(Map *map) {
+    shadowPosY = posY;
+    while (map->isValid(block->getShape(), shadowPosY + 1, posX)) {
+        shadowPosY++;
+    }
+}
+
 bool CurrentBlock::collisionBottom(Map *map) {
-    return map->isValid(block->getShape(), posY + 1, posX);
+    return not map->isValid(block->getShape(), posY + 1, posX);
 }
 
 bool CurrentBlock::rotateLeft(Map* map) {
     if (!isValid(block->getRotateLeft(), map)) return false;
-    map->eraseCur(block, posY, posX);
+    
     block->rotateLeft();
-    map->drawCur(block, posY, posX);
+
+    shadowHardDrop(map);
+
     return true;
 }
 
@@ -70,11 +93,12 @@ bool CurrentBlock::rotateRight(Map* map) {
 }
 
 void CurrentBlock::swap(Hold* hold) {
-    this->setter(hold->interchange(block));
+    block = hold->interchange(block);
 }
 
 void CurrentBlock::draw(sf::RenderWindow *window) {
-    block->draw(window, posY, posX);
+    block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X, false);
+    block->draw(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X, false);
 }
 
 bool CurrentBlock::isValid(uint16_t shape, Map* map) {

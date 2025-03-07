@@ -4,7 +4,7 @@
 
 Block* BlockFactory::createRandomBlock() {
     // // Danh sách các loại block
-    enum BlockType { Z_BLOCK, T_BLOCK, S_BLOCK, L_BLOCK, P_BLOCK, O_BLOCK, I_BLOCK};
+    enum BlockType { Z_BLOCK, T_BLOCK, S_BLOCK, L_BLOCK, J_BLOCK, O_BLOCK, I_BLOCK};
     
     // Tạo số ngẫu nhiên
     static std::random_device rd;
@@ -17,9 +17,9 @@ Block* BlockFactory::createRandomBlock() {
         case T_BLOCK: return new TBlock();
         case S_BLOCK: return new SBlock();
         case L_BLOCK: return new LBlock();
-        case P_BLOCK: return new PBlock();
+        case J_BLOCK: return new JBlock();
         case O_BLOCK: return new OBlock();
         case I_BLOCK: return new IBlock();
-        default: nullptr;
+        default: return nullptr;
     }
 }

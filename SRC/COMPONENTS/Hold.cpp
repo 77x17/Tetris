@@ -2,13 +2,11 @@
 
 #include "Common.hpp"
 #include "Block.hpp"
+#include "Monitor.hpp"
 
-Hold::Hold(sf::RenderWindow* newWindow) {
+Hold::Hold() {
     block = nullptr;
-    window = newWindow;
-    // box(win, 0, 0);
-    // mvwaddstr(win, 0, 1, "HOLD");
-    // wrefresh(win);
+    holdPosible = true;
 }
 
 Hold::~Hold() { 
@@ -17,8 +15,9 @@ Hold::~Hold() {
 }
 
 Block* Hold::interchange(Block* p) {
-    Block* tmp = block; block = p;
-    return tmp;
+    Block* temp = block; block = p;
+    block->resetState();
+    return temp;
 }
 
 bool Hold::canHold() {
@@ -29,6 +28,12 @@ void Hold::lock() { holdPosible = false; }
 void Hold::unlock() { holdPosible = true; }
 
 void Hold::drawOutline(sf::RenderWindow* window) {
+    sf::Font font;
+    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
+    sf::Text holdText("HOLD", font, BLOCK_SIZE - BLOCK_SIZE / 4);
+    holdText.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - BLOCK_SIZE);
+    window->draw(holdText);
+
     sf::RectangleShape line(sf::Vector2f(HOLD_WIDTH * BLOCK_SIZE, 1));
     line.setFillColor(sf::Color(200, 200, 200, 150)); // Gray
     line.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y + 0           * BLOCK_SIZE);
@@ -43,10 +48,6 @@ void Hold::drawOutline(sf::RenderWindow* window) {
     window->draw(line);
 }
 
-void Hold::draw() {
-    if (block) block->draw(window, 1, 1);
-}
-
-void Hold::erase() {
-    if (block) block->draw(window, 1, 1);
+void Hold::draw(sf::RenderWindow *window) {
+    if (block) block->draw(window, 0, 0, HOLD_POSITION_Y, HOLD_POSITION_X, true);
 }

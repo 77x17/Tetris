@@ -1,5 +1,4 @@
 #include "LinkListBlock.hpp"
-#include <iostream>
 
 #include "Block.hpp"
 #include "BlockFactory.hpp"
@@ -17,12 +16,9 @@ void LinkListBlock::addEle() {
     nEle++;
 }
 
-LinkListBlock::LinkListBlock(sf::RenderWindow* newWindow) {
-    window = newWindow; //derwin(_win, 14, 6, 2, 24);
-    // box(win, 0, 0);
-    // mvwaddstr(win, 0, 1, "NEXT");
-    // wrefresh(win);
-    
+LinkListBlock::LinkListBlock() {
+    nEle = 0; 
+    head = tail = nullptr;
     for (int i = 1; i <= 3; i++)
         addEle();
 }
@@ -38,15 +34,12 @@ LinkListBlock::~LinkListBlock() {
 }
 
 Block* LinkListBlock::updateNext() {
-    clean();
-
     Block* cur = head->block; 
 
     BlockEle* p = head; 
     head = head->next;
     delete p; 
     if (--nEle < 3) addEle();
-    draw();
     return cur;
 }
 
@@ -65,18 +58,10 @@ void LinkListBlock::drawOutline(sf::RenderWindow *window) {
     window->draw(line);
 }
 
-void LinkListBlock::draw() {
+void LinkListBlock::draw(sf::RenderWindow *window) {
     BlockEle *p = head;
     for (int i = 0; i < 3; i++) {
-        p->block->draw(window, 1 + i * 4, 1);
-        p = p->next;
-    }
-}
-
-void LinkListBlock::clean() {
-    BlockEle *p = head;
-    for (int i = 0; i < 3; i++) {
-        p->block->draw(window, 1 + i * 4, 1);
+        p->block->draw(window, i * 4, 0, NEXT_POSITION_Y, NEXT_POSITION_X, true);
         p = p->next;
     }
 }

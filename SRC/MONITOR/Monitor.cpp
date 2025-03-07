@@ -8,14 +8,14 @@
 
 Monitor::Monitor(sf::RenderWindow* newWindow) {
     window   = newWindow;
-    map      = new Map(window);
-    hold     = new Hold(window);
-    next     = new LinkListBlock(window);
-    curBlock = new CurrentBlock(next->updateNext());
-    infor    = new Infor(window);
+    map      = new Map();
+    hold     = new Hold();
+    next     = new LinkListBlock();
+    curBlock = new CurrentBlock();
+    infor    = new Infor();
 }
 
-Monitor::~Monitor(){
+Monitor::~Monitor() {
     if (curBlock) {delete curBlock; curBlock = nullptr;}
     if (hold) {delete hold; hold = nullptr;}
     if (next) {delete next; next = nullptr;}
@@ -50,14 +50,21 @@ void Monitor::processEvents() {
                 }
             } else if (event.key.code == sf::Keyboard::Space) {
                 curBlock->hardDrop(map); 
-                // if (tetromino.gameOver()) {
-                //     tetromino = Tetromino();
-                //     board     = Board();
-                // }
+
+                curBlock->put(map);
+                curBlock->setter(next->updateNext());
+                curBlock->resetPosition(map); // Check gameover
+
+                hold->unlock();
+
                 clock.restart();
             } else if (event.key.code == sf::Keyboard::C and hold->canHold()) {
                 hold->lock();
                 curBlock->swap(hold);
+                if (curBlock->isEmpty()) {
+                    curBlock->setter(next->updateNext());
+                }
+                curBlock->resetPosition(map);
 
                 clock.restart();
             }

@@ -25,18 +25,16 @@ class LinkListBlock {
 private:
     BlockEle* head;
     BlockEle* tail;
-    sf::RenderWindow* window;
     uint8_t nEle;
     
     void addEle();
     
     public:
-    LinkListBlock(sf::RenderWindow* window);
+    LinkListBlock();
     ~LinkListBlock();
     Block* updateNext();
     void drawOutline(sf::RenderWindow *window);
-    void draw();
-    void clean();
+    void draw(sf::RenderWindow *window);
 };
 
 #endif
