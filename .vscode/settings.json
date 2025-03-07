@@ -7,6 +7,15 @@
         "vector": "cpp",
         "cstdint": "cpp",
         "thread": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "numbers": "cpp",
+        "array": "cpp",
+        "memory": "cpp",
+        "format": "cpp",
+        "istream": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "variant": "cpp"
     }
 }

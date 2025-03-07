@@ -7,20 +7,25 @@
 BlockEle::BlockEle() { block = nullptr; next = nullptr; }
 BlockEle::BlockEle(Block* tmp) { block = tmp; next = nullptr; }
 
-void LinkListBlock::addEle() {
-    if (tail == nullptr) head = tail = new BlockEle(BlockFactory::createRandomBlock());
+void LinkListBlock::addBag() {
+    BlockFactory::createBag(head, tail);
+
+    nEle += 7;
+}
+
+void LinkListBlock::addNode(Block *block) {
+    if (tail == nullptr) head = tail = new BlockEle(block);
     else {
-        tail->next = new BlockEle(BlockFactory::createRandomBlock());
+        tail->next = new BlockEle(block);
         tail = tail->next;
     }
     nEle++;
 }
 
 LinkListBlock::LinkListBlock() {
-    nEle = 0; 
+    nEle = 0; // bag size
     head = tail = nullptr;
-    for (int i = 1; i <= 3; i++)
-        addEle();
+    addBag();
 }
 
 LinkListBlock::~LinkListBlock() {
@@ -39,7 +44,7 @@ Block* LinkListBlock::updateNext() {
     BlockEle* p = head; 
     head = head->next;
     delete p; 
-    if (--nEle < 3) addEle();
+    if (--nEle < 7) addBag();
     return cur;
 }
 
@@ -60,7 +65,7 @@ void LinkListBlock::drawOutline(sf::RenderWindow *window) {
 
 void LinkListBlock::draw(sf::RenderWindow *window) {
     BlockEle *p = head;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 5; i++) {
         p->block->draw(window, i * 4, 0, NEXT_POSITION_Y, NEXT_POSITION_X, true);
         p = p->next;
     }

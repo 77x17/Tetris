@@ -19,6 +19,7 @@ public:
     BlockEle();
     BlockEle(Block* p);
     friend class LinkListBlock;
+    friend class BlockFactory;
 };
 
 class LinkListBlock {
@@ -27,11 +28,12 @@ private:
     BlockEle* tail;
     uint8_t nEle;
     
-    void addEle();
+    void addBag();
     
-    public:
+public:
     LinkListBlock();
     ~LinkListBlock();
+    void addNode(Block *block);
     Block* updateNext();
     void drawOutline(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
