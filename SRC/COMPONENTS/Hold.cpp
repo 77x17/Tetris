@@ -2,18 +2,17 @@
 
 #include "Block.hpp"
 
-Hold::Hold(WINDOW* _win) {
+Hold::Hold(sf::RenderWindow* newWindow) {
     block = nullptr;
-    win = derwin(_win, 6, 6, 2, 2);
-    box(win, 0, 0);
-    mvwaddstr(win, 0, 1, "HOLD");
-    wrefresh(win);
+    window = newWindow;
+    // box(win, 0, 0);
+    // mvwaddstr(win, 0, 1, "HOLD");
+    // wrefresh(win);
 }
 
 Hold::~Hold() { 
     if (block) delete block; 
     block = nullptr;
-    delwin(win); 
 }
 
 Block* Hold::interchange(Block* p) {
@@ -29,9 +28,9 @@ void Hold::lock() { holdPosible = false; }
 void Hold::unlock() { holdPosible = true; }
 
 void Hold::draw() {
-    if (block) block->draw(win, 1, 1, -1);
+    if (block) block->draw(window, 1, 1, -1);
 }
 
 void Hold::erase() {
-    if (block) block->draw(win, 1, 1, ' ');
+    if (block) block->draw(window, 1, 1, ' ');
 }

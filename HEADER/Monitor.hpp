@@ -1,7 +1,8 @@
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
 
-#include <ncurses.h>
+// #include <ncurses.h>
+#include <SFML/Graphics.hpp>
 
 class Hold;
 class LinkListBlock;
@@ -16,10 +17,10 @@ protected:
     Map* map;
     Infor* infor;
     LinkListBlock* next;
-    WINDOW* win;
+    sf::RenderWindow *window;
     
 public:
-    Monitor(WINDOW* win);
+    Monitor(sf::RenderWindow *newWindow);
     ~Monitor();
     bool moveProcessing();
     virtual void start()=0;

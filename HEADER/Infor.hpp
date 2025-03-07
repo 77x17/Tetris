@@ -1,14 +1,15 @@
 #ifndef INFOR_HPP
 #define INFOR_HPP
 
-#include <ncurses.h>
+// #include <ncurses.h>
+#include <SFML/Graphics.hpp>
 
 class Infor {
 private:
     uint8_t nLines, nBlock;
-    WINDOW* win;
+    sf::RenderWindow* window;
 public:
-    Infor(WINDOW* win);
+    Infor(sf::RenderWindow* newWindow);
     void addLine();
     void addBlock();
     void draw();

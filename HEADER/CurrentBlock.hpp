@@ -1,7 +1,7 @@
 #ifndef CURRENTBLOCK_HPP
 #define CURRENTBLOCK_HPP
 
-#include <ncurses.h>
+// #include <ncurses.h>
 #include <cstdint>
 
 class Block;

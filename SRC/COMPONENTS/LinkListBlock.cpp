@@ -17,11 +17,11 @@ void LinkListBlock::addEle() {
     nEle++;
 }
 
-LinkListBlock::LinkListBlock(WINDOW* _win) {
-    win = derwin(_win, 14, 6, 2, 24);
-    box(win, 0, 0);
-    mvwaddstr(win, 0, 1, "NEXT");
-    wrefresh(win);
+LinkListBlock::LinkListBlock(sf::RenderWindow* newWindow) {
+    window = newWindow; //derwin(_win, 14, 6, 2, 24);
+    // box(win, 0, 0);
+    // mvwaddstr(win, 0, 1, "NEXT");
+    // wrefresh(win);
     
     for (int i = 1; i <= 3; i++)
         addEle();
@@ -53,7 +53,7 @@ Block* LinkListBlock::updateNext() {
 void LinkListBlock::draw() {
     BlockEle *p = head;
     for (int i = 0; i < 3; i++) {
-        p->block->draw(win, 1 + i * 4, 1, -1);
+        p->block->draw(window, 1 + i * 4, 1, -1);
         p = p->next;
     }
 }
@@ -61,7 +61,7 @@ void LinkListBlock::draw() {
 void LinkListBlock::clean() {
     BlockEle *p = head;
     for (int i = 0; i < 3; i++) {
-        p->block->draw(win, 1 + i * 4, 1, ' ');
+        p->block->draw(window, 1 + i * 4, 1, ' ');
         p = p->next;
     }
 }

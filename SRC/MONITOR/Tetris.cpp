@@ -2,19 +2,17 @@
 
 #include "Player.hpp"
 
+const int WINDOW_WIDTH  = 800;
+const int WINDOW_HEIGHT = 700;
+
 Tetris::Tetris() {
-    int h, w;
-    getmaxyx(stdscr, h, w);
-    WINDOW *win = newwin(30, 35, h/2 - 25/2, w/2 - 30/2); // WINDOW * win = newwin(nlines, ncols, y0, x0);
-    refresh();
-    box(win, 0, 0);
-    wrefresh(win);
-    player = new Player(win);
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
+    player = new Player(window);
 }
 
 Tetris::~Tetris() {
     delete player;
-    delwin(win);
+    delete window;
 }
 
 void Tetris::startGameOnePlayer() {

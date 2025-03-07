@@ -11,17 +11,18 @@ Block::~Block() {
     delete[] state;
 }
 
-void Block::draw(WINDOW* win, uint8_t y, uint8_t x, chtype c) {
-    chtype ch = ((c == (chtype)(-1)) ? symbol : c);
+void Block::draw(sf::RenderWindow* window, uint8_t y, uint8_t x, char c) {
+    char ch = ((c == (char)(-1)) ? symbol : c);
     uint16_t shape = getShape();
     for (int i = 0; i < SIZEBLOCK; i++)
     for (int i = 0; i < BLOCK_EDGE; i++) {
         int mask = getLine(shape, i);
         for (int j = 0; j < BLOCK_EDGE; j++)
             if (getBit(mask, j))
-                mvwaddch(win, y + i, x + j, ch);
+                return; // -1
+                // mvwaddch(win, y + i, x + j, ch);
     }
-    wrefresh(win);
+    // wrefresh(win);
 }
 
 uint16_t Block::getRotateLeft() { return state[(stateID + 3) % 4]; }
@@ -42,7 +43,7 @@ LBlock::LBlock(): Block() {
     state[0] = 0x0E80; state[1] = 0xC440; state[2] = 0x2E00; state[3] = 0x4460;
 }
 
-PBlock::PBlock(): Block() { // FIN
+PBlock::PBlock(): Block() { 
     symbol = '#';
     state[0] = 0x0E20; state[1] = 0x44C0; state[2] = 0x8E00; state[3] = 0x6440;
 }

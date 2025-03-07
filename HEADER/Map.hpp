@@ -1,8 +1,9 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <ncurses.h>
+// #include <ncurses.h>
 #include <cstdint>
+#include <SFML/Graphics.hpp>
 
 #include "Common.hpp"
 
@@ -12,12 +13,11 @@ class CurrentBlock;
 class Map {
 private:
     uint16_t map[HEIGHT + 1];
-    WINDOW* win;
-    WINDOW* subbox;
+    sf::RenderWindow* window;
 
     void remove(uint8_t pos);
 public:
-    Map(WINDOW*);
+    Map(sf::RenderWindow* newWindow);
     ~Map();
     
     bool add(uint8_t nLines);

@@ -1,7 +1,8 @@
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 
-#include <ncurses.h>
+// #include <ncurses.h>
+#include <SFML/Graphics.hpp>
 #include <cstdint>
 
 class Block {
@@ -9,13 +10,13 @@ protected:
     static uint8_t speed;
     uint16_t *state;
     uint8_t stateID;
-    chtype symbol;
+    char symbol;
 
 public:
     Block();
     ~Block();
 
-    void draw(WINDOW* win, uint8_t y, uint8_t x, chtype ch);
+    void draw(sf::RenderWindow* window, uint8_t y, uint8_t x, char ch);
     uint16_t getShape();
     uint16_t getRotateLeft();
     uint16_t getRotateRight();

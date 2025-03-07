@@ -2,7 +2,8 @@
 #define SETPIECE_H
 
 #include <cstdint>
-#include <ncurses.h>
+// #include <ncurses.h>
+#include <SFML/Graphics.hpp>
 
 #include "Common.hpp"
 
@@ -24,13 +25,13 @@ class LinkListBlock {
 private:
     BlockEle* head;
     BlockEle* tail;
-    WINDOW* win;
+    sf::RenderWindow* window;
     uint8_t nEle;
     
     void addEle();
     
     public:
-    LinkListBlock(WINDOW* win);
+    LinkListBlock(sf::RenderWindow* window);
     ~LinkListBlock();
     Block* updateNext();
     void draw();

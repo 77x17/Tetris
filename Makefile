@@ -1,7 +1,7 @@
 # Variables
 COMPILER = g++
 CFLAGS = -Wall -g
-LDFLAGS = -lncurses
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 INCLUDES = -I"./HEADER"
 
 SRC_DIR = ./SRC

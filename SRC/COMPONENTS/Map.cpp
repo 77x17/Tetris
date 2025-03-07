@@ -14,21 +14,21 @@
 
 #define EMPTYLINE() (FULLMASK(NUMOFFSET) ^ (FULLMASK(NUMOFFSET) << OFFRIGHT))
 
-Map::Map(WINDOW* _win) {
+Map::Map(sf::RenderWindow* newWindow) {
     for (int i = 0; i < HEIGHT; i++) map[i] = EMPTYLINE();
     map[HEIGHT] = FULLMASK(REALWIDTH);
 
-    win = derwin(_win, 25, 20, 3, 9); // modify
-    subbox = derwin(win, 21, 12, 4, 3);
-    wborder(subbox, ACS_VLINE, ACS_VLINE, ' ', ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
-    wrefresh(subbox);
+    window = newWindow; // derwin(_win, 25, 20, 3, 9); // modify
+    // subbox = derwin(win, 21, 12, 4, 3);
+    // wborder(subbox, ACS_VLINE, ACS_VLINE, ' ', ACS_HLINE, ACS_ULCORNER, ACS_URCORNER, ACS_LLCORNER, ACS_LRCORNER);
+    // wrefresh(subbox);
     draw();
 }
 
 Map::~Map() {
-    wclear(win); wclear(subbox);
-    delwin(subbox); subbox = nullptr;
-    delwin(win); win = nullptr;
+    // wclear(win); wclear(subbox);
+    // delwin(subbox); subbox = nullptr;
+    // delwin(win); win = nullptr;
 }
 
 void Map::remove(uint8_t pos) {
@@ -44,21 +44,21 @@ bool Map::add(uint8_t nLines) {
 }
 
 void Map::drawCur(Block* block, int Y, int X) {
-    block->draw(win, Y + OFFSETY, X + OFFSETX, -1);
+    block->draw(window, Y + OFFSETY, X + OFFSETX, -1);
 }
 
 void Map::eraseCur(Block* block, int Y, int X) {
-    block->draw(win, Y + OFFSETY, X + OFFSETX, ' ');
+    block->draw(window, Y + OFFSETY, X + OFFSETX, ' ');
 }
 
 void Map::draw() {
-    for (int i = 0; i < HEIGHT; i++) 
-        for (int j = 0; j < WIDTH; j++)
-            if (getBit(map[i], j+NUMOFFSET))
-                mvwaddch(win, i + OFFSETY, j + OFFSETX, '#');
-            else if (i + OFFSETY >= BLOCK_EDGE)
-                mvwaddch(win, i+OFFSETY, j+OFFSETX, ' ');
-    wrefresh(win);
+    // for (int i = 0; i < HEIGHT; i++) 
+    //     for (int j = 0; j < WIDTH; j++)
+    //         if (getBit(map[i], j + NUMOFFSET))
+    //             mvwaddch(win, i + OFFSETY, j + OFFSETX, '#');
+    //         else if (i + OFFSETY >= BLOCK_EDGE)
+    //             mvwaddch(win, i + OFFSETY, j + OFFSETX, ' ');
+    // wrefresh(win);
 }
 
 uint8_t Map::update(uint16_t shape, int Y, int X) {
