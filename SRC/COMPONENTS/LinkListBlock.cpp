@@ -73,7 +73,7 @@ void LinkListBlock::drawOutline(sf::RenderWindow *window) {
 void LinkListBlock::draw(sf::RenderWindow *window) {
     BlockEle *p = head;
     for (int i = 0; i < 5; i++) {
-        p->block->draw(window, i * 3, 0, NEXT_POSITION_Y, NEXT_POSITION_X, true);
+        p->block->drawPadding(window, i * 3, 0, NEXT_POSITION_Y, NEXT_POSITION_X);
         p = p->next;
     }
 }
