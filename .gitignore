@@ -2,5 +2,3 @@ BIN/
 PROGRAM/
 test.*
 .vscode/
-Makefile
-.vscode/
