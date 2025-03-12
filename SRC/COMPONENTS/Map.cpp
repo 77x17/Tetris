@@ -58,7 +58,7 @@ void Map::draw(sf::RenderWindow *window) {
     for (int i = 0; i < HEIGHT; i++) {
         for (int j = 0; j < WIDTH; j++) if (getBit(map[i], j + NUMOFFSET)) {
             block.setPosition(GRID_POSITION_X + j * BLOCK_SIZE + 1, GRID_POSITION_Y + i * BLOCK_SIZE + 1);
-            uint8_t shapeID = 0;
+            uint8_t shapeID = ((map[i] >> (j * COLORWIDTH + REALWIDTH)) & FULLMASK(4));
             block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
             window->draw(block);
         }
@@ -68,7 +68,7 @@ void Map::draw(sf::RenderWindow *window) {
 uint8_t Map::update(Block* block, int Y, int X) {
     uint8_t cnt = 0;
     uint16_t shape = block->getShape();
-    uint8_t color = block->getShapeID();
+    uint64_t color = block->getShapeID();
 
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
@@ -77,9 +77,12 @@ uint8_t Map::update(Block* block, int Y, int X) {
             cnt++;
         }
         else {
-            map[Y + i] ^= (getLine(shape, i) << (X + REALWIDTH));
+            for (int j = 0; j < BLOCK_EDGE; j++)
+                if (getBit(getLine(shape, i), j))
+                    map[Y + i] ^= (color << ((X + j) * COLORWIDTH + REALWIDTH));
         }
     }
+
     return cnt;
 }
 
