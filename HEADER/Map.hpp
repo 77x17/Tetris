@@ -14,6 +14,8 @@ class Map {
 private:
     uint16_t map[HEIGHT + 1];
 
+    sf::Texture texture;
+
     void remove(uint8_t pos);
 public:
     Map();
