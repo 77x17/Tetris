@@ -6,6 +6,9 @@
 
 #include "Common.hpp"
 
+#define HEIGHT 24
+#define WIDTH  10
+
 class Block;
 class CurrentBlock;
 

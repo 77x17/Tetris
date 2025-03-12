@@ -52,17 +52,21 @@ Block* LinkListBlock::updateNext() {
 void LinkListBlock::drawOutline(sf::RenderWindow *window) {
     sf::Font font;
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-    sf::Text nextText("NEXT", font, BLOCK_SIZE - BLOCK_SIZE / 4);
-    nextText.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y - BLOCK_SIZE);
+    sf::Text nextText("NEXT", font, BLOCK_SIZE - BLOCK_SIZE / 3);
+    nextText.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
     window->draw(nextText);
 
-    sf::RectangleShape line(sf::Vector2f(NEXT_WIDTH * BLOCK_SIZE, 1));
-    line.setFillColor(sf::Color(200, 200, 200, 150)); // Gray
-    line.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y + 0           * BLOCK_SIZE);
+    sf::RectangleShape line;
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+
+    // Upper - lower line
+    line.setSize(sf::Vector2f(NEXT_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
+    line.setPosition(NEXT_POSITION_X - WIDTH_BORDER, NEXT_POSITION_Y - WIDTH_BORDER + 0           * BLOCK_SIZE);
     window->draw(line);
-    line.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y + NEXT_HEIGHT * BLOCK_SIZE);
+    line.setPosition(NEXT_POSITION_X - WIDTH_BORDER, NEXT_POSITION_Y + NEXT_HEIGHT * BLOCK_SIZE);
     window->draw(line);
     
+    // Left - right line
     line.setSize(sf::Vector2f(1, NEXT_HEIGHT * BLOCK_SIZE));
     line.setPosition(NEXT_POSITION_X + 0          * BLOCK_SIZE, NEXT_POSITION_Y);
     window->draw(line);

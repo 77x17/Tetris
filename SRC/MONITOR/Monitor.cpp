@@ -7,7 +7,7 @@
 #include "LinkListBlock.hpp"
 
 constexpr float DROP_TIME = 0.5f;
-constexpr float COLLISION_DROP_TIME = 1.0f;
+constexpr float COLLISION_DROP_TIME = 2.5f;
 
 Monitor::Monitor(sf::RenderWindow* newWindow) {
     window    = newWindow;
@@ -27,6 +27,63 @@ Monitor::~Monitor() {
     if (infor) {delete infor; infor = nullptr;}
 }
 
+void Monitor::handleLeft() {
+    if (curBlock->moveLeft(map) and curBlock->collisionBottom(map) and collision == false) {
+        collision = true;
+        clock.restart();
+    }
+}
+
+void Monitor::handleRight() {
+    if (curBlock->moveRight(map) and curBlock->collisionBottom(map) and collision == false) {
+        collision = true;
+        clock.restart();
+    }
+}
+
+void Monitor::handleDown() {
+    if (curBlock->moveDown(map) and not curBlock->collisionBottom(map)) {
+        collision = true;
+        clock.restart();
+    }
+}
+
+void Monitor::handleUp() {
+    if (curBlock->rotateLeft(map) and curBlock->collisionBottom(map) and collision == false) {
+        collision = true;
+        clock.restart();
+    }
+}
+
+void Monitor::handleHardDrop() {
+    curBlock->hardDrop(map); 
+
+    curBlock->put(map);
+    curBlock->setter(next->updateNext());
+    curBlock->resetPosition(map); 
+
+    if (curBlock->gameOver(map)) {
+        restart();
+    }
+
+    hold->unlock();
+
+    clock.restart();
+}
+
+void Monitor::handleHold() {
+    if (hold->canHold()) {
+        hold->lock();
+        curBlock->swap(hold);
+        if (curBlock->isEmpty()) {
+            curBlock->setter(next->updateNext());
+        }
+        curBlock->resetPosition(map);
+
+        clock.restart();
+    }
+}
+
 void Monitor::processEvents() {
     sf::Event event;
     while (window->pollEvent(event)) {
@@ -34,56 +91,23 @@ void Monitor::processEvents() {
             window->close();
         } 
         else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Left and curBlock->moveLeft(map)) {
-                if (curBlock->collisionBottom(map)) {
-                    collision = true;
-                    collisionClock.restart();
-                    clock.restart();
-                }
+            if (event.key.code == sf::Keyboard::Left) {
+                handleLeft();
+            }
+            else if (event.key.code == sf::Keyboard::Right) {
+                handleRight();
             } 
-            else if (event.key.code == sf::Keyboard::Right and curBlock->moveRight(map)) {
-                if (curBlock->collisionBottom(map)) {
-                    collision = true;
-                    collisionClock.restart();
-                    clock.restart();
-                }
+            else if (event.key.code == sf::Keyboard::Down) {
+                handleDown();
             } 
-            else if (event.key.code == sf::Keyboard::Down and curBlock->moveDown(map)) {
-                if (not curBlock->collisionBottom(map)) {
-                    clock.restart();
-                }
-            } 
-            else if (event.key.code == sf::Keyboard::Up and curBlock->rotateLeft(map)) {
-                if (curBlock->collisionBottom(map)) {
-                    collision = true;
-                    collisionClock.restart();
-                    clock.restart();
-                }
+            else if (event.key.code == sf::Keyboard::Up) {
+                handleUp();
             } 
             else if (event.key.code == sf::Keyboard::Space) {
-                curBlock->hardDrop(map); 
-
-                curBlock->put(map);
-                curBlock->setter(next->updateNext());
-                curBlock->resetPosition(map); 
-
-                if (curBlock->gameOver(map)) {
-                    restart();
-                }
-
-                hold->unlock();
-
-                clock.restart();
+                handleHardDrop();
             } 
-            else if (event.key.code == sf::Keyboard::C and hold->canHold()) {
-                hold->lock();
-                curBlock->swap(hold);
-                if (curBlock->isEmpty()) {
-                    curBlock->setter(next->updateNext());
-                }
-                curBlock->resetPosition(map);
-
-                clock.restart();
+            else if (event.key.code == sf::Keyboard::C) {
+                handleHold();
             }
         } 
     }

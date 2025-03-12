@@ -25,18 +25,37 @@ Map::Map() {
 Map::~Map() {}
 
 void Map::drawOutline(sf::RenderWindow* window) {
-    sf::RectangleShape line(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE, 1));
-    line.setFillColor(sf::Color(200, 200, 200, 150)); // Gray
+    sf::RectangleShape line;
+
+    // Grid
+    line.setSize(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE, 1));
+    line.setFillColor(sf::Color(200, 200, 200, 100)); // Gray
     for (int i = 4; i <= GRID_HEIGHT; i++) {
         line.setPosition(GRID_POSITION_X, GRID_POSITION_Y + i * BLOCK_SIZE);
         window->draw(line);
     }
 
+    // Grid
     line.setSize(sf::Vector2f(1, (GRID_HEIGHT - 4) * BLOCK_SIZE));
+    line.setFillColor(sf::Color(200, 200, 200, 100)); // Gray
     for (int i = 0; i <= GRID_WIDTH; i++) {
         line.setPosition(GRID_POSITION_X + i * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
         window->draw(line);
     }
+
+    // Lower line
+    line.setSize(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, 5));
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+    line.setPosition(GRID_POSITION_X - WIDTH_BORDER, GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE);
+    window->draw(line);
+    
+    // Left - right line
+    line.setSize(sf::Vector2f(WIDTH_BORDER, (GRID_HEIGHT - 4) * BLOCK_SIZE));
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+    line.setPosition(GRID_POSITION_X - WIDTH_BORDER + 0          * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
+    window->draw(line);
+    line.setPosition(GRID_POSITION_X                + GRID_WIDTH * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
+    window->draw(line);
 }
 
 void Map::remove(uint8_t pos) {

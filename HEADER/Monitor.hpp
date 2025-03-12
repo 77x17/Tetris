@@ -21,6 +21,13 @@ protected:
     sf::Clock         collisionClock;
     bool collision;
     
+    void handleLeft();
+    void handleRight();
+    void handleDown();
+    void handleUp();
+    void handleHardDrop();
+    void handleHold();
+
 public:
     Monitor(sf::RenderWindow *newWindow);
     virtual ~Monitor();
