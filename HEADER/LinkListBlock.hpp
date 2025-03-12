@@ -2,7 +2,6 @@
 #define SETPIECE_H
 
 #include <cstdint>
-// #include <ncurses.h>
 #include <SFML/Graphics.hpp>
 
 class BlockEle;

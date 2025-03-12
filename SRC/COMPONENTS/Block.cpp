@@ -2,6 +2,7 @@
 
 #include "Common.hpp"
 
+sf::Texture texture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/blocks.png"); return t; }() };
 
 Block::Block() {
     stateID = 2;
@@ -15,7 +16,8 @@ Block::~Block() {
 void Block::draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX, bool padding) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
-    block.setFillColor(sf::Color::Cyan);
+    block.setTexture(&texture);
+    block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
 
     uint16_t shape = getShape();
     for (int i = 0; i < BLOCK_EDGE; i++) {
@@ -40,49 +42,49 @@ uint16_t Block::getShape() { return state[stateID]; }
 void Block::resetState() { stateID = 2; }
 
 IBlock::IBlock(): Block() {
-    symbol = '#';
+    shapeID = 0;
     state[0] = 0x0F00; state[1] = 0x2222; state[2] = 0x00F0; state[3] = 0x4444;
     paddingX = 0;
     paddingY = -BLOCK_SIZE;
 }
 
 LBlock::LBlock(): Block() {
-    symbol = '#';
-    state[0] = 0x0740; state[1] = 0x6220; state[2] = 0x1700; state[3] = 0x2230;
-    paddingX = BLOCK_SIZE / 2;
-    paddingY = BLOCK_SIZE / 2;
-}
-
-JBlock::JBlock(): Block() { 
-    symbol = '#';
+    shapeID = 1;
     state[0] = 0x0710; state[1] = 0x2260; state[2] = 0x4700; state[3] = 0x3220;
     paddingX = BLOCK_SIZE / 2;
     paddingY = BLOCK_SIZE / 2;
 }
 
+JBlock::JBlock(): Block() { 
+    shapeID = 2;
+    state[0] = 0x0740; state[1] = 0x6220; state[2] = 0x1700; state[3] = 0x2230;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = BLOCK_SIZE / 2;
+}
+
 OBlock::OBlock(): Block() {
-    symbol = '#';
+    shapeID = 3;
     state[0] = 0x0660; state[1] = 0x0660; state[2] = 0x0660; state[3] = 0x0660;
     paddingX = 0;
     paddingY = -BLOCK_SIZE / 2;
 }
 
 ZBlock::ZBlock(): Block() {
-    symbol = '#';
-    state[0] = 0x0630; state[1] = 0x1320; state[2] = 0x0630; state[3] = 0x1320;
-    paddingX = BLOCK_SIZE / 2;
-    paddingY = -BLOCK_SIZE / 2;
-}
-
-SBlock::SBlock(): Block() {
-    symbol = '#';
+    shapeID = 4;
     state[0] = 0x0360; state[1] = 0x2310; state[2] = 0x0360; state[3] = 0x2310;
     paddingX = BLOCK_SIZE / 2;
     paddingY = -BLOCK_SIZE / 2;
 }
 
+SBlock::SBlock(): Block() {
+    shapeID = 5;
+    state[0] = 0x0630; state[1] = 0x1320; state[2] = 0x0630; state[3] = 0x1320;
+    paddingX = BLOCK_SIZE / 2;
+    paddingY = -BLOCK_SIZE / 2;
+}
+
 TBlock::TBlock(): Block() {
-    symbol = '#';
+    shapeID = 6;
     state[0] = 0x0720; state[1] = 0x2620; state[2] = 0x2700; state[3] = 0x2320;
     paddingX = BLOCK_SIZE / 2;
     paddingY = BLOCK_SIZE / 2;
