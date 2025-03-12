@@ -26,7 +26,7 @@ public:
     // void drawCur(Block* block, int Y, int X);
     // void eraseCur(Block* block, int Y, int X);
 
-    uint8_t update(uint16_t shape, int Y, int X);
+    uint8_t update(Block* block, int Y, int X);
     bool isValid(uint16_t shape, int Y, int X);
 
 };

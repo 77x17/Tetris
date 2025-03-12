@@ -8,6 +8,7 @@
 #define OFFRIGHT 12
 #define NUMOFFSET 2
 #define REALWIDTH 14
+#define COLORWIDTH 4 // NUMBIT FOR COLOR -> pos[1] in ith line have color in bit 14th -> 17th
 
 // **--------** REALWIDTH
 // ** NUMOFFSET 
@@ -61,13 +62,19 @@ void Map::draw(sf::RenderWindow *window) {
     }
 }
 
-uint8_t Map::update(uint16_t shape, int Y, int X) {
+uint8_t Map::update(Block* block, int Y, int X) {
     uint8_t cnt = 0;
+    uint16_t shape = block->getShape();
+    uint8_t color = block->getShapeID();
+
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
         if (((map[Y + i] & FULLMASK(REALWIDTH)) ^ FULLMASK(REALWIDTH)) == 0) {
             remove(Y + i);
             cnt++;
+        }
+        else {
+            map[Y + i] ^= (getLine(shape, i) << (X + REALWIDTH));
         }
     }
     return cnt;

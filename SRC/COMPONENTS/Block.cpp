@@ -39,6 +39,8 @@ void Block::rotateRight() { stateID = (stateID + 1) % 4; }
 
 uint16_t Block::getShape() { return state[stateID]; }
 
+uint8_t Block::getShapeID() { return shapeID; }
+
 void Block::resetState() { stateID = 2; }
 
 IBlock::IBlock(): Block() {

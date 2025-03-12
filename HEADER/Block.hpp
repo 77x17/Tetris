@@ -17,6 +17,7 @@ public:
     ~Block();
 
     void draw(sf::RenderWindow *window, int8_t y, int8_t x, int offsetY, int offsetX, bool padding);
+    uint8_t getShapeID();
     uint16_t getShape();
     uint16_t getRotateLeft();
     uint16_t getRotateRight();
