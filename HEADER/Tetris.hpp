@@ -1,7 +1,6 @@
 #ifndef TETRIS_HPP
 #define TETRIS_HPP
 
-// #include <ncurses.h>
 #include <SFML/Graphics.hpp>
 
 class Player;

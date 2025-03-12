@@ -1,7 +1,6 @@
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
 
-// #include <ncurses.h>
 #include <SFML/Graphics.hpp>
 
 class Hold;
@@ -24,6 +23,7 @@ public:
     Monitor(sf::RenderWindow *newWindow);
     virtual ~Monitor();
     void processEvents();
+    void restart();
     virtual void start()=0;
 };
 

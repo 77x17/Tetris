@@ -53,7 +53,11 @@ void Monitor::processEvents() {
 
                 curBlock->put(map);
                 curBlock->setter(next->updateNext());
-                curBlock->resetPosition(map); // Check gameover
+                curBlock->resetPosition(map); 
+
+                if (curBlock->gameOver(map)) {
+                    restart();
+                }
 
                 hold->unlock();
 
@@ -70,4 +74,16 @@ void Monitor::processEvents() {
             }
         } 
     }
+}
+
+void Monitor::restart() {
+    delete map;
+    map = new Map();
+    delete hold;
+    hold = new Hold();
+    delete next;
+    next = new LinkListBlock();
+
+    curBlock->setter(next->updateNext());
+    curBlock->resetPosition(map);
 }

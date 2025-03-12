@@ -3,6 +3,7 @@
 #include "Common.hpp"
 
 sf::Texture texture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/blocks.png"); return t; }() };
+sf::Texture ghostTexture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/ghostBlocks.png"); return t; }() };
 
 Block::Block() {
     stateID = 2;
@@ -34,11 +35,11 @@ void Block::draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int 
 void Block::drawGhost(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
-    block.setTexture(&texture);
+    block.setTexture(&ghostTexture);
     block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
 
     block.setFillColor(sf::Color(150, 150, 150));
-
+    
     uint16_t shape = getShape();
     for (int i = 0; i < BLOCK_EDGE; i++) {
         int mask = getLine(shape, i);

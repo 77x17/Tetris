@@ -1,7 +1,6 @@
 #ifndef BLOCK_HPP
 #define BLOCK_HPP
 
-// #include <ncurses.h>
 #include <SFML/Graphics.hpp>
 #include <cstdint>
 

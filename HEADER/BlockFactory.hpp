@@ -11,7 +11,6 @@ public:
     static Block* createRandomBlock();
     static Block* getBlockType(int x);
     static void createBag(BlockEle* &head, BlockEle* &tail);
-    // static int createBag(); // network
 };
 
 #endif

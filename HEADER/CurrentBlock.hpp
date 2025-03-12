@@ -1,7 +1,6 @@
 #ifndef CURRENTBLOCK_HPP
 #define CURRENTBLOCK_HPP
 
-// #include <ncurses.h>
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 
@@ -41,6 +40,8 @@ public:
     uint8_t put(Map* map);
     void draw(sf::RenderWindow *window);
     bool isValid(uint16_t shape, Map* map);
+
+    bool gameOver(Map* map);
 };
 
 #endif

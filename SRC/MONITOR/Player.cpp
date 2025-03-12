@@ -27,12 +27,12 @@ void Player::update() {
         if (not curBlock->moveDown(map)) {
             curBlock->put(map);
 
-            // if (tetromino.gameOver()) {
-            //     tetromino = Tetromino();
-            //     board     = Board();
-            // }
             curBlock->setter(next->updateNext());
             curBlock->resetPosition(map);
+            
+            if (curBlock->gameOver(map)) {
+                restart();
+            }
             
             hold->unlock();
         }

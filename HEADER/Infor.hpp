@@ -1,7 +1,6 @@
 #ifndef INFOR_HPP
 #define INFOR_HPP
 
-// #include <ncurses.h>
 #include <SFML/Graphics.hpp>
 
 class Infor {

@@ -108,3 +108,7 @@ bool CurrentBlock::isValid(uint16_t shape, Map* map) {
 uint8_t CurrentBlock::put(Map* map) {
     return map->update(block, posY, posX);
 }
+
+bool CurrentBlock::gameOver(Map* map) {
+    return not map->isValid(block->getShape(), posY, posX);
+}
