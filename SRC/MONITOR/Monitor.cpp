@@ -9,13 +9,29 @@
 constexpr float DROP_TIME = 0.5f;
 constexpr float COLLISION_DROP_TIME = 2.5f;
 
-Monitor::Monitor(sf::RenderWindow* newWindow) {
-    window    = newWindow;
-    map       = new Map();
-    hold      = new Hold();
-    next      = new LinkListBlock();
+Monitor::Monitor(sf::RenderWindow* newWindow, int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
+    window = newWindow;
+    int HOLD_WIDTH      = 5;
+    int HOLD_HEIGHT     = 3;
+    int HOLD_POSITION_X = X_COORDINATE;
+    int HOLD_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
+    hold = new Hold(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
+    
+    int GRID_WIDTH      = 10;
+    int GRID_HEIGHT     = 24;
+    int GRID_POSITION_X = HOLD_POSITION_X + BLOCK_SIZE * (HOLD_WIDTH + 1);
+    int GRID_POSITION_Y = Y_COORDINATE;
+    map = new Map(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
+    
+    int NEXT_WIDTH      = 5;
+    int NEXT_HEIGHT     = 15;
+    int NEXT_POSITION_X = GRID_POSITION_X + BLOCK_SIZE * (GRID_WIDTH + 1);
+    int NEXT_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
+    next = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
+    
+    infor = new Infor();
+
     curBlock  = new CurrentBlock();
-    infor     = new Infor();
     collision = false;
 }
 
@@ -160,7 +176,7 @@ void Monitor::render() {
     map ->drawOutline(window);
     hold->drawOutline(window);
     next->drawOutline(window);
-    curBlock->draw(window);
+    curBlock->draw(window, map);
     hold    ->draw(window);
     next    ->draw(window);
     map     ->draw(window);
@@ -169,13 +185,31 @@ void Monitor::render() {
 }
 
 void Monitor::restart() {
-    delete map;
-    map = new Map();
+    int HOLD_WIDTH      = 5;
+    int HOLD_HEIGHT     = 3;
+    int HOLD_POSITION_X = X_COORDINATE;
+    int HOLD_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
     delete hold;
-    hold = new Hold();
-    delete next;
-    next = new LinkListBlock();
+    hold = new Hold(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
 
+    int GRID_WIDTH      = 10;
+    int GRID_HEIGHT     = 24;
+    int GRID_POSITION_X = HOLD_POSITION_X + BLOCK_SIZE * (HOLD_WIDTH + 1);
+    int GRID_POSITION_Y = Y_COORDINATE;
+    delete map;
+    map = new Map(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
+    
+    int NEXT_WIDTH      = 5;
+    int NEXT_HEIGHT     = 15;
+    int NEXT_POSITION_X = GRID_POSITION_X + BLOCK_SIZE * (GRID_WIDTH + 1);
+    int NEXT_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
+    delete next;
+    next = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
+    
+    delete infor;
+    infor = new Infor();
+    
+    collision = false;
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
 }

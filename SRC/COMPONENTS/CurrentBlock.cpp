@@ -96,9 +96,8 @@ void CurrentBlock::swap(Hold* hold) {
     block = hold->interchange(block);
 }
 
-void CurrentBlock::draw(sf::RenderWindow *window) {
-    block->drawGhost(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X);
-    block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X);
+void CurrentBlock::draw(sf::RenderWindow *window, Map *map) {
+    map->drawCurrentBlock(window, block, posY, shadowPosY, posX);
 }
 
 bool CurrentBlock::isValid(uint16_t shape, Map* map) {

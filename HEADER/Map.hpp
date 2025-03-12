@@ -14,18 +14,25 @@ class CurrentBlock;
 
 class Map {
 private:
+    int GRID_POSITION_X;
+    int GRID_POSITION_Y;
+    int GRID_WIDTH;
+    int GRID_HEIGHT;
+
     uint64_t map[HEIGHT + 1];
 
     sf::Texture texture;
 
     void remove(uint8_t pos);
+
 public:
-    Map();
+    Map(int GRID_POSITION_X, int GRID_POSITION_Y, int GRID_WIDTH, int GRID_HEIGHT);
     ~Map();
     
     bool add(uint8_t nLines);
 
     void draw(sf::RenderWindow* window);
+    void drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX);
     void drawOutline(sf::RenderWindow* window);
 
     uint8_t update(Block* block, int Y, int X);

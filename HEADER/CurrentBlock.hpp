@@ -38,7 +38,7 @@ public:
     void swap(Hold* hold);
 
     uint8_t put(Map* map);
-    void draw(sf::RenderWindow *window);
+    void draw(sf::RenderWindow *window, Map *map);
     bool isValid(uint16_t shape, Map* map);
 
     bool gameOver(Map* map);

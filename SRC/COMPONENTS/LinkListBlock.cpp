@@ -23,9 +23,7 @@ void LinkListBlock::addNode(Block *block) {
     nEle++;
 }
 
-LinkListBlock::LinkListBlock() {
-    nEle = 0; // bag size
-    head = tail = nullptr;
+LinkListBlock::LinkListBlock(int x, int y, int w, int h) : NEXT_POSITION_X(x), NEXT_POSITION_Y(y), NEXT_WIDTH(w), NEXT_HEIGHT(h), nEle(0), head(nullptr), tail(nullptr) {
     addBag();
 }
 

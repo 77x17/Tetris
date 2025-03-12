@@ -10,16 +10,20 @@ class Infor;
 class CurrentBlock;
 
 class Monitor {
+private:
+    int X_COORDINATE;
+    int Y_COORDINATE;
+
 protected:
-    Hold* hold;
-    CurrentBlock* curBlock;
-    Map* map;
-    Infor* infor;
-    LinkListBlock* next;
+    Hold             *hold;
+    CurrentBlock     *curBlock;
+    Map              *map;
+    Infor            *infor;
+    LinkListBlock    *next;
     sf::RenderWindow *window;
     sf::Clock         clock;
     sf::Clock         collisionClock;
-    bool collision;
+    bool              collision;
     
     void handleLeft();
     void handleRight();
@@ -29,7 +33,7 @@ protected:
     void handleHold();
 
 public:
-    Monitor(sf::RenderWindow *newWindow);
+    Monitor(sf::RenderWindow *newWindow, int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor();
     void processEvents();
     void restart();

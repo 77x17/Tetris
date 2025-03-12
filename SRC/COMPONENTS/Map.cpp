@@ -16,9 +16,11 @@
 
 #define EMPTYLINE (FULLMASK(NUMOFFSET) ^ (FULLMASK(NUMOFFSET) << OFFRIGHT))
 
-Map::Map() {
+Map::Map(int x, int y, int w, int h) : GRID_POSITION_X(x), GRID_POSITION_Y(y), GRID_WIDTH(w), GRID_HEIGHT(h) {
     texture.loadFromFile("ASSETS/blocks/blocks.png");
-    for (int i = 0; i < HEIGHT; i++) map[i] = EMPTYLINE;
+    for (int i = 0; i < HEIGHT; i++) {
+        map[i] = EMPTYLINE;
+    }
     map[HEIGHT] = FULLMASK(REALWIDTH);
 }
 
@@ -82,6 +84,11 @@ void Map::draw(sf::RenderWindow *window) {
             window->draw(block);
         }
     }
+}
+
+void Map::drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX) {
+    block->drawGhost(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X);
+    block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X);
 }
 
 uint8_t Map::update(Block* block, int Y, int X) {

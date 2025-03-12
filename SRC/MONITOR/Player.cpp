@@ -5,13 +5,13 @@
 #include "CurrentBlock.hpp"
 #include "Hold.hpp"
 
-Player::Player(sf::RenderWindow *window) : Monitor(window) {}
+Player::Player(sf::RenderWindow *window, int X_COORDINATE, int Y_COORDINATE) : Monitor(window, X_COORDINATE, Y_COORDINATE) {}
 
 void Player::start() {
     next->draw(window); 
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
-    curBlock->draw(window);
+    curBlock->draw(window, map);
 
     while (window->isOpen()) {
         processEvents();

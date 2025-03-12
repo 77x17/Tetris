@@ -4,13 +4,12 @@
 #include "Block.hpp"
 #include "Monitor.hpp"
 
-Hold::Hold() {
-    block = nullptr;
-    holdPosible = true;
-}
+Hold::Hold(int x, int y, int w, int h) : HOLD_POSITION_X(x), HOLD_POSITION_Y(y), HOLD_WIDTH(w), HOLD_HEIGHT(h), block(nullptr), holdPosible(true) {}
 
 Hold::~Hold() { 
-    if (block) delete block; 
+    if (block) {
+        delete block; 
+    }
     block = nullptr;
 }
 

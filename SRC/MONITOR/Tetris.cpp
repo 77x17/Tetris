@@ -2,12 +2,14 @@
 
 #include "Player.hpp"
 
+#include <thread>
+
 const int WINDOW_WIDTH  = 800;
 const int WINDOW_HEIGHT = 700;
 
 Tetris::Tetris() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
-    player = new Player(window);
+    player = new Player(window, 100, 50);
 }
 
 Tetris::~Tetris() {

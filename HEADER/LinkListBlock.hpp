@@ -21,6 +21,11 @@ public:
 
 class LinkListBlock {
 private:
+    int NEXT_POSITION_X; 
+    int NEXT_POSITION_Y;
+    int NEXT_WIDTH;
+    int NEXT_HEIGHT;
+
     BlockEle* head;
     BlockEle* tail;
     uint8_t nEle;
@@ -28,7 +33,7 @@ private:
     void addBag();
     
 public:
-    LinkListBlock();
+    LinkListBlock(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
     ~LinkListBlock();
     void addNode(Block *block);
     Block* updateNext();
