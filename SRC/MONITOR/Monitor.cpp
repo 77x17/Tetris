@@ -6,15 +6,17 @@
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 
-constexpr float DROP_TIME = 0.5f; 
+constexpr float DROP_TIME = 0.5f;
+constexpr float COLLISION_DROP_TIME = 1.0f;
 
 Monitor::Monitor(sf::RenderWindow* newWindow) {
-    window   = newWindow;
-    map      = new Map();
-    hold     = new Hold();
-    next     = new LinkListBlock();
-    curBlock = new CurrentBlock();
-    infor    = new Infor();
+    window    = newWindow;
+    map       = new Map();
+    hold      = new Hold();
+    next      = new LinkListBlock();
+    curBlock  = new CurrentBlock();
+    infor     = new Infor();
+    collision = false;
 }
 
 Monitor::~Monitor() {
@@ -30,14 +32,19 @@ void Monitor::processEvents() {
     while (window->pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             window->close();
-        } else if (event.type == sf::Event::KeyPressed) {
+        } 
+        else if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Left and curBlock->moveLeft(map)) {
                 if (curBlock->collisionBottom(map)) {
+                    collision = true;
+                    collisionClock.restart();
                     clock.restart();
                 }
             } 
             else if (event.key.code == sf::Keyboard::Right and curBlock->moveRight(map)) {
                 if (curBlock->collisionBottom(map)) {
+                    collision = true;
+                    collisionClock.restart();
                     clock.restart();
                 }
             } 
@@ -48,9 +55,12 @@ void Monitor::processEvents() {
             } 
             else if (event.key.code == sf::Keyboard::Up and curBlock->rotateLeft(map)) {
                 if (curBlock->collisionBottom(map)) {
+                    collision = true;
+                    collisionClock.restart();
                     clock.restart();
                 }
-            } else if (event.key.code == sf::Keyboard::Space) {
+            } 
+            else if (event.key.code == sf::Keyboard::Space) {
                 curBlock->hardDrop(map); 
 
                 curBlock->put(map);
@@ -64,7 +74,8 @@ void Monitor::processEvents() {
                 hold->unlock();
 
                 clock.restart();
-            } else if (event.key.code == sf::Keyboard::C and hold->canHold()) {
+            } 
+            else if (event.key.code == sf::Keyboard::C and hold->canHold()) {
                 hold->lock();
                 curBlock->swap(hold);
                 if (curBlock->isEmpty()) {
@@ -79,21 +90,43 @@ void Monitor::processEvents() {
 }
 
 void Monitor::update() {
-    if (clock.getElapsedTime().asSeconds() >= DROP_TIME) {
-        if (not curBlock->moveDown(map)) {
-            curBlock->put(map);
-
-            curBlock->setter(next->updateNext());
-            curBlock->resetPosition(map);
-            
-            if (curBlock->gameOver(map)) {
-                restart();
+    if (collision) {
+        if (collisionClock.getElapsedTime().asSeconds() >= COLLISION_DROP_TIME) {
+            if (not curBlock->moveDown(map)) {
+                curBlock->put(map);
+    
+                curBlock->setter(next->updateNext());
+                curBlock->resetPosition(map);
+                
+                if (curBlock->gameOver(map)) {
+                    restart();
+                }
+                
+                hold->unlock();
             }
             
-            hold->unlock();
+            collisionClock.restart();
+
+            collision = false;
         }
-        
-        clock.restart();
+    }
+    else {
+        if (clock.getElapsedTime().asSeconds() >= DROP_TIME) {
+            if (not curBlock->moveDown(map)) {
+                curBlock->put(map);
+
+                curBlock->setter(next->updateNext());
+                curBlock->resetPosition(map);
+                
+                if (curBlock->gameOver(map)) {
+                    restart();
+                }
+                
+                hold->unlock();
+            }
+            
+            clock.restart();
+        }
     }
 }
 

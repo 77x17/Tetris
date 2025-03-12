@@ -18,6 +18,8 @@ protected:
     LinkListBlock* next;
     sf::RenderWindow *window;
     sf::Clock         clock;
+    sf::Clock         collisionClock;
+    bool collision;
     
 public:
     Monitor(sf::RenderWindow *newWindow);
