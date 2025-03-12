@@ -2,7 +2,7 @@
 COMPILER = g++
 CFLAGS = -Wall -g
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-INCLUDES = -I"./HEADER" -I"E:\4_ARCHIVES\SOFTWARE\GAMEGUI\SFML-2.6.2\include"
+INCLUDES = -I"./HEADER"
 
 SRC_DIR = ./SRC
 HEADER_DIR = ./HEADER
