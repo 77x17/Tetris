@@ -16,8 +16,6 @@
 
 #define EMPTYLINE (FULLMASK(NUMOFFSET) ^ (FULLMASK(NUMOFFSET) << OFFRIGHT))
 
-#include <iostream>
-
 Map::Map() {
     texture.loadFromFile("ASSETS/blocks/blocks.png");
     for (int i = 0; i < HEIGHT; i++) map[i] = EMPTYLINE;
