@@ -3,18 +3,7 @@
 #include "Monitor.hpp"
 #include "Block.hpp"
 
-int main(int argc, char **argv) {
-    // initscr();
-    // cbreak();
-    // curs_set(0);
-    // keypad(stdscr, TRUE);
-    
+int main(int argc, char **argv) {    
     Tetris tetris;
     tetris.startGameOnePlayer();
-
-    // getch();
-    // refresh();
-    
-    // endwin();
-    // return 0;
 }

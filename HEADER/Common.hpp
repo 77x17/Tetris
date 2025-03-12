@@ -1,7 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-
 #define HEIGHT 24
 #define WIDTH 10
 

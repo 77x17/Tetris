@@ -9,7 +9,7 @@ class Block {
 protected:
     uint16_t *state;
     uint8_t stateID;
-    char symbol;
+    uint8_t shapeID;
     int paddingX, paddingY;
 
 public:
