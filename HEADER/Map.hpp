@@ -12,7 +12,7 @@ class CurrentBlock;
 
 class Map {
 private:
-    uint16_t map[HEIGHT + 1];
+    uint64_t map[HEIGHT + 1];
 
     sf::Texture texture;
 
