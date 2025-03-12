@@ -49,5 +49,5 @@ void Hold::drawOutline(sf::RenderWindow* window) {
 }
 
 void Hold::draw(sf::RenderWindow *window) {
-    if (block) block->draw(window, 0, 0, HOLD_POSITION_Y, HOLD_POSITION_X, true);
+    if (block) block->drawPadding(window, 0, 0, HOLD_POSITION_Y, HOLD_POSITION_X);
 }

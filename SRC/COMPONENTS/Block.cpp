@@ -13,7 +13,7 @@ Block::~Block() {
     delete[] state;
 }
 
-void Block::draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX, bool padding) {
+void Block::draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
     block.setTexture(&texture);
@@ -24,7 +24,45 @@ void Block::draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int 
         int mask = getLine(shape, i);
         for (int j = 0; j < BLOCK_EDGE; j++) {
             if (getBit(mask, j)) {
-                block.setPosition(sf::Vector2f(paddingX * padding + offsetX + (j + x) * BLOCK_SIZE + 1, paddingY * padding + offsetY + (i + y) * BLOCK_SIZE + 1));
+                block.setPosition(sf::Vector2f(offsetX + (j + x) * BLOCK_SIZE + 1, offsetY + (i + y) * BLOCK_SIZE + 1));
+                window->draw(block);
+            }
+        }
+    }
+}
+
+void Block::drawGhost(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX) {
+    sf::RectangleShape block;
+    block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
+    block.setTexture(&texture);
+    block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
+
+    block.setFillColor(sf::Color(150, 150, 150));
+
+    uint16_t shape = getShape();
+    for (int i = 0; i < BLOCK_EDGE; i++) {
+        int mask = getLine(shape, i);
+        for (int j = 0; j < BLOCK_EDGE; j++) {
+            if (getBit(mask, j)) {
+                block.setPosition(sf::Vector2f(offsetX + (j + x) * BLOCK_SIZE + 1, offsetY + (i + y) * BLOCK_SIZE + 1));
+                window->draw(block);
+            }
+        }
+    }
+}
+
+void Block::drawPadding(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX) {
+    sf::RectangleShape block;
+    block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
+    block.setTexture(&texture);
+    block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
+
+    uint16_t shape = getShape();
+    for (int i = 0; i < BLOCK_EDGE; i++) {
+        int mask = getLine(shape, i);
+        for (int j = 0; j < BLOCK_EDGE; j++) {
+            if (getBit(mask, j)) {
+                block.setPosition(sf::Vector2f(paddingX + offsetX + (j + x) * BLOCK_SIZE + 1, paddingY + offsetY + (i + y) * BLOCK_SIZE + 1));
                 window->draw(block);
             }
         }

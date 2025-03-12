@@ -16,7 +16,9 @@ public:
     Block();
     ~Block();
 
-    void draw(sf::RenderWindow *window, int8_t y, int8_t x, int offsetY, int offsetX, bool padding);
+    void draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
+    void drawGhost(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
+    void drawPadding(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
     uint16_t getShape();
     uint16_t getRotateLeft();
     uint16_t getRotateRight();
