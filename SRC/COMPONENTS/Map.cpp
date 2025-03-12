@@ -58,8 +58,8 @@ void Map::draw(sf::RenderWindow *window) {
     for (int i = 0; i < HEIGHT; i++) {
         for (int j = 0; j < WIDTH; j++) if (getBit(map[i], j + NUMOFFSET)) {
             block.setPosition(GRID_POSITION_X + j * BLOCK_SIZE + 1, GRID_POSITION_Y + i * BLOCK_SIZE + 1);
-            // uint8_t shapeID = ()
-            // block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
+            uint8_t shapeID = 0;
+            block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
             window->draw(block);
         }
     }

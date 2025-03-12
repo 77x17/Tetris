@@ -6,6 +6,8 @@
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 
+constexpr float DROP_TIME = 0.5f; 
+
 Monitor::Monitor(sf::RenderWindow* newWindow) {
     window   = newWindow;
     map      = new Map();
@@ -74,6 +76,39 @@ void Monitor::processEvents() {
             }
         } 
     }
+}
+
+void Monitor::update() {
+    if (clock.getElapsedTime().asSeconds() >= DROP_TIME) {
+        if (not curBlock->moveDown(map)) {
+            curBlock->put(map);
+
+            curBlock->setter(next->updateNext());
+            curBlock->resetPosition(map);
+            
+            if (curBlock->gameOver(map)) {
+                restart();
+            }
+            
+            hold->unlock();
+        }
+        
+        clock.restart();
+    }
+}
+
+void Monitor::render() {
+    window->clear();
+
+    map ->drawOutline(window);
+    hold->drawOutline(window);
+    next->drawOutline(window);
+    curBlock->draw(window);
+    hold    ->draw(window);
+    next    ->draw(window);
+    map     ->draw(window);
+     
+    window->display();
 }
 
 void Monitor::restart() {

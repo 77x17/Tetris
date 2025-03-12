@@ -24,6 +24,8 @@ public:
     virtual ~Monitor();
     void processEvents();
     void restart();
+    void update();
+    void render();
     virtual void start()=0;
 };
 

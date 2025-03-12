@@ -9,8 +9,6 @@ class Player :public Monitor {
 public:
     Player(sf::RenderWindow *window);
     void start();
-    void update();
-    void render();
 };
 
 #endif
