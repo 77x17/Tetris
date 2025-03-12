@@ -5,8 +5,6 @@
 // #include <ncurses.h>
 #include <SFML/Graphics.hpp>
 
-#include "Common.hpp"
-
 class BlockEle;
 class Block;
 class CurrentBlock;

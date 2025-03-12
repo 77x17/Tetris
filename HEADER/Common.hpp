@@ -19,7 +19,7 @@
 const int BLOCK_SIZE = 20;
 
 const int HOLD_POSITION_X = 50;
-const int HOLD_POSITION_Y = 50 + BLOCK_SIZE;
+const int HOLD_POSITION_Y = 50 + 5 * BLOCK_SIZE;
 const int HOLD_WIDTH      = 4;
 const int HOLD_HEIGHT     = 3;
 
@@ -29,7 +29,7 @@ const int GRID_WIDTH      = 10;
 const int GRID_HEIGHT     = 24;
 
 const int NEXT_POSITION_X = GRID_POSITION_X + BLOCK_SIZE * (GRID_WIDTH + 1);
-const int NEXT_POSITION_Y = 50 + BLOCK_SIZE;
+const int NEXT_POSITION_Y = 50 + 5 * BLOCK_SIZE;
 const int NEXT_WIDTH      = 4;
 const int NEXT_HEIGHT     = 15;
 

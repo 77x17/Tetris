@@ -25,14 +25,14 @@ Map::~Map() {}
 void Map::drawOutline(sf::RenderWindow* window) {
     sf::RectangleShape line(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE, 1));
     line.setFillColor(sf::Color(200, 200, 200, 150)); // Gray
-    for (int i = 0; i <= GRID_HEIGHT; i++) {
+    for (int i = 4; i <= GRID_HEIGHT; i++) {
         line.setPosition(GRID_POSITION_X, GRID_POSITION_Y + i * BLOCK_SIZE);
         window->draw(line);
     }
 
-    line.setSize(sf::Vector2f(1, GRID_HEIGHT * BLOCK_SIZE));
+    line.setSize(sf::Vector2f(1, (GRID_HEIGHT - 4) * BLOCK_SIZE));
     for (int i = 0; i <= GRID_WIDTH; i++) {
-        line.setPosition(GRID_POSITION_X + i * BLOCK_SIZE, GRID_POSITION_Y);
+        line.setPosition(GRID_POSITION_X + i * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
         window->draw(line);
     }
 }
@@ -49,22 +49,7 @@ bool Map::add(uint8_t nLines) {
     return false;
 }
 
-// void Map::drawCur(Block* block, int Y, int X) {
-//     block->draw(window, Y + OFFSETY, X + OFFSETX);
-// }
-
-// void Map::eraseCur(Block* block, int Y, int X) {
-//     block->draw(window, Y + OFFSETY, X + OFFSETX);
-// }
-
 void Map::draw(sf::RenderWindow *window) {
-    // for (int i = 0; i < HEIGHT; i++) 
-    //     for (int j = 0; j < WIDTH; j++)
-    //         if (getBit(map[i], j + NUMOFFSET))
-    //             mvwaddch(win, i + OFFSETY, j + OFFSETX, '#');
-    //         else if (i + OFFSETY >= BLOCK_EDGE)
-    //             mvwaddch(win, i + OFFSETY, j + OFFSETX, ' ');
-    // wrefresh(win);
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
     block.setFillColor(sf::Color::White); 
