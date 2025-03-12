@@ -17,6 +17,7 @@ void Block::draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int 
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
     block.setTexture(&texture);
+    block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
 
     uint16_t shape = getShape();
     for (int i = 0; i < BLOCK_EDGE; i++) {
