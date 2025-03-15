@@ -78,8 +78,49 @@ bool CurrentBlock::collisionBottom(Map *map) {
 }
 
 bool CurrentBlock::rotateLeft(Map* map) {
-    if (!isValid(block->getRotateLeft(), map)) return false;
-    
+    if (not isValid(block->getRotateLeft(), map)) {
+        posY++;
+        if (isValid(block->getRotateLeft(), map)) goto rotate_success;
+        posY--;
+        
+        posY--;
+        if (posY >= 0 and isValid(block->getRotateLeft(), map)) goto rotate_success;
+        posY++;
+
+        posX++;
+        if (isValid(block->getRotateLeft(), map)) goto rotate_success;
+        posX--;
+
+        posX--;
+        if (posX >= 0 and isValid(block->getRotateLeft(), map)) goto rotate_success;
+        posX++;        
+
+        if (block->getShapeID() == 0) {
+            posY += 2;
+            if (isValid(block->getRotateLeft() , map)) goto rotate_success;
+            if (isValid(block->getRotateRight(), map)) goto rotate_success;
+            posY -= 2;
+
+            posY -= 2;
+            if (posY >= 0 and isValid(block->getRotateLeft() , map)) goto rotate_success;
+            if (posY >= 0 and isValid(block->getRotateRight(), map)) goto rotate_success;
+            posY += 2;
+            
+            posX += 2;
+            if (isValid(block->getRotateLeft() , map)) goto rotate_success;
+            if (isValid(block->getRotateRight(), map)) goto rotate_success;
+            posX -= 2;
+
+            posX -= 2;
+            if (posX >= 0 and isValid(block->getRotateLeft() , map)) goto rotate_success;
+            if (posX >= 0 and isValid(block->getRotateRight(), map)) goto rotate_success;
+            posX += 2;
+        }
+
+        return false;
+    }
+
+rotate_success:
     block->rotateLeft();
 
     shadowHardDrop(map);

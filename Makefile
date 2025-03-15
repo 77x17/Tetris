@@ -14,6 +14,7 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp)
 
 # Convert .cpp files to .o files
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
+DEP_FILES = $(OBJ_FILES:.o=.d)
 
 .PHONY: all run build clean
 
@@ -31,27 +32,17 @@ $(TARGET): $(OBJ_FILES)
 	$(COMPILER) -g $^ -o $@ $(LDFLAGS) $(INCLUDES)
 	@echo "Build completed successfully."
 
-# Compile each .cpp file into .o
+# Compile each .cpp file into .o and generate dependencies
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "Compiling $<..."
 	@mkdir -p $(dir $@)
-	@$(COMPILER) -g $(CFLAGS) -c $< -o $@ $(INCLUDES)
+	$(COMPILER) -g $(CFLAGS) -c $< -o $@ $(INCLUDES) 
+	$(COMPILER) -MM $(CFLAGS) $(INCLUDES) $< | sed 's|$(notdir $<)|$@|' > $(OBJ_DIR)/$*.d
+
+# Include dependency files
+-include $(DEP_FILES)
 
 # Clean build files
 clean:
 	@rm -rf $(OBJ_DIR) $(TARGET)
 	@echo "Cleaned build files."
-
-# Dependency rules (optional but improves clarity)
-
-$(OBJ_DIR)/main.o: $(HEADER_DIR)/Common.hpp $(HEADER_DIR)/Tetris.hpp $(HEADER_DIR)/Block.hpp
-$(OBJ_DIR)/MONITOR/Tetris.o: $(HEADER_DIR)/Tetris.hpp $(HEADER_DIR)/Player.hpp
-$(OBJ_DIR)/MONITOR/Player.o: $(HEADER_DIR)/Player.hpp $(HEADER_DIR)/LinkListBlock.hpp $(HEADER_DIR)/Map.hpp $(HEADER_DIR)/CurrentBlock.hpp
-$(OBJ_DIR)/MONITOR/Monitor.o: $(HEADER_DIR)/Monitor.hpp $(HEADER_DIR)/Hold.hpp $(HEADER_DIR)/Map.hpp $(HEADER_DIR)/Infor.hpp $(HEADER_DIR)/CurrentBlock.hpp $(HEADER_DIR)/LinkListBlock.hpp
-$(OBJ_DIR)/COMPONENTS/Map.o: $(HEADER_DIR)/Common.hpp $(HEADER_DIR)/CurrentBlock.hpp $(HEADER_DIR)/Block.hpp
-$(OBJ_DIR)/COMPONENTS/LinkListBlock.o: $(HEADER_DIR)/LinkListBlock.hpp $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/BlockFactory.hpp $(HEADER_DIR)/CurrentBlock.hpp $(HEADER_DIR)/Common.hpp
-$(OBJ_DIR)/COMPONENTS/Infor.o: $(HEADER_DIR)/Infor.hpp
-$(OBJ_DIR)/COMPONENTS/Hold.o: $(HEADER_DIR)/Hold.hpp $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/Common.hpp
-$(OBJ_DIR)/COMPONENTS/CurrentBlock.o: $(HEADER_DIR)/CurrentBlock.hpp $(HEADER_DIR)/Common.hpp $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/Map.hpp  $(HEADER_DIR)/Hold.hpp 
-$(OBJ_DIR)/COMPONENTS/BlockFactory.o: $(HEADER_DIR)/BlockFactory.hpp $(HEADER_DIR)/Block.hpp
-$(OBJ_DIR)/COMPONENTS/Block.o: $(HEADER_DIR)/Block.hpp $(HEADER_DIR)/Common.hpp

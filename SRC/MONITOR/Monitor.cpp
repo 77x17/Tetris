@@ -6,8 +6,12 @@
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 
-constexpr float DROP_TIME = 0.5f;
+constexpr float DROP_TIME           = 0.5f;
 constexpr float COLLISION_DROP_TIME = 2.5f;
+
+constexpr float DELAY_MOVING_TIME   = 200.0f;
+constexpr float MOVING_TIME         = 30.0f;
+          float movingTime          = DELAY_MOVING_TIME;
 
 Monitor::Monitor(sf::RenderWindow* newWindow, int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     window = newWindow;
@@ -46,20 +50,25 @@ Monitor::~Monitor() {
 void Monitor::handleLeft() {
     if (curBlock->moveLeft(map) and curBlock->collisionBottom(map) and collision == false) {
         collision = true;
+
         clock.restart();
+        collisionClock.restart();
     }
 }
 
 void Monitor::handleRight() {
     if (curBlock->moveRight(map) and curBlock->collisionBottom(map) and collision == false) {
         collision = true;
+
         clock.restart();
+        collisionClock.restart();
     }
 }
 
 void Monitor::handleDown() {
     if (curBlock->moveDown(map) and not curBlock->collisionBottom(map)) {
         collision = true;
+
         clock.restart();
     }
 }
@@ -67,7 +76,9 @@ void Monitor::handleDown() {
 void Monitor::handleUp() {
     if (curBlock->rotateLeft(map) and curBlock->collisionBottom(map) and collision == false) {
         collision = true;
+
         clock.restart();
+        collisionClock.restart();
     }
 }
 
@@ -85,6 +96,7 @@ void Monitor::handleHardDrop() {
     hold->unlock();
 
     clock.restart();
+    collisionClock.restart();
 }
 
 void Monitor::handleHold() {
@@ -97,8 +109,13 @@ void Monitor::handleHold() {
         curBlock->resetPosition(map);
 
         clock.restart();
+        collisionClock.restart();
     }
 }
+
+bool moveLeft  = false;
+bool moveRight = false;
+bool moveDown  = false;
 
 void Monitor::processEvents() {
     sf::Event event;
@@ -107,14 +124,32 @@ void Monitor::processEvents() {
             window->close();
         } 
         else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Left) {
+            if (event.key.code == sf::Keyboard::Left and moveLeft == false) {
+                moveLeft  = true;
+                moveRight = false;
+
                 handleLeft();
+                
+                movingTime = DELAY_MOVING_TIME;
+
+                movingClock.restart();
             }
-            else if (event.key.code == sf::Keyboard::Right) {
+            else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
+                moveLeft  = false;
+                moveRight = true;
+
                 handleRight();
+
+                movingTime = DELAY_MOVING_TIME;
+
+                movingClock.restart();
             } 
-            else if (event.key.code == sf::Keyboard::Down) {
+            else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
+                moveDown = true;
+
                 handleDown();
+
+                movingClock.restart();
             } 
             else if (event.key.code == sf::Keyboard::Up) {
                 handleUp();
@@ -126,10 +161,43 @@ void Monitor::processEvents() {
                 handleHold();
             }
         } 
+        else if (event.type == sf::Event::KeyReleased) {
+            if (event.key.code == sf::Keyboard::Left) {
+                moveLeft = false;
+                
+                movingTime = DELAY_MOVING_TIME;
+            }
+            else if (event.key.code == sf::Keyboard::Right) {
+                moveRight = false;
+                
+                movingTime = DELAY_MOVING_TIME;
+            } 
+            else if (event.key.code == sf::Keyboard::Down) {
+                moveDown = false;
+            } 
+        }
     }
 }
 
 void Monitor::update() {
+    if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
+        if (moveLeft) {
+            handleLeft();
+            movingTime = MOVING_TIME;
+        }
+        else if (moveRight) {
+            handleRight();
+            movingTime = MOVING_TIME;
+        }
+        
+        if (moveDown) {
+            handleDown();
+            movingTime = MOVING_TIME;
+        }
+        
+        movingClock.restart();
+    }
+
     if (collision) {
         if (collisionClock.getElapsedTime().asSeconds() >= COLLISION_DROP_TIME) {
             if (not curBlock->moveDown(map)) {

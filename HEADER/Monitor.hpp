@@ -21,9 +21,11 @@ protected:
     Infor            *infor;
     LinkListBlock    *next;
     sf::RenderWindow *window;
-    sf::Clock         clock;
-    sf::Clock         collisionClock;
-    bool              collision;
+    sf::Clock         clock;            
+    sf::Clock         collisionClock;   
+    sf::Clock         movingClock;      
+    bool              collision;        // collision bottom (extra time to move and rotate)
+    bool              spin;             // check block spin 
     
     void handleLeft();
     void handleRight();
