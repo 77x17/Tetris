@@ -6,7 +6,7 @@
 #include "Hold.hpp"
 #include "SoundManager.hpp"
 
-CurrentBlock::CurrentBlock() : block(nullptr), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false) {
+CurrentBlock::CurrentBlock() : block(nullptr), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false), spin(false) {
     soundManager = new SoundManager();
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
     soundManager->loadSound("hold"    , "ASSETS/sfx/hold.mp3");
@@ -28,6 +28,8 @@ bool CurrentBlock::isEmpty() {
 
 void CurrentBlock::setter(Block* p) {
     block = p;
+
+    spin = false;
 }
 
 bool CurrentBlock::resetPosition(Map *map) {
