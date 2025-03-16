@@ -18,6 +18,7 @@ public:
     void draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
     void drawGhost(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
     void drawPadding(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
+    void drawBrownHold(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);
     uint8_t getShapeID();
     uint16_t getShape();
     uint16_t getRotateLeft();
