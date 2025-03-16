@@ -1,7 +1,7 @@
 # Variables
 COMPILER = g++
 CFLAGS = -Wall -g
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network
 INCLUDES = -I"./HEADER"
 
 SRC_DIR = ./SRC
@@ -22,6 +22,12 @@ all: build
 
 run: build
 	@$(TARGET)
+
+runServer: build
+	@$(TARGET) "server"
+
+runClient: build
+	@$(TARGET) "client"
 
 build: $(TARGET)
 

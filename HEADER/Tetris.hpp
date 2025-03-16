@@ -3,15 +3,23 @@
 
 #include <SFML/Graphics.hpp>
 
-class Player;
+#include <atomic>
+
+class Monitor;
+class NetworkManager;
 
 class Tetris {
 private:
-    Player* player;
+    Monitor *player, *competitor;
     sf::RenderWindow *window;
+
+    std::atomic<bool> isFinish;
+    void makeConnection(bool isHost);
+
 public:
     Tetris();
     ~Tetris();
     void startGameOnePlayer();
+    void startGameTwoPlayer(bool isHost);
 };
 #endif
