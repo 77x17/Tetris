@@ -9,7 +9,7 @@ const int WINDOW_HEIGHT = 700;
 
 Tetris::Tetris() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
-    player = new Player(window, 100, 50);
+    player = new Player(window, 100, 10);
 }
 
 Tetris::~Tetris() {

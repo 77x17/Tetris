@@ -15,6 +15,7 @@ constexpr float MOVING_TIME         = 30.0f;
 
 Monitor::Monitor(sf::RenderWindow* newWindow, int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     window = newWindow;
+
     int HOLD_WIDTH      = 5;
     int HOLD_HEIGHT     = 3;
     int HOLD_POSITION_X = X_COORDINATE;
@@ -33,18 +34,21 @@ Monitor::Monitor(sf::RenderWindow* newWindow, int x, int y) : X_COORDINATE(x), Y
     int NEXT_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
     next = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
     
-    infor = new Infor();
+    int INFOR_POSITION_X = HOLD_POSITION_X;
+    int INFOR_POSITION_Y = HOLD_POSITION_Y + (HOLD_HEIGHT + 1) * BLOCK_SIZE;
+    infor = new Infor(INFOR_POSITION_X, INFOR_POSITION_Y);
 
     curBlock  = new CurrentBlock();
     collision = false;
 }
 
 Monitor::~Monitor() {
-    if (curBlock) {delete curBlock; curBlock = nullptr;}
-    if (hold) {delete hold; hold = nullptr;}
-    if (next) {delete next; next = nullptr;}
-    if (map) {delete map; map = nullptr;}
-    if (infor) {delete infor; infor = nullptr;}
+    // if (window)   { delete window;   window   = nullptr; }
+    if (curBlock) { delete curBlock; curBlock = nullptr; }
+    if (hold)     { delete hold;     hold     = nullptr; }
+    if (next)     { delete next;     next     = nullptr; }
+    if (map)      { delete map;      map      = nullptr; }
+    if (infor)    { delete infor;    infor    = nullptr; }
 }
 
 void Monitor::handleLeft() {
@@ -52,7 +56,6 @@ void Monitor::handleLeft() {
         collision = true;
 
         clock.restart();
-        collisionClock.restart();
     }
 }
 
@@ -61,14 +64,11 @@ void Monitor::handleRight() {
         collision = true;
 
         clock.restart();
-        collisionClock.restart();
     }
 }
 
 void Monitor::handleDown() {
     if (curBlock->moveDown(map) and not curBlock->collisionBottom(map)) {
-        collision = true;
-
         clock.restart();
     }
 }
@@ -78,25 +78,29 @@ void Monitor::handleUp() {
         collision = true;
 
         clock.restart();
-        collisionClock.restart();
     }
 }
 
-void Monitor::handleHardDrop() {
-    curBlock->hardDrop(map); 
+void Monitor::handlePut() {
+    infor->addLine(curBlock->put(map));
 
-    curBlock->put(map);
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map); 
+    collision = false;
 
     if (curBlock->gameOver(map)) {
         restart();
     }
 
     hold->unlock();
+}
+
+void Monitor::handleHardDrop() {
+    curBlock->hardDrop(map); 
+
+    handlePut();
 
     clock.restart();
-    collisionClock.restart();
 }
 
 void Monitor::handleHold() {
@@ -109,7 +113,6 @@ void Monitor::handleHold() {
         curBlock->resetPosition(map);
 
         clock.restart();
-        collisionClock.restart();
     }
 }
 
@@ -119,7 +122,7 @@ bool moveDown  = false;
 
 void Monitor::processEvents() {
     sf::Event event;
-    while (window->pollEvent(event)) {
+    if (window->pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
             window->close();
         } 
@@ -197,44 +200,12 @@ void Monitor::update() {
         
         movingClock.restart();
     }
-
-    if (collision) {
-        if (collisionClock.getElapsedTime().asSeconds() >= COLLISION_DROP_TIME) {
-            if (not curBlock->moveDown(map)) {
-                curBlock->put(map);
-    
-                curBlock->setter(next->updateNext());
-                curBlock->resetPosition(map);
-                
-                if (curBlock->gameOver(map)) {
-                    restart();
-                }
-                
-                hold->unlock();
-            }
-            
-            collisionClock.restart();
-
-            collision = false;
+    if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
+        if (not curBlock->moveDown(map)) {
+            handlePut();
         }
-    }
-    else {
-        if (clock.getElapsedTime().asSeconds() >= DROP_TIME) {
-            if (not curBlock->moveDown(map)) {
-                curBlock->put(map);
-
-                curBlock->setter(next->updateNext());
-                curBlock->resetPosition(map);
-                
-                if (curBlock->gameOver(map)) {
-                    restart();
-                }
-                
-                hold->unlock();
-            }
-            
-            clock.restart();
-        }
+        
+        clock.restart();
     }
 }
 
@@ -248,34 +219,39 @@ void Monitor::render() {
     hold    ->draw(window);
     next    ->draw(window);
     map     ->draw(window);
+    infor   ->draw(window);
      
     window->display();
 }
 
 void Monitor::restart() {
-    int HOLD_WIDTH      = 5;
-    int HOLD_HEIGHT     = 3;
-    int HOLD_POSITION_X = X_COORDINATE;
-    int HOLD_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
     delete hold;
-    hold = new Hold(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
-
-    int GRID_WIDTH      = 10;
-    int GRID_HEIGHT     = 24;
-    int GRID_POSITION_X = HOLD_POSITION_X + BLOCK_SIZE * (HOLD_WIDTH + 1);
-    int GRID_POSITION_Y = Y_COORDINATE;
     delete map;
-    map = new Map(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
-    
-    int NEXT_WIDTH      = 5;
-    int NEXT_HEIGHT     = 15;
-    int NEXT_POSITION_X = GRID_POSITION_X + BLOCK_SIZE * (GRID_WIDTH + 1);
-    int NEXT_POSITION_Y = Y_COORDINATE + 5 * BLOCK_SIZE;
     delete next;
-    next = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
-    
     delete infor;
-    infor = new Infor();
+
+    int HOLD_WIDTH       = 5;
+    int HOLD_HEIGHT      = 3;
+    int HOLD_POSITION_X  = X_COORDINATE;
+    int HOLD_POSITION_Y  = Y_COORDINATE + 5 * BLOCK_SIZE;
+    
+    int GRID_WIDTH       = 10;
+    int GRID_HEIGHT      = 24;
+    int GRID_POSITION_X  = HOLD_POSITION_X + BLOCK_SIZE * (HOLD_WIDTH + 1);
+    int GRID_POSITION_Y  = Y_COORDINATE;
+    
+    int NEXT_WIDTH       = 5;
+    int NEXT_HEIGHT      = 15;
+    int NEXT_POSITION_X  = GRID_POSITION_X + BLOCK_SIZE * (GRID_WIDTH + 1);
+    int NEXT_POSITION_Y  = Y_COORDINATE + 5 * BLOCK_SIZE;
+    
+    int INFOR_POSITION_X = HOLD_POSITION_X;
+    int INFOR_POSITION_Y = HOLD_POSITION_Y + (HOLD_HEIGHT + 1) * BLOCK_SIZE;
+    
+    hold  = new Hold(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
+    map   = new Map(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
+    next  = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
+    infor = new Infor(INFOR_POSITION_X, INFOR_POSITION_Y);
     
     collision = false;
     curBlock->setter(next->updateNext());

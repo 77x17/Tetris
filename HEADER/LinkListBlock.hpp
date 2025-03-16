@@ -26,9 +26,10 @@ private:
     int NEXT_WIDTH;
     int NEXT_HEIGHT;
 
-    BlockEle* head;
-    BlockEle* tail;
-    uint8_t nEle;
+    uint8_t   nEle;
+    BlockEle *head;
+    BlockEle *tail;
+    sf::Font  font;
     
     void addBag();
     

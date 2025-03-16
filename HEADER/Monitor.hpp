@@ -14,6 +14,19 @@ private:
     int X_COORDINATE;
     int Y_COORDINATE;
 
+    sf::Clock clock;            
+    sf::Clock movingClock;      
+    bool      collision;        // collision bottom (extra time to move and rotate)
+    bool      spin;             // check block spin 
+
+    void handleLeft();
+    void handleRight();
+    void handleDown();
+    void handleUp();
+    void handlePut();
+    void handleHardDrop();
+    void handleHold();
+
 protected:
     Hold             *hold;
     CurrentBlock     *curBlock;
@@ -21,18 +34,6 @@ protected:
     Infor            *infor;
     LinkListBlock    *next;
     sf::RenderWindow *window;
-    sf::Clock         clock;            
-    sf::Clock         collisionClock;   
-    sf::Clock         movingClock;      
-    bool              collision;        // collision bottom (extra time to move and rotate)
-    bool              spin;             // check block spin 
-    
-    void handleLeft();
-    void handleRight();
-    void handleDown();
-    void handleUp();
-    void handleHardDrop();
-    void handleHold();
 
 public:
     Monitor(sf::RenderWindow *newWindow, int X_COORDINATE, int Y_COORDINATE);

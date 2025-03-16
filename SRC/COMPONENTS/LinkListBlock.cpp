@@ -5,8 +5,8 @@
 #include "CurrentBlock.hpp"
 #include "Common.hpp"
 
-BlockEle::BlockEle() { block = nullptr; next = nullptr; }
-BlockEle::BlockEle(Block* tmp) { block = tmp; next = nullptr; }
+BlockEle::BlockEle() : block(nullptr), next(nullptr) {}
+BlockEle::BlockEle(Block* tmp) : block(tmp), next(nullptr) {}
 
 void LinkListBlock::addBag() {
     BlockFactory::createBag(head, tail);
@@ -25,6 +25,8 @@ void LinkListBlock::addNode(Block *block) {
 
 LinkListBlock::LinkListBlock(int x, int y, int w, int h) : NEXT_POSITION_X(x), NEXT_POSITION_Y(y), NEXT_WIDTH(w), NEXT_HEIGHT(h), nEle(0), head(nullptr), tail(nullptr) {
     addBag();
+    
+    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
 
 LinkListBlock::~LinkListBlock() {
@@ -48,11 +50,9 @@ Block* LinkListBlock::updateNext() {
 }
 
 void LinkListBlock::drawOutline(sf::RenderWindow *window) {
-    sf::Font font;
-    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-    sf::Text nextText("NEXT", font, BLOCK_SIZE - BLOCK_SIZE / 3);
-    nextText.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
-    window->draw(nextText);
+    sf::Text text("NEXT", font, BLOCK_SIZE - BLOCK_SIZE / 3);
+    text.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
+    window->draw(text);
 
     sf::RectangleShape line;
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White

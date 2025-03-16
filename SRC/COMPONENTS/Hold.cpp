@@ -4,7 +4,9 @@
 #include "Block.hpp"
 #include "Monitor.hpp"
 
-Hold::Hold(int x, int y, int w, int h) : HOLD_POSITION_X(x), HOLD_POSITION_Y(y), HOLD_WIDTH(w), HOLD_HEIGHT(h), block(nullptr), holdPosible(true) {}
+Hold::Hold(int x, int y, int w, int h) : HOLD_POSITION_X(x), HOLD_POSITION_Y(y), HOLD_WIDTH(w), HOLD_HEIGHT(h), block(nullptr), holdPosible(true) {
+    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
+}
 
 Hold::~Hold() { 
     if (block) {
@@ -27,14 +29,12 @@ void Hold::lock() { holdPosible = false; }
 void Hold::unlock() { holdPosible = true; }
 
 void Hold::drawOutline(sf::RenderWindow* window) {
-    sf::Font font;
-    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-    sf::Text holdText("HOLD", font, BLOCK_SIZE - BLOCK_SIZE / 3);
-    holdText.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
+    sf::Text text("HOLD", font, BLOCK_SIZE - BLOCK_SIZE / 3);
+    text.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
     if (holdPosible == false) {
-        holdText.setFillColor(sf::Color::Red);
+        text.setFillColor(sf::Color::Red);
     }
-    window->draw(holdText);
+    window->draw(text);
 
     
     sf::RectangleShape line;
