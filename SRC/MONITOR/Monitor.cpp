@@ -82,7 +82,7 @@ void Monitor::handleUp() {
 }
 
 void Monitor::handlePut() {
-    infor->addLine(curBlock->put(map));
+    infor->addLine(curBlock->put(map), curBlock->spin);
 
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map); 
@@ -116,10 +116,6 @@ void Monitor::handleHold() {
     }
 }
 
-bool moveLeft  = false;
-bool moveRight = false;
-bool moveDown  = false;
-
 void Monitor::processEvents() {
     sf::Event event;
     if (window->pollEvent(event)) {
@@ -127,9 +123,9 @@ void Monitor::processEvents() {
             window->close();
         } 
         else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Left and moveLeft == false) {
-                moveLeft  = true;
-                moveRight = false;
+            if (event.key.code == sf::Keyboard::Left and curBlock->moveLeftSignal == false) {
+                curBlock->moveLeftSignal  = true;
+                curBlock->moveRightSignal = false;
 
                 handleLeft();
                 
@@ -137,9 +133,9 @@ void Monitor::processEvents() {
 
                 movingClock.restart();
             }
-            else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
-                moveLeft  = false;
-                moveRight = true;
+            else if (event.key.code == sf::Keyboard::Right and curBlock->moveRightSignal == false) {
+                curBlock->moveLeftSignal  = false;
+                curBlock->moveRightSignal = true;
 
                 handleRight();
 
@@ -147,8 +143,8 @@ void Monitor::processEvents() {
 
                 movingClock.restart();
             } 
-            else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
-                moveDown = true;
+            else if (event.key.code == sf::Keyboard::Down and curBlock->moveDownSignal == false) {
+                curBlock->moveDownSignal = true;
 
                 handleDown();
 
@@ -166,17 +162,17 @@ void Monitor::processEvents() {
         } 
         else if (event.type == sf::Event::KeyReleased) {
             if (event.key.code == sf::Keyboard::Left) {
-                moveLeft = false;
+                curBlock->moveLeftSignal = false;
                 
                 movingTime = DELAY_MOVING_TIME;
             }
             else if (event.key.code == sf::Keyboard::Right) {
-                moveRight = false;
+                curBlock->moveRightSignal = false;
                 
                 movingTime = DELAY_MOVING_TIME;
             } 
             else if (event.key.code == sf::Keyboard::Down) {
-                moveDown = false;
+                curBlock->moveDownSignal = false;
             } 
         }
     }
@@ -184,16 +180,16 @@ void Monitor::processEvents() {
 
 void Monitor::update() {
     if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
-        if (moveLeft) {
+        if (curBlock->moveLeftSignal) {
             handleLeft();
             movingTime = MOVING_TIME;
         }
-        else if (moveRight) {
+        else if (curBlock->moveRightSignal) {
             handleRight();
             movingTime = MOVING_TIME;
         }
         
-        if (moveDown) {
+        if (curBlock->moveDownSignal) {
             handleDown();
             movingTime = MOVING_TIME;
         }

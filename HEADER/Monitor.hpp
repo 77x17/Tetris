@@ -17,7 +17,6 @@ private:
     sf::Clock clock;            
     sf::Clock movingClock;      
     bool      collision;        // collision bottom (extra time to move and rotate)
-    bool      spin;             // check block spin 
 
     void handleLeft();
     void handleRight();

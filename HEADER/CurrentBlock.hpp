@@ -7,19 +7,26 @@
 class Block;
 class Map;
 class Hold;
-
+class SoundManager;
 
 class CurrentBlock {
 private:
-    Block* block;
+    Block *block;
     int8_t posX, posY;
     int8_t shadowPosY;
-
+    
+    SoundManager *soundManager;
+    
     void shadowHardDrop(Map *map);
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
     ~CurrentBlock();
+
+    bool moveLeftSignal;
+    bool moveRightSignal;
+    bool moveDownSignal;
+    bool spin; // check piece spin 
 
     bool isEmpty();
     void setter(Block* p);
