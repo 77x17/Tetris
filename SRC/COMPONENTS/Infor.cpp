@@ -1,6 +1,5 @@
 #include "Infor.hpp"
 
-#include <iostream>
 #include "SoundManager.hpp"
 
 const int FONT_SIZE = 25;
