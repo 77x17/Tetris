@@ -38,7 +38,7 @@ protected:
 public:
     Monitor(sf::RenderWindow *newWindow, int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor();
-    void processEvents();
+    void processEvents(const sf::Event &event);
     void restart();
     void update();
     void render();

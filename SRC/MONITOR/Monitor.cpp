@@ -120,65 +120,64 @@ bool moveLeft  = false;
 bool moveRight = false;
 bool moveDown  = false;
 
-void Monitor::processEvents() {
-    sf::Event event;
-    if (window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            window->close();
-        } 
-        else if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Left and moveLeft == false) {
-                moveLeft  = true;
-                moveRight = false;
+void Monitor::processEvents(const sf::Event &event) {
+    // while (window->pollEvent(event)) {
+    //     if (event.type == sf::Event::Closed) {
+    //         window->close();
+    //     }
+    //     else 
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Left and moveLeft == false) {
+            moveLeft  = true;
+            moveRight = false;
 
-                handleLeft();
-                
-                movingTime = DELAY_MOVING_TIME;
+            handleLeft();
+            
+            movingTime = DELAY_MOVING_TIME;
 
-                movingClock.restart();
-            }
-            else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
-                moveLeft  = false;
-                moveRight = true;
-
-                handleRight();
-
-                movingTime = DELAY_MOVING_TIME;
-
-                movingClock.restart();
-            } 
-            else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
-                moveDown = true;
-
-                handleDown();
-
-                movingClock.restart();
-            } 
-            else if (event.key.code == sf::Keyboard::Up) {
-                handleUp();
-            } 
-            else if (event.key.code == sf::Keyboard::Space) {
-                handleHardDrop();
-            } 
-            else if (event.key.code == sf::Keyboard::C) {
-                handleHold();
-            }
-        } 
-        else if (event.type == sf::Event::KeyReleased) {
-            if (event.key.code == sf::Keyboard::Left) {
-                moveLeft = false;
-                
-                movingTime = DELAY_MOVING_TIME;
-            }
-            else if (event.key.code == sf::Keyboard::Right) {
-                moveRight = false;
-                
-                movingTime = DELAY_MOVING_TIME;
-            } 
-            else if (event.key.code == sf::Keyboard::Down) {
-                moveDown = false;
-            } 
+            movingClock.restart();
         }
+        else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
+            moveLeft  = false;
+            moveRight = true;
+
+            handleRight();
+
+            movingTime = DELAY_MOVING_TIME;
+
+            movingClock.restart();
+        } 
+        else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
+            moveDown = true;
+
+            handleDown();
+
+            movingClock.restart();
+        } 
+        else if (event.key.code == sf::Keyboard::Up) {
+            handleUp();
+        } 
+        else if (event.key.code == sf::Keyboard::Space) {
+            handleHardDrop();
+        } 
+        else if (event.key.code == sf::Keyboard::C) {
+            handleHold();
+        }
+    } 
+    else if (event.type == sf::Event::KeyReleased) {
+        if (event.key.code == sf::Keyboard::Left) {
+            moveLeft = false;
+            
+            movingTime = DELAY_MOVING_TIME;
+        }
+        else if (event.key.code == sf::Keyboard::Right) {
+            moveRight = false;
+            
+            movingTime = DELAY_MOVING_TIME;
+        } 
+        else if (event.key.code == sf::Keyboard::Down) {
+            moveDown = false;
+        } 
     }
 }
 

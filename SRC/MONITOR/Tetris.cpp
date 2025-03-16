@@ -8,8 +8,8 @@ const int WINDOW_WIDTH  = 800;
 const int WINDOW_HEIGHT = 700;
 
 Tetris::Tetris() {
+    player = nullptr;
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
-    player = new Player(window, 100, 10);
 }
 
 Tetris::~Tetris() {
@@ -18,5 +18,10 @@ Tetris::~Tetris() {
 }
 
 void Tetris::startGameOnePlayer() {
-    player->start();
+    player = new Player(window, 100, 50);
+    while (window->isOpen()) {
+        player->start();
+        
+    }
+
 }
