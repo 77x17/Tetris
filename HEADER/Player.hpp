@@ -7,7 +7,7 @@
 
 class Player :public Monitor {
 public:
-    Player(sf::RenderWindow *window, int X_COORDINATE, int Y_COORDINATE);
+    Player(int X_COORDINATE, int Y_COORDINATE);
     void start();
 };
 

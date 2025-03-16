@@ -5,17 +5,18 @@
 #include "CurrentBlock.hpp"
 #include "Hold.hpp"
 
-Player::Player(sf::RenderWindow *window, int X_COORDINATE, int Y_COORDINATE) : Monitor(window, X_COORDINATE, Y_COORDINATE) {}
-
-void Player::start() {
-    next->draw(window); 
+Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE) {
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
-    curBlock->draw(window, map);
+}
 
-    while (window->isOpen()) {
-        processEvents();
-        render();
-        update();
-    }
+void Player::start() {
+    // next->draw(window); 
+    // curBlock->draw(window, map);
+
+    // while (window->isOpen()) {
+        // processEvents();
+        // render();
+        // update();
+    // }
 }

@@ -13,8 +13,9 @@ constexpr float DELAY_MOVING_TIME   = 200.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-Monitor::Monitor(sf::RenderWindow* newWindow, int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
-    window = newWindow;
+Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
+    
+    moveLeft = moveDown = moveRight = false;
 
     int HOLD_WIDTH      = 5;
     int HOLD_HEIGHT     = 3;
@@ -116,16 +117,7 @@ void Monitor::handleHold() {
     }
 }
 
-bool moveLeft  = false;
-bool moveRight = false;
-bool moveDown  = false;
-
 void Monitor::processEvents(const sf::Event &event) {
-    // while (window->pollEvent(event)) {
-    //     if (event.type == sf::Event::Closed) {
-    //         window->close();
-    //     }
-    //     else 
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Left and moveLeft == false) {
             moveLeft  = true;
@@ -181,7 +173,7 @@ void Monitor::processEvents(const sf::Event &event) {
     }
 }
 
-void Monitor::update() {
+void Monitor::autoDown() {
     if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
         if (moveLeft) {
             handleLeft();
@@ -208,9 +200,7 @@ void Monitor::update() {
     }
 }
 
-void Monitor::render() {
-    window->clear();
-
+void Monitor::draw(sf::RenderWindow* window) {
     map ->drawOutline(window);
     hold->drawOutline(window);
     next->drawOutline(window);
@@ -219,8 +209,6 @@ void Monitor::render() {
     next    ->draw(window);
     map     ->draw(window);
     infor   ->draw(window);
-     
-    window->display();
 }
 
 void Monitor::restart() {

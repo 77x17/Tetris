@@ -14,6 +14,10 @@ private:
     int X_COORDINATE;
     int Y_COORDINATE;
 
+    bool moveLeft;
+    bool moveRight;
+    bool moveDown;
+
     sf::Clock clock;            
     sf::Clock movingClock;      
     bool      collision;        // collision bottom (extra time to move and rotate)
@@ -33,15 +37,14 @@ protected:
     Map              *map;
     Infor            *infor;
     LinkListBlock    *next;
-    sf::RenderWindow *window;
 
 public:
-    Monitor(sf::RenderWindow *newWindow, int X_COORDINATE, int Y_COORDINATE);
+    Monitor(int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor();
     void processEvents(const sf::Event &event);
     void restart();
-    void update();
-    void render();
+    void autoDown();
+    void draw(sf::RenderWindow* window);
     virtual void start()=0;
 };
 
