@@ -171,10 +171,10 @@ void Infor::drawSpin(sf::RenderWindow *window) {
             color = sf::Color(103, 248, 254, alpha);
             break;
         case 'L':
-            color = sf::Color(103, 105, 254, alpha);
+            color = sf::Color(254, 183, 103, alpha);
             break;
         case 'J':
-            color = sf::Color(254, 183, 103, alpha);
+            color = sf::Color(103, 105, 254, alpha);
             break;
         case 'O':
             color = sf::Color(254, 247, 103, alpha);

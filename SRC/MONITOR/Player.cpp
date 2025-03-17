@@ -18,7 +18,7 @@ constexpr float DELAY_MOVING_TIME   = 200.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), moveLeft(false), moveRight(false), moveDown(false), collision(false) {}
+Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), collision(false) {}
 
 Player::~Player() {}
 
@@ -106,11 +106,6 @@ void Player::processEvents(const sf::Event &event) {
             
             movingTime = DELAY_MOVING_TIME;
 
-        movingClock.restart();
-    }
-    else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
-        moveLeft  = false;
-        moveRight = true;
             movingClock.restart();
         }
         else if (event.key.code == sf::Keyboard::Right and curBlock->moveRightSignal == false) {
@@ -121,10 +116,6 @@ void Player::processEvents(const sf::Event &event) {
 
             movingTime = DELAY_MOVING_TIME;
 
-        movingClock.restart();
-    } 
-    else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
-        moveDown = true;
             movingClock.restart();
         } 
         else if (event.key.code == sf::Keyboard::Down and curBlock->moveDownSignal == false) {
@@ -132,7 +123,7 @@ void Player::processEvents(const sf::Event &event) {
 
             handleDown();
 
-            movingClock.restart();
+            // movingClock.restart();
         } 
         else if (event.key.code == sf::Keyboard::Up) {
             handleUp();
@@ -158,7 +149,7 @@ void Player::processEvents(const sf::Event &event) {
         else if (event.key.code == sf::Keyboard::Down) {
             curBlock->moveDownSignal = false;
         } 
-    }
+    }   
 }
 
 void Player::autoDown() {

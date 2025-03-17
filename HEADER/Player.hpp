@@ -11,10 +11,6 @@
 
 class Player :public Monitor {
 private:
-    bool moveLeft;
-    bool moveRight;
-    bool moveDown;
-
     sf::Clock clock;            
     sf::Clock movingClock;      
     bool      collision;        // collision bottom (extra time to move and rotate)
