@@ -5,6 +5,7 @@
 #include "CurrentBlock.hpp"
 #include "Hold.hpp"
 #include "Infor.hpp"
+#include "SoundManager.hpp"
 
 #include <iostream>
 
@@ -15,12 +16,17 @@ constexpr float DELAY_MOVING_TIME   = 200.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE), collision(false) {
-    curBlock  = new CurrentBlock();
+Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), collision(false), volume(50.0f) {
+    curBlock = new CurrentBlock();
+    
+    soundManager = new SoundManager();
+    soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
 }
 
 Player::~Player() {
     delete curBlock; curBlock = nullptr;
+    
+    delete soundManager;
 }
 
 void Player::resetComponent() {
@@ -154,8 +160,24 @@ void Player::processEvents(const sf::Event &event) {
         } 
         else if (event.key.code == sf::Keyboard::Down) {
             curBlock->moveDownSignal = false;
-        } 
-    }   
+        }
+    }
+    else if (event.type == sf::Event::MouseWheelScrolled) {
+        if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+            SoundManager::setVolume(volume);
+            soundManager->play("scroll");
+
+            if (event.mouseWheelScroll.delta > 0) {  // Scroll up
+                volume += 5.0f;
+            } else {  // Scroll down
+                volume -= 5.0f;
+            }
+
+            // Clamp volume between 0 and 100
+            if (volume > 100.0f) volume = 100.0f;
+            if (volume < 0.0f) volume = 0.0f;
+        }
+    }
 }
 
 void Player::autoDown() {
@@ -187,5 +209,8 @@ void Player::autoDown() {
 
 void Player::draw(sf::RenderWindow* window) {
     Monitor::draw(window);
+    
     curBlock->draw(window, map);
+
+    infor->drawAudio(window, SoundManager::getVolume());
 }
