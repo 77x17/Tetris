@@ -48,6 +48,7 @@ public:
     uint8_t put(Map* map);
     void draw(sf::RenderWindow *window, Map *map);
     bool isValid(uint16_t shape, Map* map);
+    char getTypeBlock();
 
     bool gameOver(Map* map);
 };

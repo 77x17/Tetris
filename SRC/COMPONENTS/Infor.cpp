@@ -1,5 +1,7 @@
 #include "Infor.hpp"
 
+#include <iostream>
+
 #include "SoundManager.hpp"
 
 const int FONT_SIZE = 25;
@@ -7,7 +9,7 @@ const int FONT_SIZE = 25;
 constexpr float TIME_OUT = 2.0f;
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(int x, int y, int w) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), nLine(0), count(0), add(0), B2B(0), B2BMissing(0) {
+Infor::Infor(int x, int y, int w) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), nLine(0), count(0), add(0), B2B(0), B2BMissing(0), spin(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -31,9 +33,16 @@ void Infor::reset() {
     nLine = 0; count = 0; add = 0; B2B = 0; B2BMissing = 0;
 }
 
-void Infor::addLine(uint8_t lines, bool spin) {
+void Infor::addLine(uint8_t lines, bool isSpin, char block) {
     nLine   += lines;
     add      = lines;
+
+    if (isSpin) {
+        spin      = isSpin;
+        typeBlock = block;
+
+        spinTimeout.restart();
+    }
 
     if (add != 0) {
         count++;
@@ -60,7 +69,7 @@ void Infor::addLine(uint8_t lines, bool spin) {
                 soundManager->play("clearQuad");
             }
         }
-        else if (spin) {
+        else if (isSpin) {
             B2B++;
 
             soundManager->play("clearSpin");
@@ -87,7 +96,7 @@ void Infor::addLine(uint8_t lines, bool spin) {
 
 void Infor::drawMessage(sf::RenderWindow *window, const std::string string) {
     sf::Text text(string, font, FONT_SIZE);
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y);
+    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE);
     
     float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, 255, 255, alpha));
@@ -99,8 +108,8 @@ void Infor::drawCombo(sf::RenderWindow *window, const std::string string) {
     sf::Text text("COMBO", font, FONT_SIZE);
     sf::Text number(string, font, FONT_SIZE * 2);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 2);
-    number.setPosition(text.getPosition().x - number.getGlobalBounds().width - 15, INFOR_POSITION_Y + FONT_SIZE + FONT_SIZE / 2);
+    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 3);
+    number.setPosition(text.getPosition().x - number.getGlobalBounds().width - 15, INFOR_POSITION_Y + FONT_SIZE * 2 + FONT_SIZE / 2);
     
     float alpha = 255 * (1 - comboTimeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, 255, 255, alpha));
@@ -113,7 +122,7 @@ void Infor::drawCombo(sf::RenderWindow *window, const std::string string) {
 void Infor::drawB2B(sf::RenderWindow *window) {
     sf::Text text("B2B x" + std::to_string(B2B - 1), font, FONT_SIZE - FONT_SIZE / 4);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 1);
+    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 2);
     
     float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, (alpha > 175 ? 255 : 215), 0, std::max(alpha, 175.0f)));
@@ -124,7 +133,7 @@ void Infor::drawB2B(sf::RenderWindow *window) {
 void Infor::drawMissingB2B(sf::RenderWindow *window) {
     sf::Text text("B2B x" + std::to_string(B2BMissing - 1), font, FONT_SIZE - FONT_SIZE / 4);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 1);
+    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 2);
     
     sf::Color color;
     float phase = B2BMissingTimeout.getElapsedTime().asSeconds() / TIME_OUT;
@@ -149,14 +158,51 @@ void Infor::drawMissingB2B(sf::RenderWindow *window) {
     window->draw(text);
 }
 
+void Infor::drawSpin(sf::RenderWindow *window) {
+    std::string type = std::string() + typeBlock;
+    sf::Text text(type + " - SPIN", font, FONT_SIZE - FONT_SIZE / 4);
+
+    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y);
+    
+    float alpha = 255 * (1 - spinTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+    sf::Color color;
+    switch (typeBlock) {
+        case 'I':
+            color = sf::Color(103, 248, 254, alpha);
+            break;
+        case 'L':
+            color = sf::Color(254, 183, 103, alpha);
+            break;
+        case 'J':
+            color = sf::Color(103, 105, 254, alpha);
+            break;
+        case 'O':
+            color = sf::Color(254, 247, 103, alpha);
+            break;
+        case 'Z':
+            color = sf::Color(254, 103, 103, alpha);
+            break;
+        case 'S':
+            color = sf::Color(123, 255, 104, alpha);
+            break;
+        case 'T':
+            color = sf::Color(191, 64, 191, alpha);
+            break;
+    }
+    text.setFillColor(color);
+
+    window->draw(text);
+}
 
 void Infor::draw(sf::RenderWindow *window) {
-    if (timeout.getElapsedTime().asSeconds() < TIME_OUT) {
-        if (message != std::string()) {
-            drawMessage(window, message);
-        }
+    if (message != std::string() and timeout.getElapsedTime().asSeconds() < TIME_OUT) {
+        drawMessage(window, message);
     }
-    
+
+    if (spin and spinTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
+        drawSpin(window);
+    }
+
     if (comboTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
         if (combo != std::string()) {
             drawCombo(window, combo);
