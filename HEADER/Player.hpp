@@ -19,7 +19,7 @@ private:
     sf::Clock movingClock;      
     bool      collision;        // collision bottom (extra time to move and rotate)
 
-    
+protected:
     void handleLeft();
     void handleRight();
     void handleDown();
