@@ -7,13 +7,12 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <thread>
 
-const int WINDOW_WIDTH  = 1000;
+const int WINDOW_WIDTH  = 1050;
 const int WINDOW_HEIGHT = 700;
 
 Tetris::Tetris() {
     player = nullptr;
     competitor = nullptr;
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
 }
 
 Tetris::~Tetris() {
@@ -23,8 +22,9 @@ Tetris::~Tetris() {
 }
 
 void Tetris::startGameOnePlayer() {
-    player = new Player(10, 50);
-    Player *mirror = new Player(500, 50);
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2, WINDOW_HEIGHT), "Tetr.io");
+
+    player = new Player(50, 10);
     
     while (window->isOpen()) {
         sf::Event event;
@@ -32,15 +32,12 @@ void Tetris::startGameOnePlayer() {
             if (event.type == sf::Event::Closed) 
                 return;
             player->processEvents(event);
-            mirror->processEvents(event);
         }
 
         player->autoDown();
-        mirror->autoDown();
 
         window->clear();
         player->draw(window);
-        mirror->draw(window);   
         window->display();
     }
 }
@@ -51,13 +48,13 @@ void Tetris::makeConnection(bool isHost) {
         listener.listen(55001);
         std::random_device rd;
         int seed = rd();
-        player = new Player(10, 50, listener, seed);
+        player = new Player(50, 10, listener, seed);
         listener.listen(55000);
-        competitor = new Competitor(500, 50, listener, seed);
+        competitor = new Competitor(550, 10, listener, seed);
     }
     else {
-        competitor = new Competitor(500, 50, "127.0.0.1", 55001);
-        player = new Player(10, 50, "127.0.0.1", 55000);
+        competitor = new Competitor(550, 10, "127.0.0.1", 55001);
+        player = new Player(50, 10, "127.0.0.1", 55000);
     }
     isFinish.store(true);
 }
@@ -65,6 +62,8 @@ void Tetris::makeConnection(bool isHost) {
 #include <iostream>
 
 void Tetris::startGameTwoPlayer(bool isHost) {
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
+
     isFinish.store(false);
     std::thread connectThread(&Tetris::makeConnection, this, isHost);
     connectThread.detach();
