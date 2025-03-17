@@ -23,7 +23,7 @@ Tetris::~Tetris() {
 }
 
 void Tetris::startGameOnePlayer() {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2, WINDOW_HEIGHT), "Tetr.io");
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2 + 25, WINDOW_HEIGHT), "Tetr.io");
 
     player = new Player(50, 10);
     player->start(0);

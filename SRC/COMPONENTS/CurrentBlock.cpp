@@ -13,6 +13,7 @@ CurrentBlock::CurrentBlock() : block(nullptr), moveLeftSignal(false), moveRightS
     soundManager->loadSound("move"    , "ASSETS/sfx/move.mp3");
     soundManager->loadSound("rotate"  , "ASSETS/sfx/rotate.mp3");
     soundManager->loadSound("spin"    , "ASSETS/sfx/spin.mp3");
+    soundManager->loadSound("topout"  , "ASSETS/sfx/topout.mp3");
 }
 
 CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH_MAP / 2 - BLOCK_EDGE/2), posY(0){ block = nullptr; }
@@ -169,6 +170,7 @@ bool CurrentBlock::rotateRight(Map* map) {
 
 void CurrentBlock::swap(Hold* hold) {
     block = hold->interchange(block);
+
     soundManager->play("hold");
 }
 
@@ -184,6 +186,33 @@ uint8_t CurrentBlock::put(Map* map) {
     return map->update(block, posY, posX);;
 }
 
+char CurrentBlock::getTypeBlock() {
+    switch (block->getShapeID()) {
+        case 0:
+            return 'I';
+        case 1:
+            return 'L';
+        case 2:
+            return 'J';
+        case 3:
+            return 'O';
+        case 4:
+            return 'Z';
+        case 5:
+            return 'S';
+        case 6:
+            return 'T';
+    }
+
+    return char();
+}
+
 bool CurrentBlock::gameOver(Map* map) {
-    return not map->isValid(block->getShape(), posY, posX);
+    bool isGameOver = not map->isValid(block->getShape(), posY, posX);
+
+    if (isGameOver) {
+        soundManager->play("topout");
+    }
+
+    return isGameOver;
 }

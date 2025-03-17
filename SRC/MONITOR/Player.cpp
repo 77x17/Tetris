@@ -18,13 +18,9 @@ constexpr float DELAY_MOVING_TIME   = 200.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE) {
-    moveLeft = moveDown = moveRight = false;
-    collision = false;
-}
+Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), moveLeft(false), moveRight(false), moveDown(false), collision(false) {}
 
-Player::~Player() {
-}
+Player::~Player() {}
 
 void Player::start(uint32_t seed) {
     collision = false; gameOver = false;
@@ -70,7 +66,7 @@ void Player::handleUp() {
 }
 
 void Player::handlePut() {
-    infor->addLine(curBlock->put(map), curBlock->spin);
+    infor->addLine(curBlock->put(map), curBlock->spin, curBlock->getTypeBlock());
 
     curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map); 

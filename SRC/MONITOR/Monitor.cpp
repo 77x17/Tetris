@@ -61,8 +61,8 @@ void Monitor::draw(sf::RenderWindow* window) {
 }
 
 void Monitor::clearScreen(uint32_t seed) {
-    hold->reset();
-    map->reset();
-    next->reset(seed);
+    hold ->reset();
+    map  ->reset();
+    next ->reset(seed);
     infor->reset();
 }
