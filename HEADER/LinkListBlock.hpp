@@ -39,7 +39,8 @@ public:
     LinkListBlock(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
     ~LinkListBlock();
     void setSeed(int seed);
-    
+    void reset(uint32_t seed);
+
     void addNode(Block *block);
     Block* updateNext();
     void drawOutline(sf::RenderWindow *window);

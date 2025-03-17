@@ -14,7 +14,8 @@ constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
 Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
-    
+    gameOver = false;
+
     moveLeft = moveDown = moveRight = false;
 
     int HOLD_WIDTH       = 5;
@@ -85,15 +86,15 @@ void Monitor::handleUp() {
 void Monitor::handlePut() {
     infor->addLine(curBlock->put(map), curBlock->spin);
 
-    curBlock->setter(next->updateNext());
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map); 
     collision = false;
-
-    if (curBlock->gameOver(map)) {
-        restart();
-    }
-
+    gameOver = curBlock->gameOver(map);
     hold->unlock();
+}
+
+bool Monitor::isGameOver() {
+    return gameOver;
 }
 
 void Monitor::handleHardDrop() {
@@ -109,7 +110,7 @@ void Monitor::handleHold() {
         hold->lock();
         curBlock->swap(hold);
         if (curBlock->isEmpty()) {
-            curBlock->setter(next->updateNext());
+            curBlock->freeAndSetter(next->updateNext());
         }
         curBlock->resetPosition(map);
 
@@ -220,38 +221,15 @@ void Monitor::draw(sf::RenderWindow* window) {
     infor   ->draw(window);
 }
 
-void Monitor::restart() {
-    delete hold;
-    delete map;
-    delete next;
-    delete infor;
+#include <iostream>
 
-    int HOLD_WIDTH       = 5;
-    int HOLD_HEIGHT      = 3;
-    int HOLD_POSITION_X  = X_COORDINATE;
-    int HOLD_POSITION_Y  = Y_COORDINATE + 5 * BLOCK_SIZE;
-    
-    int GRID_WIDTH       = 10;
-    int GRID_HEIGHT      = 24;
-    int GRID_POSITION_X  = HOLD_POSITION_X + BLOCK_SIZE * (HOLD_WIDTH + 1);
-    int GRID_POSITION_Y  = Y_COORDINATE;
-    
-    int NEXT_WIDTH       = 5;
-    int NEXT_HEIGHT      = 15;
-    int NEXT_POSITION_X  = GRID_POSITION_X + BLOCK_SIZE * (GRID_WIDTH + 1);
-    int NEXT_POSITION_Y  = Y_COORDINATE + 5 * BLOCK_SIZE;
-    
-    int INFOR_POSITION_X = HOLD_POSITION_X;
-    int INFOR_POSITION_Y = HOLD_POSITION_Y + (HOLD_HEIGHT + 1) * BLOCK_SIZE;
-    int INFOR_WIDTH      = 5;
-    
-    hold  = new Hold(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
-    map   = new Map(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
-    next  = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
-    next->setSeed(0);
-    infor = new Infor(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE);
-    
-    collision = false;
-    curBlock->setter(next->updateNext());
+void Monitor::restart(uint32_t seed) {
+    hold->reset();
+    map->reset();
+    next->reset(seed);
+    infor->reset();
+
+    collision = false; gameOver = false;
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
 }

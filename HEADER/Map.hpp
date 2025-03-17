@@ -6,9 +6,6 @@
 
 #include "Common.hpp"
 
-#define HEIGHT 24
-#define WIDTH  10
-
 class Block;
 class CurrentBlock;
 
@@ -19,7 +16,7 @@ private:
     int GRID_WIDTH;
     int GRID_HEIGHT;
 
-    uint64_t map[HEIGHT + 1];
+    uint64_t* map;
 
     sf::Texture texture;
 
@@ -29,6 +26,8 @@ public:
     Map(int GRID_POSITION_X, int GRID_POSITION_Y, int GRID_WIDTH, int GRID_HEIGHT);
     ~Map();
     
+    void reset();
+
     bool add(uint8_t nLines);
 
     void draw(sf::RenderWindow* window);

@@ -35,15 +35,15 @@ build: $(TARGET)
 $(TARGET): $(OBJ_FILES)
 	@echo "Linking objects to executable..."
 	@mkdir -p $(dir $@)
-	$(COMPILER) -g $^ -o $@ $(LDFLAGS) $(INCLUDES)
+	@$(COMPILER) -g $^ -o $@ $(LDFLAGS) $(INCLUDES)
 	@echo "Build completed successfully."
 
 # Compile each .cpp file into .o and generate dependencies
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "Compiling $<..."
 	@mkdir -p $(dir $@)
-	$(COMPILER) -g $(CFLAGS) -c $< -o $@ $(INCLUDES) 
-	$(COMPILER) -MM $(CFLAGS) $(INCLUDES) $< | sed 's|$(notdir $<)|$@|' > $(OBJ_DIR)/$*.d
+	@$(COMPILER) -g $(CFLAGS) -c $< -o $@ $(INCLUDES)
+	@$(COMPILER) -MM $(CFLAGS) $(INCLUDES) $< | sed 's|$(notdir $<)|$@|' > $(OBJ_DIR)/$*.d
 
 # Include dependency files
 -include $(DEP_FILES)

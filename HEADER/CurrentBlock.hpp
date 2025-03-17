@@ -30,6 +30,7 @@ public:
 
     bool isEmpty();
     void setter(Block* p);
+    void freeAndSetter(Block* p);
     bool resetPosition(Map *map);
 
     bool moveDown(Map *map);

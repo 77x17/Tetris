@@ -9,9 +9,13 @@ Hold::Hold(int x, int y, int w, int h) : HOLD_POSITION_X(x), HOLD_POSITION_Y(y),
 }
 
 Hold::~Hold() { 
-    if (block) {
-        delete block; 
-    }
+    delete block;
+    block = nullptr;
+}
+
+void Hold::reset() {
+    unlock();
+    delete block;
     block = nullptr;
 }
 

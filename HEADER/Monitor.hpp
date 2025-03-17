@@ -18,6 +18,8 @@ private:
     bool moveRight;
     bool moveDown;
 
+    bool gameOver;
+
     sf::Clock clock;            
     sf::Clock movingClock;      
     bool      collision;        // collision bottom (extra time to move and rotate)
@@ -41,7 +43,8 @@ public:
     Monitor(int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor();
     void processEvents(const sf::Event &event);
-    void restart();
+    bool isGameOver();
+    void restart(uint32_t seed = 0);
     void autoDown();
     void draw(sf::RenderWindow* window);
     virtual void start()=0;

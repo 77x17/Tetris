@@ -6,6 +6,7 @@
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <thread>
+#include <iostream>
 
 const int WINDOW_WIDTH  = 1050;
 const int WINDOW_HEIGHT = 700;
@@ -25,9 +26,14 @@ void Tetris::startGameOnePlayer() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2, WINDOW_HEIGHT), "Tetr.io");
 
     player = new Player(50, 10);
-    
+    // std::cerr << "HELLO!\n";
     while (window->isOpen()) {
         sf::Event event;
+
+        if (player->isGameOver()) {
+            player->restart();
+        }
+
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) 
                 return;
@@ -58,8 +64,6 @@ void Tetris::makeConnection(bool isHost) {
     }
     isFinish.store(true);
 }
-
-#include <iostream>
 
 void Tetris::startGameTwoPlayer(bool isHost) {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");

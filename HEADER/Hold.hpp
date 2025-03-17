@@ -19,6 +19,9 @@ private:
 public:
     Hold(int HOLD_POSITION_X, int HOLD_POSITION_Y, int HOLD_WIDTH, int HOLD_HEIGHT);
     ~Hold();
+
+    void reset();
+    
     Block* interchange(Block* p);
     bool canHold();
     void lock();

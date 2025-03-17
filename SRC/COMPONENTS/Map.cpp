@@ -18,13 +18,23 @@
 
 Map::Map(int x, int y, int w, int h) : GRID_POSITION_X(x), GRID_POSITION_Y(y), GRID_WIDTH(w), GRID_HEIGHT(h) {
     texture.loadFromFile("ASSETS/blocks/blocks.png");
-    for (int i = 0; i < HEIGHT; i++) {
+    map = new uint64_t[HEIGHT_MAP + 1]();
+    for (int i = 0; i < HEIGHT_MAP; i++) {
         map[i] = EMPTYLINE;
     }
-    map[HEIGHT] = FULLMASK(REALWIDTH);
+    map[HEIGHT_MAP] = FULLMASK(REALWIDTH);
 }
 
-Map::~Map() {}
+Map::~Map() {
+    delete map;
+}
+
+void Map::reset() {
+    for (int i = 0; i < HEIGHT_MAP; i++) {
+        map[i] = EMPTYLINE;
+    }
+    map[HEIGHT_MAP] = FULLMASK(REALWIDTH);
+}
 
 void Map::drawOutline(sf::RenderWindow* window) {
     sf::RectangleShape line;
@@ -76,8 +86,8 @@ void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
     block.setTexture(&texture);
-    for (int i = 0; i < HEIGHT; i++) {
-        for (int j = 0; j < WIDTH; j++) if (getBit(map[i], j + NUMOFFSET)) {
+    for (int i = 0; i < HEIGHT_MAP; i++) {
+        for (int j = 0; j < WIDTH_MAP; j++) if (getBit(map[i], j + NUMOFFSET)) {
             block.setPosition(GRID_POSITION_X + j * BLOCK_SIZE + 1, GRID_POSITION_Y + i * BLOCK_SIZE + 1);
             uint8_t shapeID = ((map[i] >> (j * COLORWIDTH + REALWIDTH)) & FULLMASK(4));
             block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
@@ -96,7 +106,7 @@ uint8_t Map::update(Block* block, int Y, int X) {
     uint16_t shape = block->getShape();
     uint64_t color = block->getShapeID();
 
-    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT) {
+    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT_MAP) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
         if (((map[Y + i] & FULLMASK(REALWIDTH)) ^ FULLMASK(REALWIDTH)) == 0) {
             remove(Y + i);
@@ -113,7 +123,7 @@ uint8_t Map::update(Block* block, int Y, int X) {
 }
 
 bool Map::isValid(uint16_t shape, int Y, int X) {
-    if (X < -NUMOFFSET || X + BLOCK_EDGE > WIDTH + NUMOFFSET) return false;
+    if (X < -NUMOFFSET || X + BLOCK_EDGE > HEIGHT_MAP + NUMOFFSET) return false;
 
     for (int i = 0; i < BLOCK_EDGE; i++)
         if (((getMask(map[i + Y], X + NUMOFFSET) ^ getLine(shape, i)) & getMask(map[i + Y], X + NUMOFFSET)) != getMask(map[i + Y], X + NUMOFFSET))

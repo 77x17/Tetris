@@ -28,6 +28,9 @@ private:
 public:
     Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH);
     ~Infor();
+
+    void reset();
+
     void addLine(uint8_t lines, bool spin);
     void drawMessage(sf::RenderWindow *window, const std::string text);
     void drawCombo(sf::RenderWindow *window, const std::string text);

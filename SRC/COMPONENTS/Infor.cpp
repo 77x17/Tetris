@@ -27,6 +27,10 @@ Infor::~Infor() {
     delete soundManager;
 }
 
+void Infor::reset() {
+    nLine = 0; count = 0; add = 0; B2B = 0; B2BMissing = 0;
+}
+
 void Infor::addLine(uint8_t lines, bool spin) {
     nLine   += lines;
     add      = lines;

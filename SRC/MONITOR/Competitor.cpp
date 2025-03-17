@@ -24,7 +24,7 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &list
     next->setSeed(seed);
     recvSock.send(&seed, sizeof(seed));
 
-    curBlock->setter(next->updateNext());
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
     mtx.unlock();
 }
@@ -39,7 +39,7 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int
     }
     next->setSeed(seed);
 
-    curBlock->setter(next->updateNext());
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
     mtx.unlock();
 }

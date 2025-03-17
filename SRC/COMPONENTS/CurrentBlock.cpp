@@ -15,7 +15,7 @@ CurrentBlock::CurrentBlock() : block(nullptr), moveLeftSignal(false), moveRightS
     soundManager->loadSound("spin"    , "ASSETS/sfx/spin.mp3");
 }
 
-CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH / 2 - BLOCK_EDGE/2), posY(0){}
+CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH_MAP / 2 - BLOCK_EDGE/2), posY(0){ block = nullptr; }
 
 CurrentBlock::~CurrentBlock() {
     delete block; block = nullptr;
@@ -28,12 +28,16 @@ bool CurrentBlock::isEmpty() {
 
 void CurrentBlock::setter(Block* p) {
     block = p;
+    spin = false;
+}
 
+void CurrentBlock::freeAndSetter(Block* p) {
+    delete block; block = p;
     spin = false;
 }
 
 bool CurrentBlock::resetPosition(Map *map) {
-    posX = WIDTH / 2 - BLOCK_EDGE / 2; posY = 0;
+    posX = WIDTH_MAP / 2 - BLOCK_EDGE / 2; posY = 0;
 
     shadowHardDrop(map);
 
@@ -165,7 +169,6 @@ bool CurrentBlock::rotateRight(Map* map) {
 
 void CurrentBlock::swap(Hold* hold) {
     block = hold->interchange(block);
-
     soundManager->play("hold");
 }
 

@@ -9,8 +9,7 @@
 #include <SFML/Window/Event.hpp>
 
 Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE) {
-    std::random_device rd; next->setSeed(rd());
-    curBlock->setter(next->updateNext());
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
 }
 
@@ -23,7 +22,7 @@ Player::Player(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listener, ui
 
     sendSock.send(&seed, sizeof(seed));
 
-    curBlock->setter(next->updateNext());
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
 }
 
@@ -37,7 +36,7 @@ Player::Player(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port):M
     next->setSeed(seed);
 
     std::cout << "New client connected: " << sendSock.getRemoteAddress() << std::endl;
-    curBlock->setter(next->updateNext());
+    curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
 }
 

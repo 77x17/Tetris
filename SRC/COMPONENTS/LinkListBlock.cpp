@@ -23,12 +23,11 @@ void LinkListBlock::addNode(Block *block) {
 }
 
 LinkListBlock::LinkListBlock(int x, int y, int w, int h) : NEXT_POSITION_X(x), NEXT_POSITION_Y(y), NEXT_WIDTH(w), NEXT_HEIGHT(h), nEle(0), head(nullptr), tail(nullptr) {
-    gen.seed(0);
+    std::random_device rd; gen = std::mt19937(rd());
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
 
 LinkListBlock::~LinkListBlock() {
-    if (head == nullptr) return;
     while (head) {
         BlockEle* tmp = head; head = head->next;
         delete tmp->block; // this is a block create in factory and it is not automatically deleted.
@@ -36,20 +35,27 @@ LinkListBlock::~LinkListBlock() {
     }
     head = tail = nullptr;
 }
-#include <iostream>
+
+void LinkListBlock::reset(uint32_t seed) {
+    while (head) {
+        BlockEle* tmp = head; head = head->next;
+        delete tmp->block;
+        delete tmp;
+    }
+    head = tail = nullptr; nEle = 0;
+    setSeed(seed);
+}
+
 void LinkListBlock::setSeed(int seed) {
     gen =  std::mt19937(seed);
-    // std::cout << "HELLO!";
-    addBag();
 }
 
 Block* LinkListBlock::updateNext() {
+    if (nEle < 7) addBag();
     Block* cur = head->block; 
-
-    BlockEle* p = head; 
+    BlockEle* p = head;
     head = head->next;
-    delete p; 
-    if (--nEle < 7) addBag();
+    nEle--; delete p;
     return cur;
 }
 
