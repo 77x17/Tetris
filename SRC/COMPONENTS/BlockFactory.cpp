@@ -31,11 +31,11 @@ Block* BlockFactory::getBlockType(int x) {
 
 void BlockFactory::createBag(BlockEle* &head, BlockEle* &tail) {
     static std::random_device rd;
-    static std::mt19937 gen(rd());
+    static std::mt19937 gen(1234);
 
     int number[7] = {0, 1, 2, 3, 4, 5, 6};
     std::shuffle(number, number + 7, gen);
-    for (const int& x : number) {
+    for (const int& x : number) { 
         if (head == nullptr) {
             head = tail = new BlockEle(getBlockType(x));
         }

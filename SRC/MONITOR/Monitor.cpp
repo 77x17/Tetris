@@ -148,7 +148,7 @@ void Monitor::processEvents(const sf::Event &event) {
         } 
         else if (event.key.code == sf::Keyboard::Up) {
             handleUp();
-        } 
+        }
         else if (event.key.code == sf::Keyboard::Space) {
             handleHardDrop();
         } 

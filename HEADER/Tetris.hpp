@@ -5,12 +5,14 @@
 
 #include <atomic>
 
-class Monitor;
+class Player;
+class Competitor;
 class NetworkManager;
 
 class Tetris {
 private:
-    Monitor *player, *competitor;
+    Player *player;
+    Competitor *competitor;
     sf::RenderWindow *window;
 
     std::atomic<bool> isFinish;

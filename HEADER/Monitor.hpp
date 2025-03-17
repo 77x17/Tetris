@@ -46,7 +46,6 @@ public:
     void autoDown();
     void draw(sf::RenderWindow* window);
     virtual void start()=0;
-    virtual void sendEvent(const sf::Event &event)=0;
 };
 
 #endif

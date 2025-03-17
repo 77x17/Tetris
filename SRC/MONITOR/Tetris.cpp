@@ -1,6 +1,7 @@
 #include "Tetris.hpp"
 
 #include "Player.hpp"
+#include "Competitor.hpp"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
@@ -10,7 +11,8 @@ const int WINDOW_WIDTH  = 1000;
 const int WINDOW_HEIGHT = 700;
 
 Tetris::Tetris() {
-    player = competitor = nullptr;
+    player = nullptr;
+    competitor = nullptr;
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
 }
 
@@ -48,11 +50,12 @@ void Tetris::makeConnection(bool isHost) {
         sf::TcpListener listener;
         listener.listen(55001);
         player = new Player(10, 50, listener);
-        competitor = new Player(500, 50, listener);
+        listener.listen(55000);
+        competitor = new Competitor(500, 50, listener);
     }
     else {
-        competitor = new Player(500, 50, "127.0.0.1", 55001);
-        player = new Player(10, 50, "127.0.0.1", 55001);
+        competitor = new Competitor(500, 50, "127.0.0.1", 55001);
+        player = new Player(10, 50, "127.0.0.1", 55000);
     }
     isFinish.store(true);
 }
@@ -72,13 +75,15 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         }
     }
 
-    while (window->isOpen()) {
+    competitor->initPollEvent();
 
+    while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) 
                 return;
             player->processEvents(event);
+            player->sendEvent(event);
         }
         
         player->autoDown();
