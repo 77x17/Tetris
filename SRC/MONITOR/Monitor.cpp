@@ -6,17 +6,10 @@
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 
-constexpr float DROP_TIME           = 0.5f;
-constexpr float COLLISION_DROP_TIME = 2.5f;
-
-constexpr float DELAY_MOVING_TIME   = 200.0f;
-constexpr float MOVING_TIME         = 30.0f;
-          float movingTime          = DELAY_MOVING_TIME;
+#include <iostream>
 
 Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     gameOver = false;
-
-    moveLeft = moveDown = moveRight = false;
 
     int HOLD_WIDTH       = 5;
     int HOLD_HEIGHT      = 3;
@@ -42,7 +35,6 @@ Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     next      = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
     infor     = new Infor(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE);
     curBlock  = new CurrentBlock();
-    collision = false;
 }
 
 Monitor::~Monitor() {
@@ -53,161 +45,8 @@ Monitor::~Monitor() {
     if (infor)    { delete infor;    infor    = nullptr; }
 }
 
-void Monitor::handleLeft() {
-    if (curBlock->moveLeft(map) and curBlock->collisionBottom(map) and collision == false) {
-        collision = true;
-
-        clock.restart();
-    }
-}
-
-void Monitor::handleRight() {
-    if (curBlock->moveRight(map) and curBlock->collisionBottom(map) and collision == false) {
-        collision = true;
-
-        clock.restart();
-    }
-}
-
-void Monitor::handleDown() {
-    if (curBlock->moveDown(map) and not curBlock->collisionBottom(map)) {
-        clock.restart();
-    }
-}
-
-void Monitor::handleUp() {
-    if (curBlock->rotateLeft(map) and curBlock->collisionBottom(map) and collision == false) {
-        collision = true;
-
-        clock.restart();
-    }
-}
-
-void Monitor::handlePut() {
-    infor->addLine(curBlock->put(map), curBlock->spin);
-
-    curBlock->freeAndSetter(next->updateNext());
-    curBlock->resetPosition(map); 
-    collision = false;
-    gameOver = curBlock->gameOver(map);
-    hold->unlock();
-}
-
 bool Monitor::isGameOver() {
     return gameOver;
-}
-
-void Monitor::handleHardDrop() {
-    curBlock->hardDrop(map); 
-
-    handlePut();
-
-    clock.restart();
-}
-
-void Monitor::handleHold() {
-    if (hold->canHold()) {
-        hold->lock();
-        curBlock->swap(hold);
-        if (curBlock->isEmpty()) {
-            curBlock->freeAndSetter(next->updateNext());
-        }
-        curBlock->resetPosition(map);
-
-        clock.restart();
-    }
-}
-
-void Monitor::processEvents(const sf::Event &event) {
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Left and curBlock->moveLeftSignal == false) {
-            curBlock->moveLeftSignal  = true;
-            curBlock->moveRightSignal = false;
-
-            handleLeft();
-            
-            movingTime = DELAY_MOVING_TIME;
-
-        movingClock.restart();
-    }
-    else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
-        moveLeft  = false;
-        moveRight = true;
-            movingClock.restart();
-        }
-        else if (event.key.code == sf::Keyboard::Right and curBlock->moveRightSignal == false) {
-            curBlock->moveLeftSignal  = false;
-            curBlock->moveRightSignal = true;
-
-            handleRight();
-
-            movingTime = DELAY_MOVING_TIME;
-
-        movingClock.restart();
-    } 
-    else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
-        moveDown = true;
-            movingClock.restart();
-        } 
-        else if (event.key.code == sf::Keyboard::Down and curBlock->moveDownSignal == false) {
-            curBlock->moveDownSignal = true;
-
-            handleDown();
-
-            movingClock.restart();
-        } 
-        else if (event.key.code == sf::Keyboard::Up) {
-            handleUp();
-        } 
-        else if (event.key.code == sf::Keyboard::Space) {
-            handleHardDrop();
-        } 
-        else if (event.key.code == sf::Keyboard::C) {
-            handleHold();
-        }
-    } 
-    else if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::Left) {
-            curBlock->moveLeftSignal = false;
-            
-            movingTime = DELAY_MOVING_TIME;
-        }
-        else if (event.key.code == sf::Keyboard::Right) {
-            curBlock->moveRightSignal = false;
-            
-            movingTime = DELAY_MOVING_TIME;
-        } 
-        else if (event.key.code == sf::Keyboard::Down) {
-            curBlock->moveDownSignal = false;
-        } 
-    }
-}
-
-void Monitor::autoDown() {
-    if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
-        if (curBlock->moveLeftSignal) {
-            handleLeft();
-            movingTime = MOVING_TIME;
-        }
-        else if (curBlock->moveRightSignal) {
-            handleRight();
-            movingTime = MOVING_TIME;
-        }
-        
-        if (curBlock->moveDownSignal) {
-            handleDown();
-            movingTime = MOVING_TIME;
-        }
-        
-        movingClock.restart();
-    }
-    if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
-        if (not curBlock->moveDown(map)) {
-            handlePut();
-        }
-        
-        clock.restart();
-    }
 }
 
 void Monitor::draw(sf::RenderWindow* window) {
@@ -221,15 +60,9 @@ void Monitor::draw(sf::RenderWindow* window) {
     infor   ->draw(window);
 }
 
-#include <iostream>
-
-void Monitor::restart(uint32_t seed) {
+void Monitor::clearScreen(uint32_t seed) {
     hold->reset();
     map->reset();
     next->reset(seed);
     infor->reset();
-
-    collision = false; gameOver = false;
-    curBlock->freeAndSetter(next->updateNext());
-    curBlock->resetPosition(map);
 }

@@ -11,15 +11,31 @@
 
 class Player :public Monitor {
 private:
-    sf::TcpSocket sendSock;
+    bool moveLeft;
+    bool moveRight;
+    bool moveDown;
+
+    sf::Clock clock;            
+    sf::Clock movingClock;      
+    bool      collision;        // collision bottom (extra time to move and rotate)
+
+    
+    void handleLeft();
+    void handleRight();
+    void handleDown();
+    void handleUp();
+    void handlePut();
+    void handleHardDrop();
+    void handleHold();
+
 public:
     Player(int X_COORDINATE, int Y_COORDINATE);
-    Player(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);
-    Player(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
     ~Player();
-    
-    void start();
-    void sendEvent(const sf::Event &event);
+    void processEvents(const sf::Event &event);
+    void autoDown();
+
+    void start(uint32_t seed);
+    void restart(uint32_t seed);
 };
 
 #endif

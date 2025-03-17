@@ -48,11 +48,11 @@ Competitor::~Competitor() {
 }
 
 void Competitor::start() {
-    sf::Event event;
-    while (recvEvent(event)) {
-        processEvents(event);
-    }
-    autoDown();
+    // sf::Event event;
+    // while (recvEvent(event)) {
+    //     processEvents(event);
+    // }
+    // autoDown();
 }
 
 bool Competitor::recvEvent(sf::Event &event) {

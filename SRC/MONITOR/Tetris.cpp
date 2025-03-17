@@ -26,12 +26,12 @@ void Tetris::startGameOnePlayer() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2, WINDOW_HEIGHT), "Tetr.io");
 
     player = new Player(50, 10);
-    // std::cerr << "HELLO!\n";
+    player->start(0);
     while (window->isOpen()) {
         sf::Event event;
 
         if (player->isGameOver()) {
-            player->restart();
+            player->restart(0);
         }
 
         while (window->pollEvent(event)) {
@@ -49,54 +49,54 @@ void Tetris::startGameOnePlayer() {
 }
 
 void Tetris::makeConnection(bool isHost) {
-    if (isHost) {
-        sf::TcpListener listener;
-        listener.listen(55001);
-        std::random_device rd;
-        int seed = rd();
-        player = new Player(50, 10, listener, seed);
-        listener.listen(55000);
-        competitor = new Competitor(550, 10, listener, seed);
-    }
-    else {
-        competitor = new Competitor(550, 10, "127.0.0.1", 55001);
-        player = new Player(50, 10, "127.0.0.1", 55000);
-    }
-    isFinish.store(true);
+    // if (isHost) {
+    //     sf::TcpListener listener;
+    //     listener.listen(55001);
+    //     std::random_device rd;
+    //     int seed = rd();
+    //     player = new Player(50, 10, listener, seed);
+    //     listener.listen(55000);
+    //     competitor = new Competitor(550, 10, listener, seed);
+    // }
+    // else {
+    //     competitor = new Competitor(550, 10, "127.0.0.1", 55001);
+    //     player = new Player(50, 10, "127.0.0.1", 55000);
+    // }
+    // isFinish.store(true);
 }
 
 void Tetris::startGameTwoPlayer(bool isHost) {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
+    // window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
 
-    isFinish.store(false);
-    std::thread connectThread(&Tetris::makeConnection, this, isHost);
-    connectThread.detach();
+    // isFinish.store(false);
+    // std::thread connectThread(&Tetris::makeConnection, this, isHost);
+    // connectThread.detach();
 
-    while (window->isOpen() && !isFinish) {
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
-                return;
-        }
-    }
+    // while (window->isOpen() && !isFinish) {
+    //     sf::Event event;
+    //     while (window->pollEvent(event)) {
+    //         if (event.type == sf::Event::Closed) 
+    //             return;
+    //     }
+    // }
 
-    competitor->initPollEvent();
+    // competitor->initPollEvent();
 
-    while (window->isOpen()) {
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
-                return;
-            player->processEvents(event);
-            player->sendEvent(event);
-        }
+    // while (window->isOpen()) {
+    //     sf::Event event;
+    //     while (window->pollEvent(event)) {
+    //         if (event.type == sf::Event::Closed) 
+    //             return;
+    //         player->processEvents(event);
+    //         player->sendEvent(event);
+    //     }
         
-        player->autoDown();
-        competitor->start();
+    //     player->autoDown();
+    //     competitor->start();
 
-        window->clear();
-        player->draw(window);
-        competitor->draw(window);
-        window->display();
-    }
+    //     window->clear();
+    //     player->draw(window);
+    //     competitor->draw(window);
+    //     window->display();
+    // }
 }

@@ -23,7 +23,6 @@ void LinkListBlock::addNode(Block *block) {
 }
 
 LinkListBlock::LinkListBlock(int x, int y, int w, int h) : NEXT_POSITION_X(x), NEXT_POSITION_Y(y), NEXT_WIDTH(w), NEXT_HEIGHT(h), nEle(0), head(nullptr), tail(nullptr) {
-    std::random_device rd; gen = std::mt19937(rd());
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
 
