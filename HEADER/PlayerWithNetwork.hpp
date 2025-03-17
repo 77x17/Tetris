@@ -1,6 +1,8 @@
 #ifndef PLAYERWITHNETWORK_HPP
 #define PLAYERWITHNETWORK_HPP
 
+#include <SFML/Window/Event.hpp>
+
 #include "Player.hpp"
 
 class PlayerWithNetwork: public Player {
@@ -12,6 +14,8 @@ public:
 
     void start(uint32_t seed);
     void restart(uint32_t seed);
+
+    void sendEvent(const sf::Event &event);
 };
 
 #endif

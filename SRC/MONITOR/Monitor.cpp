@@ -34,15 +34,13 @@ Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     map       = new Map(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
     next      = new LinkListBlock(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
     infor     = new Infor(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE);
-    curBlock  = new CurrentBlock();
 }
 
 Monitor::~Monitor() {
-    if (curBlock) { delete curBlock; curBlock = nullptr; }
-    if (hold)     { delete hold;     hold     = nullptr; }
-    if (next)     { delete next;     next     = nullptr; }
-    if (map)      { delete map;      map      = nullptr; }
-    if (infor)    { delete infor;    infor    = nullptr; }
+    delete hold;     hold     = nullptr;
+    delete next;     next     = nullptr;
+    delete map;      map      = nullptr;
+    delete infor;    infor    = nullptr;
 }
 
 bool Monitor::isGameOver() {
@@ -53,7 +51,6 @@ void Monitor::draw(sf::RenderWindow* window) {
     map ->drawOutline(window);
     hold->drawOutline(window);
     next->drawOutline(window);
-    curBlock->draw(window, map);
     hold    ->draw(window);
     next    ->draw(window);
     map     ->draw(window);

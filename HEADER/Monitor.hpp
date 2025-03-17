@@ -16,7 +16,6 @@ private:
     
 protected:
     Hold             *hold;
-    CurrentBlock     *curBlock;
     Map              *map;
     Infor            *infor;
     LinkListBlock    *next;
@@ -28,7 +27,7 @@ public:
     virtual ~Monitor();
     
     bool isGameOver();
-    void draw(sf::RenderWindow* window);
+    virtual void draw(sf::RenderWindow* window);
 };
 
 #endif

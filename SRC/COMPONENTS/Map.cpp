@@ -1,6 +1,5 @@
 #include "Map.hpp"
 
-#include "CurrentBlock.hpp"
 #include "Block.hpp"
 
 #define OFFSETX 4

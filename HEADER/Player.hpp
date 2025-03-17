@@ -21,6 +21,8 @@ private:
     bool      collision;        // collision bottom (extra time to move and rotate)
 
 protected:
+    CurrentBlock     *curBlock;
+    
     void handleLeft();
     void handleRight();
     void handleDown();
@@ -38,6 +40,8 @@ public:
 
     void start();
     void restart();
+
+    void draw(sf::RenderWindow* window);
 };
 
 #endif

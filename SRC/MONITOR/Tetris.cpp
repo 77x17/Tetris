@@ -12,21 +12,16 @@
 const int WINDOW_WIDTH  = 1050;
 const int WINDOW_HEIGHT = 700;
 
-Tetris::Tetris() {
-    player = nullptr;
-    competitor = nullptr;
-}
+Tetris::Tetris() {}
 
 Tetris::~Tetris() {
-    delete player;
-    delete competitor;
     delete window;
 }
 
 void Tetris::startGameOnePlayer() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2, WINDOW_HEIGHT), "Tetr.io");
 
-    player = new Player(50, 10);
+    Player* player = new Player(50, 10);
     player->start();
     while (window->isOpen()) {
         sf::Event event;
@@ -49,7 +44,7 @@ void Tetris::startGameOnePlayer() {
     }
 }
 
-void Tetris::makeConnection(bool isHost) {
+void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
     if (isHost) {
         sf::TcpListener listener;
         listener.listen(55001);
@@ -67,10 +62,14 @@ void Tetris::makeConnection(bool isHost) {
 }
 
 void Tetris::startGameTwoPlayer(bool isHost) {
+    Competitor* competitor;
+    PlayerWithNetwork* player;
+
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
 
     isFinish.store(false);
-    std::thread connectThread(&Tetris::makeConnection, this, isHost);
+    std::thread connectThread(&Tetris::makeConnection, this, isHost, 
+                                    std::ref(competitor), std::ref(player));
     connectThread.detach();
 
     while (window->isOpen() && !isFinish) {
@@ -81,23 +80,23 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         }
     }
 
-    // competitor->initPollEvent();
+    competitor->initPollEvent();
 
-    // while (window->isOpen()) {
-    //     sf::Event event;
-    //     while (window->pollEvent(event)) {
-    //         if (event.type == sf::Event::Closed) 
-    //             return;
-    //         player->processEvents(event);
-    //         player->sendEvent(event);
-    //     }
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) 
+                return;
+            player->processEvents(event);
+            player->sendEvent(event);
+        }
         
-    //     player->autoDown();
-    //     competitor->start();
+        player->autoDown();
+        competitor->start();
 
-    //     window->clear();
-    //     player->draw(window);
-    //     competitor->draw(window);
-    //     window->display();
-    // }
+        window->clear();
+        player->draw(window);
+        competitor->draw(window);
+        window->display();
+    }
 }

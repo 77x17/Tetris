@@ -6,17 +6,16 @@
 #include <atomic>
 
 class Player;
+class PlayerWithNetwork;
 class Competitor;
 class NetworkManager;
 
 class Tetris {
 private:
-    Player *player;
-    Competitor *competitor;
     sf::RenderWindow *window;
 
     std::atomic<bool> isFinish;
-    void makeConnection(bool isHost);
+    void makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player);
 
 public:
     Tetris();

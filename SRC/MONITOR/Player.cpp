@@ -6,9 +6,6 @@
 #include "Hold.hpp"
 #include "Infor.hpp"
 
-#include <SFML/Network.hpp>
-#include <SFML/Window/Event.hpp>
-
 #include <iostream>
 
 constexpr float DROP_TIME           = 0.5f;
@@ -19,11 +16,13 @@ constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
 Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE) {
+    curBlock  = new CurrentBlock();
     moveLeft = moveDown = moveRight = false;
     collision = false;
 }
 
 Player::~Player() {
+    delete curBlock; curBlock = nullptr;
 }
 
 void Player::resetComponent() {
@@ -113,25 +112,25 @@ void Player::processEvents(const sf::Event &event) {
             
             movingTime = DELAY_MOVING_TIME;
 
-        movingClock.restart();
-    }
-    else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
-        moveLeft  = false;
-        moveRight = true;
             movingClock.restart();
         }
-        else if (event.key.code == sf::Keyboard::Right and curBlock->moveRightSignal == false) {
-            curBlock->moveLeftSignal  = false;
-            curBlock->moveRightSignal = true;
+        else if (event.key.code == sf::Keyboard::Right and moveRight == false) {
+            moveLeft  = false;
+            moveRight = true;
+                movingClock.restart();
+            }
+            else if (event.key.code == sf::Keyboard::Right and curBlock->moveRightSignal == false) {
+                curBlock->moveLeftSignal  = false;
+                curBlock->moveRightSignal = true;
 
-            handleRight();
+                handleRight();
 
-            movingTime = DELAY_MOVING_TIME;
+                movingTime = DELAY_MOVING_TIME;
 
-        movingClock.restart();
-    } 
-    else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
-        moveDown = true;
+            movingClock.restart();
+        } 
+        else if (event.key.code == sf::Keyboard::Down and moveDown == false) {
+            moveDown = true;
             movingClock.restart();
         } 
         else if (event.key.code == sf::Keyboard::Down and curBlock->moveDownSignal == false) {
@@ -193,4 +192,9 @@ void Player::autoDown() {
         
         clock.restart();
     }
+}
+
+void Player::draw(sf::RenderWindow* window) {
+    Monitor::draw(window);
+    curBlock->draw(window, map);
 }
