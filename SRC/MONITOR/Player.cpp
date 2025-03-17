@@ -30,6 +30,8 @@ void Player::resetComponent() {
 }
 
 void Player::start() {
+    std::random_device rd; 
+    next->setSeed(rd());
     resetComponent();
 }
 
