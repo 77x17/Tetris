@@ -12,7 +12,7 @@
 constexpr float DROP_TIME           = 0.5f;
 constexpr float COLLISION_DROP_TIME = 2.5f;
 
-constexpr float DELAY_MOVING_TIME   = 200.0f;
+constexpr float DELAY_MOVING_TIME   = 175.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
