@@ -114,6 +114,33 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         }
     }
 
+    sf::Texture backgroundTexture;
+    backgroundTexture.loadFromFile("ASSETS/background.png");
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setColor(sf::Color(255, 255, 255, 50));
+
+    // Get window size & texture size
+    sf::Vector2u windowSize = window->getSize();
+    sf::Vector2u textureSize = backgroundTexture.getSize();
+    // Calculate scale factors
+    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
+    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
+    float scale = std::max(scaleX, scaleY);
+    // Apply scale to fit window
+    backgroundSprite.setScale(scale, scale);
+    // Center the sprite
+    float newWidth  = textureSize.x * scale;
+    float newHeight = textureSize.y * scale;
+    float posX = (windowSize.x - newWidth ) / 2;
+    float posY = (windowSize.y - newHeight) / 2;
+    backgroundSprite.setPosition(posX, posY);
+
+    sf::Music backgroundMusic;
+    backgroundMusic.openFromFile("ASSETS/sfx/tetristheme.mp3");
+    backgroundMusic.setLoop(true);  
+    backgroundMusic.play();
+
     competitor->start();
 
     while (window->isOpen()) {
@@ -123,13 +150,17 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                 return;
             player->processEvents(event);
         }
+
         
         player->autoDown();
-
+        
         window->clear();
         player->sendCurBlock();
+        window->draw(backgroundSprite); // Draw background
         player->draw(window);
         competitor->draw(window);
         window->display();
+
+        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
 }
