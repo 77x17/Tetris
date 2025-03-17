@@ -1,15 +1,16 @@
 #include "Infor.hpp"
 
-#include <iostream>
-
 #include "SoundManager.hpp"
+#include "Common.hpp"
 
 const int FONT_SIZE = 25;
 
 constexpr float TIME_OUT = 2.0f;
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(int x, int y, int w) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), nLine(0), count(0), add(0), B2B(0), B2BMissing(0), spin(false) {
+Infor::Infor(int x, int y, int w, int audioX, int audioY, int audioW, int audioH) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), 
+        AUDIO_POSITION_X(audioX), AUDIO_POSITION_Y(audioY), AUDIO_WIDTH(audioW), AUDIO_HEIGHT(audioH),
+        nLine(0), count(0), add(0), B2B(0), B2BMissing(0), spin(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -224,4 +225,34 @@ void Infor::draw(sf::RenderWindow *window) {
     if (B2B > 1) {
         drawB2B(window);
     }
+}
+
+void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
+    sf::Text text("AUDIO", font, BLOCK_SIZE - BLOCK_SIZE / 3);
+    text.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
+    window->draw(text);
+
+    sf::RectangleShape line;
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+
+    // Upper - lower line
+    line.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
+    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y - WIDTH_BORDER + 0           * BLOCK_SIZE);
+    window->draw(line);
+    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y + AUDIO_HEIGHT * BLOCK_SIZE);
+    window->draw(line);
+    
+    // Left - right line
+    // line.setSize(sf::Vector2f(1, AUDIO_HEIGHT * BLOCK_SIZE));
+    // line.setPosition(AUDIO_POSITION_X + 0           * BLOCK_SIZE, AUDIO_POSITION_Y);
+    // window->draw(line);
+    // line.setPosition(AUDIO_POSITION_X + AUDIO_WIDTH * BLOCK_SIZE, AUDIO_POSITION_Y);
+    // window->draw(line);
+
+    sf::RectangleShape volumeBar;
+    volumeBar.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE * (volume / 100.0f), AUDIO_HEIGHT * BLOCK_SIZE));  // Width proportional to volume
+    volumeBar.setFillColor(sf::Color::White);
+    volumeBar.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y);
+
+    window->draw(volumeBar);
 }

@@ -36,7 +36,6 @@ void Hold::drawOutline(sf::RenderWindow* window) {
     sf::Text text("HOLD", font, BLOCK_SIZE - BLOCK_SIZE / 3);
     text.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
     window->draw(text);
-
     
     sf::RectangleShape line;
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White

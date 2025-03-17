@@ -40,7 +40,7 @@ void Map::drawOutline(sf::RenderWindow* window) {
 
     // Grid
     line.setSize(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE, 1));
-    line.setFillColor(sf::Color(200, 200, 200, 100)); // Gray
+    line.setFillColor(sf::Color(100, 100, 100, 100)); // Gray
     for (int i = 4; i <= GRID_HEIGHT; i++) {
         line.setPosition(GRID_POSITION_X, GRID_POSITION_Y + i * BLOCK_SIZE);
         window->draw(line);
@@ -48,7 +48,7 @@ void Map::drawOutline(sf::RenderWindow* window) {
 
     // Grid
     line.setSize(sf::Vector2f(1, (GRID_HEIGHT - 4) * BLOCK_SIZE));
-    line.setFillColor(sf::Color(200, 200, 200, 100)); // Gray
+    line.setFillColor(sf::Color(100, 100, 100, 100)); // Gray
     for (int i = 0; i <= GRID_WIDTH; i++) {
         line.setPosition(GRID_POSITION_X + i * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
         window->draw(line);

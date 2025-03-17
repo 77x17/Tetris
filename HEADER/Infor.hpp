@@ -10,6 +10,11 @@ private:
     int INFOR_POSITION_X;
     int INFOR_POSITION_Y;
     int INFOR_WIDTH;
+
+    int AUDIO_POSITION_X;
+    int AUDIO_POSITION_Y;
+    int AUDIO_WIDTH;
+    int AUDIO_HEIGHT;
     
     int  nLine;
     int  count;
@@ -29,7 +34,7 @@ private:
     SoundManager *soundManager;
 
 public:
-    Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH);
+    Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
     ~Infor();
 
     void reset();
@@ -40,6 +45,7 @@ public:
     void drawB2B(sf::RenderWindow *window);
     void drawMissingB2B(sf::RenderWindow *window);
     void drawSpin(sf::RenderWindow *window);
+    void drawAudio(sf::RenderWindow *window, const float &volume);
     void draw(sf::RenderWindow *window);
 
 };

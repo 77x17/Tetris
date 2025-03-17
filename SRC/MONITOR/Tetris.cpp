@@ -3,14 +3,18 @@
 #include "Player.hpp"
 #include "PlayerWithNetwork.hpp"
 #include "Competitor.hpp"
+#include "SoundManager.hpp"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
+#include <SFML/Graphics.hpp>
 #include <thread>
 #include <iostream>
 
 const int WINDOW_WIDTH  = 1050;
 const int WINDOW_HEIGHT = 700;
+
+float SoundManager::volume = 50.0f;
 
 Tetris::Tetris() {}
 
@@ -20,6 +24,33 @@ Tetris::~Tetris() {
 
 void Tetris::startGameOnePlayer() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2 + 25, WINDOW_HEIGHT), "Tetr.io");
+
+    sf::Texture backgroundTexture;
+    backgroundTexture.loadFromFile("ASSETS/background.png");
+    sf::Sprite backgroundSprite;
+    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setColor(sf::Color(255, 255, 255, 50));
+
+    // Get window size & texture size
+    sf::Vector2u windowSize = window->getSize();
+    sf::Vector2u textureSize = backgroundTexture.getSize();
+    // Calculate scale factors
+    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
+    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
+    float scale = std::max(scaleX, scaleY);
+    // Apply scale to fit window
+    backgroundSprite.setScale(scale, scale);
+    // Center the sprite
+    float newWidth  = textureSize.x * scale;
+    float newHeight = textureSize.y * scale;
+    float posX = (windowSize.x - newWidth ) / 2;
+    float posY = (windowSize.y - newHeight) / 2;
+    backgroundSprite.setPosition(posX, posY);
+
+    sf::Music backgroundMusic;
+    backgroundMusic.openFromFile("ASSETS/sfx/tetristheme.mp3");
+    backgroundMusic.setLoop(true);  
+    backgroundMusic.play();
 
     Player* player = new Player(50, 10);
     player->start();
@@ -39,8 +70,11 @@ void Tetris::startGameOnePlayer() {
         player->autoDown();
 
         window->clear();
+        window->draw(backgroundSprite); // Draw background
         player->draw(window);
         window->display();
+
+        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
 }
 

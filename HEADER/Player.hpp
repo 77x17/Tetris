@@ -9,12 +9,17 @@
 
 #include <random>
 
-class Player :public Monitor {
+class SoundManager;
+
+class Player : public Monitor {
 private:
     sf::Clock clock;            
-    sf::Clock movingClock;      
+    sf::Clock movingClock;
+
+    SoundManager *soundManager;
     
-    bool      collision;        // collision bottom (extra time to move and rotate)
+    bool  collision;        // collision bottom (extra time to move and rotate)
+    float volume;
 
 protected:
     CurrentBlock     *curBlock;
