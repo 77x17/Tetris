@@ -116,9 +116,9 @@ void Player::processEvents(const sf::Event &event) {
             curBlock->moveLeftSignal  = false;
             curBlock->moveRightSignal = true;
 
-                handleRight();
+            handleRight();
 
-                movingTime = DELAY_MOVING_TIME;
+            movingTime = DELAY_MOVING_TIME;
 
             movingClock.restart();
         } 
@@ -138,7 +138,7 @@ void Player::processEvents(const sf::Event &event) {
         else if (event.key.code == sf::Keyboard::C) {
             handleHold();
         }
-    } 
+    }   
     else if (event.type == sf::Event::KeyReleased) {
         if (event.key.code == sf::Keyboard::Left) {
             curBlock->moveLeftSignal = false;
