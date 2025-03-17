@@ -10,7 +10,7 @@ class BlockFactory {
 public:
     static Block* createRandomBlock();
     static Block* getBlockType(int x);
-    static void createBag(BlockEle* &head, BlockEle* &tail);
+    static void createBag(BlockEle* &head, BlockEle* &tail, std::mt19937 &gen);
 };
 
 #endif

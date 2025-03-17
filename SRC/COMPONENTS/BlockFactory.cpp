@@ -29,10 +29,7 @@ Block* BlockFactory::getBlockType(int x) {
     }
 }
 
-void BlockFactory::createBag(BlockEle* &head, BlockEle* &tail) {
-    static std::random_device rd;
-    static std::mt19937 gen(1234);
-
+void BlockFactory::createBag(BlockEle* &head, BlockEle* &tail, std::mt19937 &gen) {
     int number[7] = {0, 1, 2, 3, 4, 5, 6};
     std::shuffle(number, number + 7, gen);
     for (const int& x : number) { 

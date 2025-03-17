@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <SFML/Graphics.hpp>
+#include <random>
 
 class BlockEle;
 class Block;
@@ -30,12 +31,15 @@ private:
     BlockEle *head;
     BlockEle *tail;
     sf::Font  font;
-    
+
+    std::mt19937 gen;
     void addBag();
     
 public:
     LinkListBlock(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
     ~LinkListBlock();
+    void setSeed(int seed);
+    
     void addNode(Block *block);
     Block* updateNext();
     void drawOutline(sf::RenderWindow *window);

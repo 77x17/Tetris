@@ -9,21 +9,33 @@
 #include <SFML/Window/Event.hpp>
 
 Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE) {
+    std::random_device rd; next->setSeed(rd());
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
 }
 
 #include <iostream>
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listener):Monitor(X_COORDINATE, Y_COORDINATE) {
+Player::Player(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listener, uint32_t seed):Monitor(X_COORDINATE, Y_COORDINATE) {
     listener.accept(sendSock);
     std::cout << "New client connected: " << sendSock.getRemoteAddress() << std::endl;
+    next->setSeed(seed);
+
+    sendSock.send(&seed, sizeof(seed));
+
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
 }
 
 Player::Player(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port):Monitor(X_COORDINATE, Y_COORDINATE) {
     sendSock.connect(ipv4, port);
+
+    uint32_t seed = 0; std::size_t tmp=0;
+    if (sendSock.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to receive seed!");
+    }
+    next->setSeed(seed);
+
     std::cout << "New client connected: " << sendSock.getRemoteAddress() << std::endl;
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);

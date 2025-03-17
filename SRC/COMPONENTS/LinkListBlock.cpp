@@ -9,8 +9,7 @@ BlockEle::BlockEle() : block(nullptr), next(nullptr) {}
 BlockEle::BlockEle(Block* tmp) : block(tmp), next(nullptr) {}
 
 void LinkListBlock::addBag() {
-    BlockFactory::createBag(head, tail);
-
+    BlockFactory::createBag(head, tail, gen);
     nEle += 7;
 }
 
@@ -24,8 +23,7 @@ void LinkListBlock::addNode(Block *block) {
 }
 
 LinkListBlock::LinkListBlock(int x, int y, int w, int h) : NEXT_POSITION_X(x), NEXT_POSITION_Y(y), NEXT_WIDTH(w), NEXT_HEIGHT(h), nEle(0), head(nullptr), tail(nullptr) {
-    addBag();
-    
+    gen.seed(0);
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
 
@@ -37,6 +35,12 @@ LinkListBlock::~LinkListBlock() {
         delete tmp;
     }
     head = tail = nullptr;
+}
+#include <iostream>
+void LinkListBlock::setSeed(int seed) {
+    gen =  std::mt19937(seed);
+    // std::cout << "HELLO!";
+    addBag();
 }
 
 Block* LinkListBlock::updateNext() {

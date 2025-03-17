@@ -17,9 +17,13 @@
 //     curBlock->resetPosition(map);
 // }
 
-Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner):Monitor(X_COORDINATE, Y_COORDINATE) {
+Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed):Monitor(X_COORDINATE, Y_COORDINATE) {
     listenner.accept(recvSock);
     std::cout << "New client connected: " << recvSock.getRemoteAddress() << std::endl;
+
+    next->setSeed(seed);
+    recvSock.send(&seed, sizeof(seed));
+
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
     mtx.unlock();
@@ -28,6 +32,13 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &list
 Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port):Monitor(X_COORDINATE, Y_COORDINATE) {
     recvSock.connect(ipv4, port);
     std::cout << "New client connected: " << recvSock.getRemoteAddress() << std::endl;
+    
+    uint32_t seed = 0; std::size_t tmp=0;
+    if (recvSock.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
+        throw std::runtime_error("Failed to receive seed!");
+    }
+    next->setSeed(seed);
+
     curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
     mtx.unlock();

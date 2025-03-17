@@ -7,12 +7,14 @@
 
 #include "Monitor.hpp"
 
+#include <random>
+
 class Player :public Monitor {
 private:
     sf::TcpSocket sendSock;
 public:
     Player(int X_COORDINATE, int Y_COORDINATE);
-    Player(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner);
+    Player(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);
     Player(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
     ~Player();
     

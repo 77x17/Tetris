@@ -49,9 +49,11 @@ void Tetris::makeConnection(bool isHost) {
     if (isHost) {
         sf::TcpListener listener;
         listener.listen(55001);
-        player = new Player(10, 50, listener);
+        std::random_device rd;
+        int seed = rd();
+        player = new Player(10, 50, listener, seed);
         listener.listen(55000);
-        competitor = new Competitor(500, 50, listener);
+        competitor = new Competitor(500, 50, listener, seed);
     }
     else {
         competitor = new Competitor(500, 50, "127.0.0.1", 55001);
