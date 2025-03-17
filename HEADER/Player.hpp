@@ -23,9 +23,9 @@ protected:
     void handleRight();
     void handleDown();
     void handleUp();
-    void handlePut();
     void handleHardDrop();
-    void handleHold();
+    virtual void handlePut();
+    virtual void handleHold();
 
     void resetComponent();
 public:

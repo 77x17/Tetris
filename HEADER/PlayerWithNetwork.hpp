@@ -15,7 +15,10 @@ public:
     void start(uint32_t seed);
     void restart(uint32_t seed);
 
-    void sendEvent(const sf::Event &event);
+    void sendCurBlock();
+
+    void handlePut();
+    void handleHold();
 };
 
 #endif

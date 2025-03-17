@@ -1,14 +1,17 @@
 #include "PlayerWithNetwork.hpp"
 
+#include "CurrentBlock.hpp"
+#include "LinkListBlock.hpp"
+
 #include <iostream>
 #include <SFML/Network.hpp>
 
 PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listener, uint32_t seed):Player(X_COORDINATE, Y_COORDINATE) {
     listener.accept(socket);
-    std::cout << "New client connected: " << socket.getRemoteAddress() << std::endl;
-    
+    std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
     socket.send(&seed, sizeof(seed));
-    resetComponent();
+    next->setSeed(seed);
+    start(seed);
 }
 
 PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port):Player(X_COORDINATE, Y_COORDINATE) {
@@ -18,22 +21,17 @@ PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const c
     if (socket.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
         throw std::runtime_error("Failed to receive seed!");
     }
-    restart(seed);
-    std::cout << "New client connected: " << socket.getRemoteAddress() << std::endl;
+    next->setSeed(seed);
+    start(seed);
+    std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
 }
 
-void PlayerWithNetwork::sendEvent(const sf::Event &event) {
-    if (not(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)) return;
-    if (not(event.key.code == sf::Keyboard::C || event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left))
-        return;
-    sf::Packet packet;
-
-    // Pack the event type (e.g., KeyPressed) and the key code (e.g., Left, Right)
-    packet << static_cast<int>(event.type) << static_cast<int>(event.key.code);
+void PlayerWithNetwork::sendCurBlock() {
+    sf::Packet packet; packet << CURBLOCK;
+    curBlock->compress(packet);
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
-    // std::cerr << "Sent event\n";
 }
 
 void PlayerWithNetwork::start(uint32_t seed) {
@@ -43,4 +41,21 @@ void PlayerWithNetwork::start(uint32_t seed) {
 void PlayerWithNetwork::restart(uint32_t seed) {
     clearScreen(seed);
     resetComponent();
+}
+
+void PlayerWithNetwork::handlePut() {
+    sf::Packet packet; packet << PUT;
+    curBlock->compress(packet);
+
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    Player::handlePut();
+}
+
+void PlayerWithNetwork::handleHold() {
+    sf::Packet packet; packet << HOLD;
+
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    Player::handleHold();
 }

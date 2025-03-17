@@ -216,3 +216,7 @@ bool CurrentBlock::gameOver(Map* map) {
 
     return isGameOver;
 }
+
+void CurrentBlock::compress(sf::Packet &packet) {
+    packet << block->getStateID() << posY << posX << shadowPosY;
+}

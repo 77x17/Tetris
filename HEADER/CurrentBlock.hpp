@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 
 class Block;
 class Map;
@@ -51,6 +52,8 @@ public:
     char getTypeBlock();
 
     bool gameOver(Map* map);
+
+    void compress(sf::Packet &packet);
 };
 
 #endif

@@ -80,7 +80,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         }
     }
 
-    competitor->initPollEvent();
+    competitor->start();
 
     while (window->isOpen()) {
         sf::Event event;
@@ -88,13 +88,12 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             if (event.type == sf::Event::Closed) 
                 return;
             player->processEvents(event);
-            player->sendEvent(event);
         }
         
         player->autoDown();
-        competitor->start();
 
         window->clear();
+        player->sendCurBlock();
         player->draw(window);
         competitor->draw(window);
         window->display();

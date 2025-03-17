@@ -8,10 +8,16 @@
 
 #include "Monitor.hpp"
 
+class Block;
+
 class Competitor :public Monitor {
 private:
     sf::TcpSocket recvSock;
     std::mutex mtx;
+    
+    Block* curBlock;
+    uint8_t posX, posY, posYShadow;
+
     std::queue<sf::Event> pollEvent;
     std::mt19937 gen;
 public:
@@ -20,8 +26,8 @@ public:
     Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
     ~Competitor();
     void start();
-    void initPollEvent();
-    bool recvEvent(sf::Event &event);
+    // void initPollEvent();
+    void draw(sf::RenderWindow* window);
 };
 
 #endif

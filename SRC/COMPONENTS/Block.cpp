@@ -96,6 +96,8 @@ void Block::rotateLeft() { stateID = (stateID + 3) % 4; }
 void Block::rotateRight() { stateID = (stateID + 1) % 4; }
 
 uint16_t Block::getShape() { return state[stateID]; }
+uint8_t Block::getStateID() { return stateID; }
+void Block::setStateID(int x) { stateID = x; }
 
 uint8_t Block::getShapeID() { return shapeID; }
 

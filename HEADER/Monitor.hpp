@@ -9,6 +9,8 @@ class Map;
 class Infor;
 class CurrentBlock;
 
+enum MessageCode {CURBLOCK, PUT, HOLD};
+
 class Monitor {
 private:
     int X_COORDINATE;
