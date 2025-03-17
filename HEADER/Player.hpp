@@ -22,15 +22,15 @@ private:
     float volume;
 
 protected:
-    CurrentBlock     *curBlock;
+    CurrentBlock *curBlock;
     
     void handleLeft();
     void handleRight();
     void handleDown();
-    void handleUp();
     void handleHardDrop();
     virtual void handlePut();
     virtual void handleHold();
+    virtual void handleUp();
 
     void resetComponent();
 public:

@@ -101,7 +101,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     Competitor* competitor;
     PlayerWithNetwork* player;
 
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io");
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io " + (std::string)(isHost ? "Server" : "Client"));
 
     isFinish.store(false);
     std::thread connectThread(&Tetris::makeConnection, this, isHost, 

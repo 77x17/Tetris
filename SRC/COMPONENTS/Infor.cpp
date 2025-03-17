@@ -151,8 +151,11 @@ void Infor::drawMissingB2B(sf::RenderWindow *window) {
         color = sf::Color::Black;
     } 
     else if (phase < 0.375f) { 
-        color = sf::Color(255, 215, 0);
+        color = sf::Color::White;
     } 
+    else {
+        return;
+    }
 
     text.setFillColor(color);
 
@@ -241,13 +244,6 @@ void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
     window->draw(line);
     line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y + AUDIO_HEIGHT * BLOCK_SIZE);
     window->draw(line);
-    
-    // Left - right line
-    // line.setSize(sf::Vector2f(1, AUDIO_HEIGHT * BLOCK_SIZE));
-    // line.setPosition(AUDIO_POSITION_X + 0           * BLOCK_SIZE, AUDIO_POSITION_Y);
-    // window->draw(line);
-    // line.setPosition(AUDIO_POSITION_X + AUDIO_WIDTH * BLOCK_SIZE, AUDIO_POSITION_Y);
-    // window->draw(line);
 
     sf::RectangleShape volumeBar;
     volumeBar.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE * (volume / 100.0f), AUDIO_HEIGHT * BLOCK_SIZE));  // Width proportional to volume

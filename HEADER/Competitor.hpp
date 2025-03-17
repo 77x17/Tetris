@@ -9,14 +9,16 @@
 #include "Monitor.hpp"
 
 class Block;
+class SoundManager;
 
-class Competitor :public Monitor {
+class Competitor : public Monitor {
 private:
     sf::TcpSocket recvSock;
     std::mutex mtx;
     
     Block* curBlock;
     uint8_t posX, posY, posYShadow;
+    SoundManager *soundManager;
 
     std::queue<sf::Event> pollEvent;
     std::mt19937 gen;

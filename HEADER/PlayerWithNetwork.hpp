@@ -19,6 +19,7 @@ public:
 
     void handlePut();
     void handleHold();
+    void handleUp();
 };
 
 #endif

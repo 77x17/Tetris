@@ -45,7 +45,7 @@ void PlayerWithNetwork::restart(uint32_t seed) {
 
 void PlayerWithNetwork::handlePut() {
     sf::Packet packet; packet << PUT;
-    curBlock->compress(packet);
+    curBlock->compressWithSpin(packet);
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
@@ -58,4 +58,11 @@ void PlayerWithNetwork::handleHold() {
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
     Player::handleHold();
+}
+
+void PlayerWithNetwork::handleUp() {
+    // sf::Packet packet; packet << SPIN;
+
+    // if (socket.send(packet) != sf::Socket::Done)
+    // throw std::runtime_error("Failed to send event!");
 }

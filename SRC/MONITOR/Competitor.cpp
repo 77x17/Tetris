@@ -6,6 +6,8 @@
 #include "Map.hpp"
 #include "Hold.hpp"
 #include "Block.hpp"
+#include "Infor.hpp"
+#include "SoundManager.hpp"
 
 #include <SFML/Network.hpp>
 #include <SFML/Window/Event.hpp>
@@ -17,17 +19,21 @@
 //     curBlock->resetPosition(map);
 // }
 
-Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed):Monitor(X_COORDINATE, Y_COORDINATE) {
+Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed) : Monitor(X_COORDINATE, Y_COORDINATE) {
     listenner.accept(recvSock);
     std::cout << "New client connected: " << recvSock.getRemoteAddress() << " SEED:" << seed << std::endl;
 
     next->setSeed(seed);
     recvSock.send(&seed, sizeof(seed));
     curBlock = nullptr;
+
+    soundManager = new SoundManager();
+    soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
+
     mtx.unlock();
 }
 
-Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port):Monitor(X_COORDINATE, Y_COORDINATE) {
+Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port) : Monitor(X_COORDINATE, Y_COORDINATE) {
     recvSock.connect(ipv4, port);
     
     uint32_t seed = 0; std::size_t tmp=0;
@@ -39,11 +45,17 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int
     
     next->setSeed(seed);
     curBlock = nullptr;
+
+    soundManager = new SoundManager();
+    soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
+
     mtx.unlock();
 }
 
 Competitor::~Competitor() {
     delete curBlock; curBlock = nullptr;
+
+    delete soundManager;
 }
 
 void Competitor::draw(sf::RenderWindow* window) {
@@ -76,23 +88,36 @@ void Competitor::start() {
                 break;
 
                 case PUT: {
-                    uint8_t state, y, x;
-                    packet >> state >> y >> x;
+                    uint8_t state, y, x, shadowPosY, spin, typeBlock;
+                    packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
                     mtx.lock();
-                    map->update(curBlock, y, x);
+                    int test = map->update(curBlock, y, x);
+
+                    infor->addLine(test, spin, (char)typeBlock);
+                    hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
                     mtx.unlock();
                 }
                 break;
+
                 case HOLD: {
                     mtx.lock();
                     curBlock = hold->interchange(curBlock);
+                    hold->lock();
                     if (curBlock == nullptr) curBlock = next->updateNext();
                     mtx.unlock();
                 }
                 break;
-                default:
-                    break;
+
+                case SPIN: {
+                    soundManager->play("spin");
+                }
+                break;
+
+                default: {
+                    
+                }
+                break;
             }
             
             // mtx.lock();

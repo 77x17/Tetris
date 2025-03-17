@@ -54,6 +54,7 @@ public:
     bool gameOver(Map* map);
 
     void compress(sf::Packet &packet);
+    void compressWithSpin(sf::Packet &packet);
 };
 
 #endif

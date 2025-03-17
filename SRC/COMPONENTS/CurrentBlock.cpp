@@ -1,5 +1,7 @@
 #include "CurrentBlock.hpp"
 
+#include <iostream>
+
 #include "Common.hpp"
 #include "Block.hpp"
 #include "Map.hpp"
@@ -202,6 +204,8 @@ char CurrentBlock::getTypeBlock() {
             return 'S';
         case 6:
             return 'T';
+        default:
+            throw std::invalid_argument("Invalid getTypeBlock()");
     }
 
     return char();
@@ -219,4 +223,8 @@ bool CurrentBlock::gameOver(Map* map) {
 
 void CurrentBlock::compress(sf::Packet &packet) {
     packet << block->getStateID() << posY << posX << shadowPosY;
+}
+
+void CurrentBlock::compressWithSpin(sf::Packet &packet) {
+    packet << block->getStateID() << posY << posX << shadowPosY << spin << (uint8_t)getTypeBlock();
 }
