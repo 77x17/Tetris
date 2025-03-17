@@ -1,9 +1,11 @@
 #include "PlayerWithNetwork.hpp"
 
+#include <iostream>
+
 PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listener, uint32_t seed):Player(X_COORDINATE, Y_COORDINATE) {
-    // listener.accept(sendSock);
-    // std::cout << "New client connected: " << sendSock.getRemoteAddress() << std::endl;
-    // next->setSeed(seed);
+    // listener.accept(socket);
+    // std::cout << "New client connected: " << socket.getRemoteAddress() << std::endl;
+    
 
     // sendSock.send(&seed, sizeof(seed));
 
@@ -37,4 +39,13 @@ PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const c
 //         throw std::runtime_error("Failed to send event!");
 //     // std::cerr << "Sent event\n";
 // }
+}
+
+void PlayerWithNetwork::start(uint32_t seed) {
+    resetComponent();
+}
+
+void PlayerWithNetwork::restart(uint32_t seed) {
+    clearScreen(seed);
+    resetComponent();
 }

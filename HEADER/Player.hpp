@@ -17,6 +17,7 @@ private:
 
     sf::Clock clock;            
     sf::Clock movingClock;      
+    
     bool      collision;        // collision bottom (extra time to move and rotate)
 
 protected:
@@ -28,14 +29,15 @@ protected:
     void handleHardDrop();
     void handleHold();
 
+    void resetComponent();
 public:
     Player(int X_COORDINATE, int Y_COORDINATE);
     ~Player();
     void processEvents(const sf::Event &event);
     void autoDown();
 
-    void start(uint32_t seed);
-    void restart(uint32_t seed);
+    void start();
+    void restart();
 };
 
 #endif

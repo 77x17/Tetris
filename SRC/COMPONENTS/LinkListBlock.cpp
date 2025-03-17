@@ -46,7 +46,7 @@ void LinkListBlock::reset(uint32_t seed) {
 }
 
 void LinkListBlock::setSeed(int seed) {
-    gen =  std::mt19937(seed);
+    gen = std::mt19937(seed);
 }
 
 Block* LinkListBlock::updateNext() {

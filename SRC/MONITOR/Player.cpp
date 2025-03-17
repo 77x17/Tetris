@@ -26,17 +26,20 @@ Player::Player(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORD
 Player::~Player() {
 }
 
-void Player::start(uint32_t seed) {
+void Player::resetComponent() {
     collision = false; gameOver = false;
     curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
 }
 
-void Player::restart(uint32_t seed) {
-    clearScreen(seed);
-    collision = false; gameOver = false;
-    curBlock->freeAndSetter(next->updateNext());
-    curBlock->resetPosition(map);
+void Player::start() {
+    resetComponent();
+}
+
+void Player::restart() {
+    std::random_device rd;
+    clearScreen(rd());
+    resetComponent();
 }
 
 void Player::handleLeft() {
