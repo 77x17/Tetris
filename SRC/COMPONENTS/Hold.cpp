@@ -31,9 +31,6 @@ void Hold::unlock() { holdPosible = true; }
 void Hold::drawOutline(sf::RenderWindow* window) {
     sf::Text text("HOLD", font, BLOCK_SIZE - BLOCK_SIZE / 3);
     text.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
-    if (holdPosible == false) {
-        text.setFillColor(sf::Color::Red);
-    }
     window->draw(text);
 
     
@@ -61,7 +58,7 @@ void Hold::draw(sf::RenderWindow *window) {
             block->drawPadding(window, 0, 0, HOLD_POSITION_Y, HOLD_POSITION_X);
         } 
         else {
-            block->drawPadding(window, 0, 0, HOLD_POSITION_Y, HOLD_POSITION_X);
+            block->drawBrownHold(window, 0, 0, HOLD_POSITION_Y, HOLD_POSITION_X);
         }
     }
 }

@@ -4,13 +4,22 @@
 #include "Block.hpp"
 #include "Map.hpp"
 #include "Hold.hpp"
+#include "SoundManager.hpp"
 
-CurrentBlock::CurrentBlock() : block(nullptr) {}
+CurrentBlock::CurrentBlock() : block(nullptr), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false), spin(false) {
+    soundManager = new SoundManager();
+    soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
+    soundManager->loadSound("hold"    , "ASSETS/sfx/hold.mp3");
+    soundManager->loadSound("move"    , "ASSETS/sfx/move.mp3");
+    soundManager->loadSound("rotate"  , "ASSETS/sfx/rotate.mp3");
+    soundManager->loadSound("spin"    , "ASSETS/sfx/spin.mp3");
+}
 
 CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH / 2 - BLOCK_EDGE/2), posY(0){}
 
 CurrentBlock::~CurrentBlock() {
     delete block; block = nullptr;
+    delete soundManager;
 }
 
 bool CurrentBlock::isEmpty() {
@@ -19,6 +28,8 @@ bool CurrentBlock::isEmpty() {
 
 void CurrentBlock::setter(Block* p) {
     block = p;
+
+    spin = false;
 }
 
 bool CurrentBlock::resetPosition(Map *map) {
@@ -35,6 +46,10 @@ bool CurrentBlock::moveDown(Map* map) {
 
     posY++;
 
+    if (moveDownSignal == true) {
+        soundManager->play("move");
+    }
+
     return true;
 }
 
@@ -45,6 +60,8 @@ bool CurrentBlock::moveLeft(Map* map) {
     posX--;
 
     shadowHardDrop(map);
+
+    soundManager->play("move");
 
     return true;
 }
@@ -57,11 +74,15 @@ bool CurrentBlock::moveRight(Map* map) {
 
     shadowHardDrop(map);
 
+    soundManager->play("move");
+
     return true;
 }
 
 bool CurrentBlock::hardDrop(Map *map) {
     posY = shadowPosY;
+
+    soundManager->play("hardDrop");
 
     return true;
 }
@@ -125,6 +146,15 @@ rotate_success:
 
     shadowHardDrop(map);
 
+    if (posY != 0 and not map->isValid(block->getShape(), posY - 1, posX)) {
+        spin = true;
+        soundManager->play("spin");
+    }
+    else {
+        spin = false;
+        soundManager->play("rotate");
+    }
+
     return true;
 }
 
@@ -135,6 +165,8 @@ bool CurrentBlock::rotateRight(Map* map) {
 
 void CurrentBlock::swap(Hold* hold) {
     block = hold->interchange(block);
+
+    soundManager->play("hold");
 }
 
 void CurrentBlock::draw(sf::RenderWindow *window, Map *map) {
@@ -146,7 +178,7 @@ bool CurrentBlock::isValid(uint16_t shape, Map* map) {
 }
 
 uint8_t CurrentBlock::put(Map* map) {
-    return map->update(block, posY, posX);
+    return map->update(block, posY, posX);;
 }
 
 bool CurrentBlock::gameOver(Map* map) {
