@@ -4,26 +4,49 @@
 #include "PlayerWithNetwork.hpp"
 #include "Competitor.hpp"
 #include "SoundManager.hpp"
+#include "Menu.hpp"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Graphics.hpp>
 #include <thread>
-#include <iostream>
 
 const int WINDOW_WIDTH  = 1050;
 const int WINDOW_HEIGHT = 700;
 
 float SoundManager::volume = 50.0f;
 
-Tetris::Tetris() {}
+Tetris::Tetris() {
+    window = nullptr;
+    menu   = new Menu();
+}
 
 Tetris::~Tetris() {
     delete window;
+    delete menu;
+}
+
+void Tetris::start() {
+    while (true) {       
+        int gameType = menu->createWindow(window);
+        
+        if (gameType == 0) {
+            startGameOnePlayer();
+        }
+        else if (gameType == 1) {
+            startGameTwoPlayer(true);   // Server
+        }
+        else if (gameType == 2) {
+            startGameTwoPlayer(false);  // Client
+        }
+        else if (gameType == -1) {      // Exit;
+            break;
+        }
+    }
 }
 
 void Tetris::startGameOnePlayer() {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2 + 25, WINDOW_HEIGHT), "Tetr.io");
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH / 2 + 25, WINDOW_HEIGHT), "Tetr.io", sf::Style::Close);
 
     sf::Texture backgroundTexture;
     backgroundTexture.loadFromFile("ASSETS/background.png");
@@ -54,6 +77,7 @@ void Tetris::startGameOnePlayer() {
 
     Player* player = new Player(50, 10);
     player->start();
+    
     while (window->isOpen()) {
         sf::Event event;
 
@@ -62,8 +86,10 @@ void Tetris::startGameOnePlayer() {
         }
 
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
-                return;
+            if (event.type == sf::Event::Closed) {
+                window->close();
+            }
+
             player->processEvents(event);
         }
 
@@ -76,6 +102,8 @@ void Tetris::startGameOnePlayer() {
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
+
+    delete player;
 }
 
 void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
@@ -98,10 +126,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
 }
 
 void Tetris::startGameTwoPlayer(bool isHost) {
-    Competitor* competitor;
-    PlayerWithNetwork* player;
+    PlayerWithNetwork* player = nullptr;
+    Competitor* competitor    = nullptr;
 
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io " + (std::string)(isHost ? "Server" : "Client"));
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io " + (std::string)(isHost ? "Server" : "Client"), sf::Style::Close);
 
     isFinish.store(false);
     std::thread connectThread(&Tetris::makeConnection, this, isHost, 
@@ -111,8 +139,14 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     while (window->isOpen() && !isFinish) {
         sf::Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
+            if (event.type == sf::Event::Closed) {
+                window->close();
+                
+                delete player;
+                delete competitor;
+
                 return;
+            }
         }
     }
 
@@ -148,8 +182,10 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) 
-                return;
+            if (event.type == sf::Event::Closed) {
+                window->close();
+            }
+                
             player->processEvents(event);
         }
 
@@ -165,4 +201,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
+
+    delete player;
+    delete competitor;
 }
