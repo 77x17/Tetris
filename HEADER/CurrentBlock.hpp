@@ -24,9 +24,6 @@ public:
     CurrentBlock(Block *p);
     ~CurrentBlock();
 
-    bool moveLeftSignal;
-    bool moveRightSignal;
-    bool moveDownSignal;
     bool spin; // check piece spin 
 
     bool isEmpty();
@@ -35,6 +32,7 @@ public:
     bool resetPosition(Map *map);
 
     bool moveDown(Map *map);
+    bool fallDown(Map *map);
     bool moveLeft(Map *map);
     bool moveRight(Map *map);
     bool hardDrop(Map *map);

@@ -8,7 +8,7 @@
 #include "Hold.hpp"
 #include "SoundManager.hpp"
 
-CurrentBlock::CurrentBlock() : block(nullptr), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false), spin(false) {
+CurrentBlock::CurrentBlock() : block(nullptr), spin(false) {
     soundManager = new SoundManager();
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
     soundManager->loadSound("hold"    , "ASSETS/sfx/hold.mp3");
@@ -47,15 +47,22 @@ bool CurrentBlock::resetPosition(Map *map) {
     return true;
 }
 
-bool CurrentBlock::moveDown(Map* map) {
+bool CurrentBlock::fallDown(Map* map) {
     if (not map->isValid(block->getShape(), posY + 1, posX)) 
         return false; 
 
     posY++;
 
-    if (moveDownSignal == true) {
-        soundManager->play("move");
-    }
+    return true;
+}
+
+bool CurrentBlock::moveDown(Map* map) {
+    if (not map->isValid(block->getShape(), posY + 1, posX)) 
+    return false; 
+    
+    posY++;
+
+    soundManager->play("move");
 
     return true;
 }

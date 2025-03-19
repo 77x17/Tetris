@@ -17,9 +17,12 @@ private:
     sf::Clock movingClock;
 
     SoundManager *soundManager;
-    
-    bool  collision;        // collision bottom (extra time to move and rotate)
     float volume;
+
+    bool  moveLeftSignal;
+    bool  moveRightSignal;
+    bool  moveDownSignal;
+    bool  collision;        // collision bottom (extra time to move and rotate)
 
 protected:
     CurrentBlock *curBlock;

@@ -9,10 +9,13 @@ class Player;
 class PlayerWithNetwork;
 class Competitor;
 class NetworkManager;
+class Menu;
 
 class Tetris {
 private:
     sf::RenderWindow *window;
+
+    Menu             *menu;
 
     std::atomic<bool> isFinish;
     void makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player);
@@ -20,6 +23,7 @@ private:
 public:
     Tetris();
     ~Tetris();
+    void start();
     void startGameOnePlayer();
     void startGameTwoPlayer(bool isHost);
 };

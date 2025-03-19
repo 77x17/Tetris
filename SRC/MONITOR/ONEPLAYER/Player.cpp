@@ -16,7 +16,9 @@ constexpr float DELAY_MOVING_TIME   = 175.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), collision(false), volume(50.0f) {
+Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), 
+        volume(50.0f), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false), 
+        collision(false) {
     curBlock = new CurrentBlock();
     
     soundManager = new SoundManager();
@@ -110,9 +112,9 @@ void Player::handleHold() {
 
 void Player::processEvents(const sf::Event &event) {
     if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Left and curBlock->moveLeftSignal == false) {
-            curBlock->moveLeftSignal  = true;
-            curBlock->moveRightSignal = false;
+        if (event.key.code == sf::Keyboard::Left and moveLeftSignal == false) {
+            moveLeftSignal  = true;
+            moveRightSignal = false;
 
             handleLeft();
             
@@ -120,9 +122,9 @@ void Player::processEvents(const sf::Event &event) {
 
             movingClock.restart();
         }
-        else if (event.key.code == sf::Keyboard::Right and curBlock->moveRightSignal == false) {
-            curBlock->moveLeftSignal  = false;
-            curBlock->moveRightSignal = true;
+        else if (event.key.code == sf::Keyboard::Right and moveRightSignal == false) {
+            moveLeftSignal  = false;
+            moveRightSignal = true;
 
             handleRight();
 
@@ -130,12 +132,12 @@ void Player::processEvents(const sf::Event &event) {
 
             movingClock.restart();
         } 
-        else if (event.key.code == sf::Keyboard::Down and curBlock->moveDownSignal == false) {
-            curBlock->moveDownSignal = true;
+        else if (event.key.code == sf::Keyboard::Down and moveDownSignal == false) {
+            moveDownSignal = true;
 
             handleDown();
 
-            // movingClock.restart();
+            movingClock.restart();
         } 
         else if (event.key.code == sf::Keyboard::Up) {
             handleUp();
@@ -149,17 +151,17 @@ void Player::processEvents(const sf::Event &event) {
     }   
     else if (event.type == sf::Event::KeyReleased) {
         if (event.key.code == sf::Keyboard::Left) {
-            curBlock->moveLeftSignal = false;
+            moveLeftSignal = false;
             
             movingTime = DELAY_MOVING_TIME;
         }
         else if (event.key.code == sf::Keyboard::Right) {
-            curBlock->moveRightSignal = false;
+            moveRightSignal = false;
             
             movingTime = DELAY_MOVING_TIME;
         } 
         else if (event.key.code == sf::Keyboard::Down) {
-            curBlock->moveDownSignal = false;
+            moveDownSignal = false;
         }
     }
     else if (event.type == sf::Event::MouseWheelScrolled) {
@@ -182,16 +184,16 @@ void Player::processEvents(const sf::Event &event) {
 
 void Player::autoDown() {
     if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
-        if (curBlock->moveLeftSignal) {
+        if (moveLeftSignal) {
             handleLeft();
             movingTime = MOVING_TIME;
         }
-        else if (curBlock->moveRightSignal) {
+        else if (moveRightSignal) {
             handleRight();
             movingTime = MOVING_TIME;
         }
         
-        if (curBlock->moveDownSignal) {
+        if (moveDownSignal) {
             handleDown();
             movingTime = MOVING_TIME;
         }
@@ -199,7 +201,7 @@ void Player::autoDown() {
         movingClock.restart();
     }
     if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
-        if (not curBlock->moveDown(map)) {
+        if (not curBlock->fallDown(map)) {
             handlePut();
         }
         
