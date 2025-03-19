@@ -81,9 +81,8 @@ bool Map::addPosible(uint8_t nLines) {
             return false;
     return true;
 }
-#include <iostream>
+
 void Map::add(int nLines) {
-    std::cerr << (int)nLines << '\n';
     if (nLines == 0) return;
     for (int i = 0; i + nLines < HEIGHT_MAP; i++)
         map[i] = map[i + nLines];

@@ -67,7 +67,7 @@ void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgrou
     float posY = (windowSize.y - newHeight) / 2;
     backgroundSprite.setPosition(posX, posY);
 
-    backgroundMusic.openFromFile("ASSETS/sfx/tetristheme.mp3");
+    backgroundMusic.openFromFile("ASSETS/sfx/_tetristheme.mp3");
     backgroundMusic.setLoop(true);
 }
 

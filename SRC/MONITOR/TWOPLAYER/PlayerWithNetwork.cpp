@@ -61,9 +61,10 @@ void PlayerWithNetwork::handlePut() {
     infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
     if (nLines) {
+        std::cout << "Player: " << nLines << "\n";
         competitor->handleAddLine(nLines);
     }
-    else  
+    else
         map->add(infor->getAndRemoveLineAdd());
 
     resetComponent();

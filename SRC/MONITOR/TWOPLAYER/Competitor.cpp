@@ -100,11 +100,12 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
                     
                     if (tmp) {
-                        
                         player->handleAddLine(tmp);
                     }
                     else {
-                        map->add(infor->getAndRemoveLineAdd());
+                        int tmp = infor->getAndRemoveLineAdd();
+                        std::cout << "MONITOR: " << tmp << '\n';
+                        map->add(tmp);
                     }
 
                     mtx.unlock();
