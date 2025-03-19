@@ -18,7 +18,6 @@ private:
     
     int  nLine;
     int  count;
-    int  add;
     int  B2B;
     int  B2BMissing;
     bool spin;
@@ -39,7 +38,9 @@ public:
 
     void reset();
 
-    void addLine(uint8_t lines, bool spin, char typeBlock);
+    void removeLine(uint8_t lines);
+
+    void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);
     void drawMessage(sf::RenderWindow *window, const std::string text);
     void drawCombo(sf::RenderWindow *window, const std::string text);
     void drawB2B(sf::RenderWindow *window);
