@@ -33,6 +33,7 @@ void Player::resetComponent() {
     collision = false; gameOver = false;
     curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
+    hold->unlock();
 }
 
 void Player::start() {
@@ -82,11 +83,8 @@ void Player::handlePut() {
     infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
 
-    curBlock->freeAndSetter(next->updateNext());
-    curBlock->resetPosition(map); 
-    collision = false;
+    resetComponent();
     gameOver = curBlock->gameOver(map);
-    hold->unlock();
 }
 
 void Player::handleHardDrop() {
