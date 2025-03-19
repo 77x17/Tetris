@@ -16,7 +16,7 @@ const int WINDOW_HEIGHT = 700;
 
 float SoundManager::volume = 50.0f;
 
-Tetris::Tetris() {}
+Tetris::Tetris() { window = nullptr; }
 
 Tetris::~Tetris() {
     delete window;
