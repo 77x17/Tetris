@@ -11,6 +11,7 @@ const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE
 Infor::Infor(int x, int y, int w, int audioX, int audioY, int audioW, int audioH) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), 
         AUDIO_POSITION_X(audioX), AUDIO_POSITION_Y(audioY), AUDIO_WIDTH(audioW), AUDIO_HEIGHT(audioH),
         nLine(0), count(0), B2B(0), B2BMissing(0), spin(false) {
+    nLinesAdd = 0;
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -31,11 +32,35 @@ Infor::~Infor() {
 }
 
 void Infor::reset() {
-    nLine = 0; count = 0; B2B = 0; B2BMissing = 0;
+    nLine = 0; count = 0; B2B = 0; B2BMissing = 0; nLinesAdd = 0;
 }
 
 void Infor::removeLine(uint8_t lines) {
     nLine   += lines;
+    mtx.lock();
+    nLinesAdd = std::max(0, nLinesAdd - lines);
+    mtx.unlock();
+}
+
+void Infor::addLine(uint8_t lines) {
+    if (lines <= 0) throw std::runtime_error("garbage push error");
+    
+    if (spin) lines *= 2;
+    else {
+        if (lines < 4) lines--;
+    }
+
+    mtx.lock(); 
+    nLinesAdd += lines;
+    mtx.unlock();
+}
+
+int Infor::getAndRemoveLineAdd() {
+    mtx.lock();
+    int tmp = nLinesAdd;
+    nLinesAdd = 0;
+    mtx.unlock();
+    return tmp;
 }
 
 void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {

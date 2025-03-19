@@ -3,6 +3,8 @@
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 #include "Infor.hpp"
+#include "Map.hpp"
+#include "Competitor.hpp"
 
 #include <iostream>
 #include <SFML/Network.hpp>
@@ -27,6 +29,8 @@ PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const c
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
 }
 
+void PlayerWithNetwork::setCompetitor(Competitor* com) { competitor = com; }
+
 void PlayerWithNetwork::sendCurBlock() {
     sf::Packet packet; packet << CURBLOCK;
     curBlock->compress(packet);
@@ -48,15 +52,22 @@ void PlayerWithNetwork::handlePut() {
     sf::Packet packet; packet << PUT;
     curBlock->compressWithSpin(packet);
 
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    // Player::handlePut();
+
     int nLines = curBlock->put(map);
+    
     infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
+    if (nLines) {
+        competitor->handleAddLine(nLines);
+    }
+    else  
+        map->add(infor->getAndRemoveLineAdd());
 
     resetComponent();
     gameOver = curBlock->gameOver(map);
-
-    if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
 }
 
 void PlayerWithNetwork::handleHold() {
@@ -74,4 +85,8 @@ void PlayerWithNetwork::handleUp() {
         if (socket.send(packet) != sf::Socket::Done)
             throw std::runtime_error("Failed to send event!");
     }
+}
+
+void PlayerWithNetwork::handleAddLine(uint8_t nLines) {
+    infor->addLine(nLines);
 }

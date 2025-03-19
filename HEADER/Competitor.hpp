@@ -10,6 +10,7 @@
 
 class Block;
 class SoundManager;
+class PlayerWithNetwork;
 
 class Competitor : public Monitor {
 private:
@@ -27,9 +28,11 @@ public:
     Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);
     Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
     ~Competitor();
-    void start();
+    void start(PlayerWithNetwork* &player);
     // void initPollEvent();
     void draw(sf::RenderWindow* window);
+
+    void handleAddLine(uint8_t nLines);
 };
 
 #endif

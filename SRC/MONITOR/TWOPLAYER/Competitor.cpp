@@ -8,6 +8,7 @@
 #include "Block.hpp"
 #include "Infor.hpp"
 #include "SoundManager.hpp"
+#include "PlayerWithNetwork.hpp"
 
 #include <SFML/Network.hpp>
 #include <SFML/Window/Event.hpp>
@@ -65,9 +66,9 @@ void Competitor::draw(sf::RenderWindow* window) {
     mtx.unlock();
 }
 
-void Competitor::start() {
+void Competitor::start(PlayerWithNetwork* &player) { // Player
     curBlock = next->updateNext();
-    std::thread th([this](){
+    std::thread th([this](PlayerWithNetwork* &player){
         while (true) {
             sf::Packet packet;
             if (recvSock.receive(packet) != sf::Socket::Done)
@@ -91,10 +92,21 @@ void Competitor::start() {
                     uint8_t state, y, x, shadowPosY, spin, typeBlock;
                     packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
                     mtx.lock();
-                    int tmp = map->update(curBlock, y, x); infor->removeLine(tmp);
-                    infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
+                    int tmp = map->update(curBlock, y, x); 
                     hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
+                    
+                    infor->removeLine(tmp);
+                    infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
+                    
+                    if (tmp) {
+                        
+                        player->handleAddLine(tmp);
+                    }
+                    else {
+                        map->add(infor->getAndRemoveLineAdd());
+                    }
+
                     mtx.unlock();
                 }
                 break;
@@ -123,6 +135,10 @@ void Competitor::start() {
             // pollEvent.push(event);
             // mtx.unlock();
         }
-    });
+    }, std::ref(player));
     th.detach();
+}
+
+void Competitor::handleAddLine(uint8_t nLines) {
+    infor->addLine(nLines);
 }
