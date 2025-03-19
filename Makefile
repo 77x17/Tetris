@@ -1,6 +1,6 @@
 # Variables
 COMPILER = g++
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g -MMD -MP
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system 
 INCLUDES = -I"./HEADER"
 
@@ -13,6 +13,8 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp) $(wildca
 
 # Convert .cpp files to .o files
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC_FILES))
+
+# Dependency files
 DEP_FILES = $(OBJ_FILES:.o=.d)
 
 .PHONY: all run build clean
@@ -21,12 +23,6 @@ all: build
 
 run: build
 	@$(TARGET)
-
-runServer: build
-	@$(TARGET) "server"
-
-runClient: build
-	@$(TARGET) "client"
 
 build: $(TARGET)
 
@@ -41,8 +37,8 @@ $(TARGET): $(OBJ_FILES)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "Compiling $<..."
 	@mkdir -p $(dir $@)
-	@$(COMPILER) -g $(CFLAGS) -c $< -o $@ $(INCLUDES)
-	@$(COMPILER) -MM $(CFLAGS) $(INCLUDES) $< | sed 's|$(notdir $<)|$@|' > $(OBJ_DIR)/$*.d
+	@$(COMPILER) $(CFLAGS) -c $< -o $@ $(INCLUDES)
+
 
 # Include dependency files
 -include $(DEP_FILES)

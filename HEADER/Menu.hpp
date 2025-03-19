@@ -10,6 +10,5 @@ public:
     Menu();
     ~Menu();
 
-    int createWindow(sf::RenderWindow *window);
-
+    int createWindow(sf::RenderWindow *&window);
 };
