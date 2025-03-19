@@ -10,7 +10,7 @@ const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE
 
 Infor::Infor(int x, int y, int w, int audioX, int audioY, int audioW, int audioH) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), 
         AUDIO_POSITION_X(audioX), AUDIO_POSITION_Y(audioY), AUDIO_WIDTH(audioW), AUDIO_HEIGHT(audioH),
-        nLine(0), count(0), add(0), B2B(0), B2BMissing(0), spin(false) {
+        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -31,13 +31,14 @@ Infor::~Infor() {
 }
 
 void Infor::reset() {
-    nLine = 0; count = 0; add = 0; B2B = 0; B2BMissing = 0;
+    nLine = 0; count = 0; B2B = 0; B2BMissing = 0;
 }
 
-void Infor::addLine(uint8_t lines, bool isSpin, char block) {
+void Infor::removeLine(uint8_t lines) {
     nLine   += lines;
-    add      = lines;
+}
 
+void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
     if (isSpin) {
         spin      = isSpin;
         typeBlock = block;
@@ -45,10 +46,19 @@ void Infor::addLine(uint8_t lines, bool isSpin, char block) {
         spinTimeout.restart();
     }
 
-    if (add != 0) {
+    if (lines == 0) {
+        if (count > 2) {
+            soundManager->play("comboBreak");
+        }
+
+        count = 0;
+        return;
+    }
+
+    if (lines != 0) {
         count++;
 
-        message = clearMessage[add];
+        message = clearMessage[lines];
         
         if (count > 1) {
             combo = std::to_string(count - 1);
@@ -56,11 +66,11 @@ void Infor::addLine(uint8_t lines, bool isSpin, char block) {
             soundManager->play("combo" + (count <= 6 ? combo : "5"));
 
             comboTimeout.restart();
-        } 
+        }
         
         timeout.restart();
 
-        if (add == 4) {
+        if (lines == 4) {
             B2B++;
 
             if (B2B > 1) {
@@ -86,12 +96,6 @@ void Infor::addLine(uint8_t lines, bool isSpin, char block) {
 
             soundManager->play("clearLine");
         }
-    } else {
-        if (count > 2) {
-            soundManager->play("comboBreak");
-        }
-
-        count = 0;
     }
 }
 

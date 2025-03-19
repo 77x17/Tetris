@@ -75,12 +75,6 @@ void Map::remove(uint8_t pos) {
     map[0] = EMPTYLINE;
 }
 
-// the function adds nlines to map 
-// returns a value indicating whether the map is valid or not
-bool Map::add(uint8_t nLines) {
-    return false;
-}
-
 void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
