@@ -91,9 +91,7 @@ void Competitor::start() {
                     uint8_t state, y, x, shadowPosY, spin, typeBlock;
                     packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
                     mtx.lock();
-                    int test = map->update(curBlock, y, x);
-
-                    infor->addLine(test, spin, (char)typeBlock);
+                    infor->addLine(map->update(curBlock, y, x), spin, (char)typeBlock);
                     hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
                     mtx.unlock();

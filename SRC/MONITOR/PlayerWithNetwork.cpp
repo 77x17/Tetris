@@ -61,9 +61,10 @@ void PlayerWithNetwork::handleHold() {
 }
 
 void PlayerWithNetwork::handleUp() {
-    // sf::Packet packet; packet << SPIN;
-
-    // if (socket.send(packet) != sf::Socket::Done)
-    // throw std::runtime_error("Failed to send event!");
     Player::handleUp();
+    if (curBlock->spin) {
+        sf::Packet packet; packet << SPIN;
+        if (socket.send(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to send event!");
+    }
 }
