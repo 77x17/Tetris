@@ -48,15 +48,9 @@ void PlayerWithNetwork::handlePut() {
     sf::Packet packet; packet << PUT;
     curBlock->compressWithSpin(packet);
 
-    int nLines = curBlock->put(map);
-    infor->removeLine(nLines);
-    infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
-
-    resetComponent();
-    gameOver = curBlock->gameOver(map);
-
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
+    Player::handlePut();
 }
 
 void PlayerWithNetwork::handleHold() {
