@@ -75,6 +75,23 @@ void Map::remove(uint8_t pos) {
     map[0] = EMPTYLINE;
 }
 
+bool Map::addPosible(uint8_t nLines) {
+    for (int i = 0; i < nLines; i++) 
+        if (map[i] != EMPTYLINE)
+            return false;
+    return true;
+}
+#include <iostream>
+void Map::add(int nLines) {
+    std::cerr << (int)nLines << '\n';
+    if (nLines == 0) return;
+    for (int i = 0; i + nLines < HEIGHT_MAP; i++)
+        map[i] = map[i + nLines];
+    for (int i = HEIGHT_MAP - nLines; i < HEIGHT_MAP; i++) 
+        map[i] = FULLMASK(REALWIDTH);
+}
+
+
 void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));

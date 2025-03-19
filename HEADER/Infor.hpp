@@ -2,6 +2,7 @@
 #define INFOR_HPP
 
 #include <SFML/Graphics.hpp>
+#include <mutex>
 
 class SoundManager;
 
@@ -32,6 +33,9 @@ private:
     std::string   combo;
     SoundManager *soundManager;
 
+    std::mutex mtx;
+    int nLinesAdd;
+
 public:
     Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
     ~Infor();
@@ -39,6 +43,8 @@ public:
     void reset();
 
     void removeLine(uint8_t lines);
+    void addLine(uint8_t lines);
+    int getAndRemoveLineAdd();
 
     void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);
     void drawMessage(sf::RenderWindow *window, const std::string text);

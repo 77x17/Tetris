@@ -177,7 +177,8 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     backgroundMusic.setLoop(true);  
     backgroundMusic.play();
 
-    competitor->start();
+    player->setCompetitor(competitor);
+    competitor->start(player);
 
     while (window->isOpen()) {
         sf::Event event;
