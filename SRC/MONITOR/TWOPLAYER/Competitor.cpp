@@ -102,7 +102,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
                     
                     if (tmp) {
-                        player->handleAddLine(tmp);
+                        player->handleAddLine(tmp, spin);
                     }
                     else {
                         int tmp = infor->getAndRemoveLineAdd();
@@ -146,6 +146,6 @@ void Competitor::restart(uint32_t seed) {
     clearScreen(seed);
 }
 
-void Competitor::handleAddLine(uint8_t nLines) {
-    infor->addLine(nLines);
+void Competitor::handleAddLine(uint8_t nLines, bool spin) {
+    infor->addLine(nLines, spin);
 }

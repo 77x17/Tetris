@@ -26,7 +26,7 @@ public:
     void handlePut();
     void handleHold();
     void handleUp();
-    void handleAddLine(uint8_t nLines);
+    void handleAddLine(uint8_t nLines, bool spin);
 };
 
 #endif

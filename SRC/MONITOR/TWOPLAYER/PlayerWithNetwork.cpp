@@ -62,7 +62,7 @@ void PlayerWithNetwork::handlePut() {
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
     if (nLines) {
         std::cout << "Player: " << nLines << "\n";
-        competitor->handleAddLine(nLines);
+        competitor->handleAddLine(nLines, curBlock->spin);
     }
     else
         map->add(infor->getAndRemoveLineAdd());
@@ -88,6 +88,6 @@ void PlayerWithNetwork::handleUp() {
     }
 }
 
-void PlayerWithNetwork::handleAddLine(uint8_t nLines) {
-    infor->addLine(nLines);
+void PlayerWithNetwork::handleAddLine(uint8_t nLines, bool spin) {
+    infor->addLine(nLines, spin);
 }

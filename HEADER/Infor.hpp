@@ -50,7 +50,7 @@ public:
     void reset();
 
     void removeLine(uint8_t lines);
-    void addLine(uint8_t lines);
+    void addLine(uint8_t lines, bool spin);
     int getAndRemoveLineAdd();
 
     void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);

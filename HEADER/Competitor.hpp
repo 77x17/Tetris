@@ -33,7 +33,7 @@ public:
     // void initPollEvent();
     void draw(sf::RenderWindow* window);
 
-    void handleAddLine(uint8_t nLines);
+    void handleAddLine(uint8_t nLines, bool spin);
 };
 
 #endif
