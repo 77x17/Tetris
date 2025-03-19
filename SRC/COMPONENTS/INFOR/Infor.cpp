@@ -43,6 +43,13 @@ void Infor::removeLine(uint8_t lines) {
 }
 
 void Infor::addLine(uint8_t lines) {
+    if (lines <= 0) throw std::runtime_error("garbage push error");
+    
+    if (spin) lines *= 2;
+    else {
+        if (lines < 4) lines--;
+    }
+
     mtx.lock(); 
     nLinesAdd += lines;
     mtx.unlock();
