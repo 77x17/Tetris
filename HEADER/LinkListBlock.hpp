@@ -5,20 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 
-class BlockEle;
 class Block;
-class CurrentBlock;
-
-class BlockEle{
-private:
-    Block* block;
-    BlockEle* next;
-public:
-    BlockEle();
-    BlockEle(Block* p);
-    friend class LinkListBlock;
-    friend class BlockFactory;
-};
+class BlockEle;
 
 class LinkListBlock {
 private:

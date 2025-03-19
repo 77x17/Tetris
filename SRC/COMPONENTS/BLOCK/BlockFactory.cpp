@@ -1,7 +1,7 @@
 #include "BlockFactory.hpp"
 
 #include "Block.hpp"
-#include "LinkListBlock.hpp"
+#include "BlockEle.hpp"
 
 // Danh sách các loại block
 enum BlockType { Z_BLOCK, T_BLOCK, S_BLOCK, L_BLOCK, J_BLOCK, O_BLOCK, I_BLOCK};

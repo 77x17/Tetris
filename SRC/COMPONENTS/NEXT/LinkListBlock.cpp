@@ -1,12 +1,11 @@
 #include "LinkListBlock.hpp"
 
 #include "Block.hpp"
+#include "BlockEle.hpp"
 #include "BlockFactory.hpp"
 #include "CurrentBlock.hpp"
 #include "Common.hpp"
 
-BlockEle::BlockEle() : block(nullptr), next(nullptr) {}
-BlockEle::BlockEle(Block* tmp) : block(tmp), next(nullptr) {}
 
 void LinkListBlock::addBag() {
     BlockFactory::createBag(head, tail, gen);
