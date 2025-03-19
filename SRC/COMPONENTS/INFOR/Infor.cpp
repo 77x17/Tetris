@@ -8,10 +8,11 @@ const int FONT_SIZE = 25;
 constexpr float TIME_OUT = 2.0f;
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(int x, int y, int w, int audioX, int audioY, int audioW, int audioH) : INFOR_POSITION_X(x), INFOR_POSITION_Y(y), INFOR_WIDTH(w), 
-        AUDIO_POSITION_X(audioX), AUDIO_POSITION_Y(audioY), AUDIO_WIDTH(audioW), AUDIO_HEIGHT(audioH),
-        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false) {
-    nLinesAdd = 0;
+Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH) : 
+        INFOR_POSITION_X(x)   , INFOR_POSITION_Y(y)   , INFOR_WIDTH(w)   , 
+        AUDIO_POSITION_X(aX)  , AUDIO_POSITION_Y(aY)  , AUDIO_WIDTH(aW)  , AUDIO_HEIGHT(aH)  ,
+        GARBAGE_POSITION_X(gX), GARBAGE_POSITION_Y(gY), GARBAGE_WIDTH(gW), GARBAGE_HEIGHT(gH),
+        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), nLinesAdd(0) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -257,6 +258,8 @@ void Infor::draw(sf::RenderWindow *window) {
     if (B2B > 1) {
         drawB2B(window);
     }
+
+    drawGarbage(window);
 }
 
 void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
@@ -269,7 +272,7 @@ void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
 
     // Upper - lower line
     line.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
-    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y - WIDTH_BORDER + 0           * BLOCK_SIZE);
+    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y - WIDTH_BORDER);
     window->draw(line);
     line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y + AUDIO_HEIGHT * BLOCK_SIZE);
     window->draw(line);
@@ -280,4 +283,13 @@ void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
     volumeBar.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y);
 
     window->draw(volumeBar);
+}
+
+void Infor::drawGarbage(sf::RenderWindow *window) {
+    sf::RectangleShape garbageBar;
+    garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLinesAdd * BLOCK_SIZE));
+    garbageBar.setFillColor(sf::Color(255, 0, 0, 100));
+    garbageBar.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLinesAdd * BLOCK_SIZE);
+
+    window->draw(garbageBar);
 }

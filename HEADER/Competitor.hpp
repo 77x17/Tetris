@@ -29,6 +29,7 @@ public:
     Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
     ~Competitor();
     void start(PlayerWithNetwork* &player);
+    void restart(uint32_t seed);    
     // void initPollEvent();
     void draw(sf::RenderWindow* window);
 

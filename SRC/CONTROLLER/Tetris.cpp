@@ -11,7 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
-const int WINDOW_WIDTH  = 1050;
+const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 700;
 
 float SoundManager::volume = 50.0f;
@@ -80,7 +80,7 @@ void Tetris::startGameOnePlayer() {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
-    Player* player = new Player(50 + WINDOW_WIDTH / 4 - 25, 10);
+    Player* player = new Player(50 + WINDOW_WIDTH / 4, 10);
     player->start();
     
     while (window->isOpen()) {
@@ -122,8 +122,8 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, listener, seed);
     }
     else {
-        // competitor = new Competitor(550, 10, "10.0.133.113", 55001);
-        // player = new PlayerWithNetwork(50, 10, "10.0.133.113", 55000);
+        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.115.212", 55001);
+        // player = new PlayerWithNetwork(50, 10, "10.0.115.212", 55000);
         competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
         player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
     }
@@ -192,6 +192,14 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     competitor->start(player);
 
     while (window->isOpen()) {
+        if (player->isGameOver()) {
+            player->restart(123);
+        }
+
+        if (competitor->isGameOver()) {
+            competitor->restart(123);
+        }
+
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {

@@ -95,6 +95,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     int tmp = map->update(curBlock, y, x); 
                     hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
+
+                    // gameOver = not map->isValid(curBlock->getShape(), posY, posX);
                     
                     infor->removeLine(tmp);
                     infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
@@ -138,6 +140,10 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
         }
     }, std::ref(player));
     th.detach();
+}
+
+void Competitor::restart(uint32_t seed) {
+    clearScreen(seed);
 }
 
 void Competitor::handleAddLine(uint8_t nLines) {

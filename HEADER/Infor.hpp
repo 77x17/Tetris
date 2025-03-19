@@ -17,6 +17,11 @@ private:
     int AUDIO_WIDTH;
     int AUDIO_HEIGHT;
     
+    int GARBAGE_POSITION_X;
+    int GARBAGE_POSITION_Y;
+    int GARBAGE_WIDTH;
+    int GARBAGE_HEIGHT;
+
     int  nLine;
     int  count;
     int  B2B;
@@ -37,7 +42,9 @@ private:
     int nLinesAdd;
 
 public:
-    Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
+    Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, 
+        int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT,
+        int GARBAGE_POSITION_X, int GARBAGE_POSITION_Y, int GARBAGE_WIDTH, int GARBAGE_HEIGHT);
     ~Infor();
 
     void reset();
@@ -53,6 +60,7 @@ public:
     void drawMissingB2B(sf::RenderWindow *window);
     void drawSpin(sf::RenderWindow *window);
     void drawAudio(sf::RenderWindow *window, const float &volume);
+    void drawGarbage(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
 
 };
