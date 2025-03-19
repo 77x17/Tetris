@@ -65,4 +65,5 @@ void PlayerWithNetwork::handleUp() {
 
     // if (socket.send(packet) != sf::Socket::Done)
     // throw std::runtime_error("Failed to send event!");
+    Player::handleUp();
 }
