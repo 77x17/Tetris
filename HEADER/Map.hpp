@@ -28,8 +28,6 @@ public:
     
     void reset();
 
-    bool add(uint8_t nLines);
-
     void draw(sf::RenderWindow* window);
     void drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX);
     void drawOutline(sf::RenderWindow* window);
