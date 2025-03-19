@@ -42,14 +42,14 @@ void Hold::drawOutline(sf::RenderWindow* window) {
 
     // Upper - lower line
     line.setSize(sf::Vector2f(HOLD_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
-    line.setPosition(HOLD_POSITION_X - WIDTH_BORDER, HOLD_POSITION_Y - WIDTH_BORDER + 0           * BLOCK_SIZE);
+    line.setPosition(HOLD_POSITION_X - WIDTH_BORDER, HOLD_POSITION_Y - WIDTH_BORDER);
     window->draw(line);
     line.setPosition(HOLD_POSITION_X - WIDTH_BORDER, HOLD_POSITION_Y + HOLD_HEIGHT * BLOCK_SIZE);
     window->draw(line);
     
     // Left - right line
     line.setSize(sf::Vector2f(1, HOLD_HEIGHT * BLOCK_SIZE));
-    line.setPosition(HOLD_POSITION_X + 0          * BLOCK_SIZE, HOLD_POSITION_Y);
+    line.setPosition(HOLD_POSITION_X                          , HOLD_POSITION_Y);
     window->draw(line);
     line.setPosition(HOLD_POSITION_X + HOLD_WIDTH * BLOCK_SIZE, HOLD_POSITION_Y);
     window->draw(line);
