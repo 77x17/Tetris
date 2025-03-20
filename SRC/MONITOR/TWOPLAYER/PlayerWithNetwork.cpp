@@ -60,7 +60,7 @@ void PlayerWithNetwork::handlePut() {
     if (nLines == 0) {
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(0, 10);
+        std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
         int randomNumber = dis(gen);
         packet << randomNumber;
         map->add(infor->getAndRemoveLineAdd(), randomNumber);
