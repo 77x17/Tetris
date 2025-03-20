@@ -37,6 +37,8 @@ void Infor::reset() {
 }
 
 int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
+    return lines;
+    
     if (spin) lines *= 2;
     else {
         if (lines < 4) lines--;
@@ -99,8 +101,8 @@ void Infor::removeLine(uint8_t lines) {
     if (garbageSent != 0) {
         garbageSentTimeout.restart();
     }
+
     mtx.unlock();
-    
 }
 
 // garbage receive
