@@ -197,19 +197,19 @@ uint8_t CurrentBlock::put(Map* map) {
 
 char CurrentBlock::getTypeBlock() {
     switch (block->getShapeID()) {
-        case 0:
-            return 'I';
         case 1:
-            return 'L';
+            return 'I';
         case 2:
-            return 'J';
+            return 'L';
         case 3:
-            return 'O';
+            return 'J';
         case 4:
-            return 'Z';
+            return 'O';
         case 5:
-            return 'S';
+            return 'Z';
         case 6:
+            return 'S';
+        case 7:
             return 'T';
         default:
             throw std::invalid_argument("Invalid getTypeBlock()");

@@ -36,7 +36,7 @@ void Block::drawGhost(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY,
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
     block.setTexture(&ghostTexture);
-    block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
+    block.setTextureRect(sf::IntRect((shapeID - 1) * 25, 0, 25, 25));
 
     block.setFillColor(sf::Color(150, 150, 150));
     
@@ -104,49 +104,49 @@ uint8_t Block::getShapeID() { return shapeID; }
 void Block::resetState() { stateID = 2; }
 
 IBlock::IBlock(): Block() {
-    shapeID = 0;
+    shapeID = 1;
     state[0] = 0x0F00; state[1] = 0x2222; state[2] = 0x00F0; state[3] = 0x4444;
     paddingX = BLOCK_SIZE / 2;
     paddingY = -BLOCK_SIZE;
 }
 
 LBlock::LBlock(): Block() {
-    shapeID = 1;
+    shapeID = 2;
     state[0] = 0x0710; state[1] = 0x2260; state[2] = 0x4700; state[3] = 0x3220;
     paddingX = BLOCK_SIZE;
     paddingY = BLOCK_SIZE / 2;
 }
 
 JBlock::JBlock(): Block() { 
-    shapeID = 2;
+    shapeID = 3;
     state[0] = 0x0740; state[1] = 0x6220; state[2] = 0x1700; state[3] = 0x2230;
     paddingX = BLOCK_SIZE;
     paddingY = BLOCK_SIZE / 2;
 }
 
 OBlock::OBlock(): Block() {
-    shapeID = 3;
+    shapeID = 4;
     state[0] = 0x0660; state[1] = 0x0660; state[2] = 0x0660; state[3] = 0x0660;
     paddingX = BLOCK_SIZE / 2;
     paddingY = -BLOCK_SIZE / 2;
 }
 
 ZBlock::ZBlock(): Block() {
-    shapeID = 4;
+    shapeID = 5;
     state[0] = 0x0360; state[1] = 0x2310; state[2] = 0x0360; state[3] = 0x2310;
     paddingX = BLOCK_SIZE;
     paddingY = -BLOCK_SIZE / 2;
 }
 
 SBlock::SBlock(): Block() {
-    shapeID = 5;
+    shapeID = 6;
     state[0] = 0x0630; state[1] = 0x1320; state[2] = 0x0630; state[3] = 0x1320;
     paddingX = BLOCK_SIZE;
     paddingY = -BLOCK_SIZE / 2;
 }
 
 TBlock::TBlock(): Block() {
-    shapeID = 6;
+    shapeID = 7;
     state[0] = 0x0720; state[1] = 0x2620; state[2] = 0x2700; state[3] = 0x2320;
     paddingX = BLOCK_SIZE;
     paddingY = BLOCK_SIZE / 2;
