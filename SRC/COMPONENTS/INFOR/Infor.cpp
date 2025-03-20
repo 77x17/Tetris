@@ -37,11 +37,19 @@ void Infor::reset() {
 }
 
 int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
-    return lines;
-    
-    if (spin) lines *= 2;
+    // return lines;
+
+    int result = 0;
+    if (spin) { 
+        result = lines * 2;
+    }
     else {
-        if (lines < 4) lines--;
+        if (lines < 4) { 
+            result += lines - 1;
+        }
+        else {
+            result += lines;
+        }
     }
 
     // B2B Calc
@@ -50,39 +58,39 @@ int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
         // nothing
     }
     else if (1 <= B2B and B2B <= 2) {
-        lines += 1;
+        result += 1;
     }
     else if (3 <= B2B and B2B <= 7) {
-        lines += 2;
+        result += 2;
     }
     else if (8 <= B2B and B2B <= 23) {
-        lines += 3;
+        result += 3;
     }
     else if (24 <= B2B and B2B <= 66) {
-        lines += 4;
+        result += 4;
     }
     else if (67 <= B2B) {
-        lines += 5;
+        result += 5;
     }
 
     // combo
     if (spin and lines >= 2) {
-        lines += count;
+        result += count;
     }
     else if (count <= 1) {
         // nothing
     }
     else if (2 <= count and count <= 5) {
-        lines += 1;
+        result += 1;
     }
     else if (6 <= count and count <= 15) {
-        lines += 2;
+        result += 2;
     }
     else if (16 <= count and count <= 20) {
-        lines += 3;
+        result += 3;
     }
 
-    return lines;
+    return result;
 }
 
 // garbage sent
