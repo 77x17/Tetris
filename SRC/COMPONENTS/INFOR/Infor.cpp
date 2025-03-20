@@ -85,22 +85,22 @@ int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
 
 // garbage sent
 void Infor::removeLine(uint8_t lines) {
+    if (lines == 0) {
+        // nothing
+        return;
+    }
+
     nLine += lines;
 
     mtx.lock();
     nLinesAdd >>= lines; 
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
-    mtx.unlock();
-
-    if (lines == 0) {
-        // nothing
-        return;
-    }
-    
     garbageSent = getGarbage(lines, spin, B2B, count);
     if (garbageSent != 0) {
         garbageSentTimeout.restart();
     }
+    mtx.unlock();
+    
 }
 
 // garbage receive
