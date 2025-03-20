@@ -91,8 +91,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 case PUT: {
                     uint8_t state, y, x, shadowPosY, spin, typeBlock;
                     packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
-                    mtx.lock();
                     int tmp = map->update(curBlock, y, x); 
+                    // mtx.lock();
                     hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
 
@@ -102,7 +102,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     if (!map->isValid(curBlock->getShape(), posY, posX))
                         setGameOver();
 
-                    mtx.unlock();
+                    // mtx.unlock();
 
                     if (tmp) {
                         player->handleAddLine(tmp, infor);
@@ -118,7 +118,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 case RECVLINE: {
                     uint8_t nLines; 
                     bool    spin;
-                    int B2B, count;
+                    int     B2B;
+                    int     count;
                     packet >> nLines >> spin >> B2B >> count;
                     infor->addLine(nLines, spin, B2B, count);
                 }

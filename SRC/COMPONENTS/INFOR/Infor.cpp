@@ -87,23 +87,20 @@ int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
 void Infor::removeLine(uint8_t lines) {
     nLine += lines;
 
-    if (lines == 0) {
-        // nothing
-        return;
-    }
-    
-    garbageSent = getGarbage(lines, spin, B2B, count);
-    if (garbageSent == 0) {
-        // nothing
-        return;
-    }
-
-    garbageSentTimeout.restart();
-
     mtx.lock();
     nLinesAdd >>= lines; 
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
     mtx.unlock();
+
+    // if (lines == 0) {
+    //     // nothing
+    //     return;
+    // }
+    
+    // garbageSent = getGarbage(lines, spin, B2B, count);
+    // if (garbageSent != 0) {
+    //     garbageSentTimeout.restart();
+    // }
 }
 
 // garbage receive
@@ -111,7 +108,7 @@ void Infor::addLine(uint8_t lines, bool spin, int B2B, int count) {
     if (lines <= 0) throw std::runtime_error("garbage push error");
     // Only use infor in decleration and donot access outer infor.
     
-    lines = getGarbage(lines, spin, B2B, count);
+    // lines = getGarbage(lines, spin, B2B, count);
 
     mtx.lock(); 
     nLinesAdd <<= (lines + 1);
@@ -319,7 +316,10 @@ void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
 }
 
 void Infor::drawGarbage(sf::RenderWindow *window) {
-    int nLines = __builtin_popcount(nLinesAdd);
+    mtx.lock();
+    uint64_t tmp = nLinesAdd;
+    mtx.unlock();
+    int nLines = __builtin_popcount(tmp);
     sf::RectangleShape garbageBar;
     garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLines * BLOCK_SIZE));
     garbageBar.setFillColor(sf::Color(255, 0, 0, 100));
@@ -330,9 +330,9 @@ void Infor::drawGarbage(sf::RenderWindow *window) {
     line.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), 2));
     
     for (int i = 0; i + 1 < 64; i++) 
-        if (getBit(nLinesAdd, i)) {
+        if (getBit(tmp, i)) {
             nLines--;
-            if (getBit(nLinesAdd, i + 1) == 0){
+            if (getBit(tmp, i + 1) == 0){
                 line.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
                 window->draw(line);
             }
