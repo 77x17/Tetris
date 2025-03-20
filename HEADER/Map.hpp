@@ -28,8 +28,8 @@ public:
     
     void reset();
 
-    bool addPosible(uint8_t nLines);
-    void add(int nLines, uint8_t posException);
+    bool addPosible(uint8_t nLiness);
+    void add(uint64_t nLines, int seed);
 
     void draw(sf::RenderWindow* window);
     void drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX);

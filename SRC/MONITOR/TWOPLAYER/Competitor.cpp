@@ -105,9 +105,9 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                         player->handleAddLine(tmp, spin);
                     }
                     else {
-                        int tmp = infor->getAndRemoveLineAdd();
-                        int pos = 0; packet >> pos;
-                        map->add(tmp, pos);
+                        uint64_t tmp = infor->getAndRemoveLineAdd();
+                        int seed; packet >> seed;
+                        map->add(tmp, seed);
                     }
 
                     mtx.unlock();

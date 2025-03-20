@@ -39,7 +39,8 @@ void Infor::reset() {
 void Infor::removeLine(uint8_t lines) {
     nLine   += lines;
     mtx.lock();
-    nLinesAdd = std::max(0, nLinesAdd - lines);
+    nLinesAdd >>= lines; 
+    if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
     mtx.unlock();
 }
 
@@ -52,13 +53,14 @@ void Infor::addLine(uint8_t lines, bool spin) {
     }
 
     mtx.lock(); 
-    nLinesAdd += lines;
+    nLinesAdd <<= (lines + 1);
+    nLinesAdd |= FULLMASK(lines);
     mtx.unlock();
 }
 
-int Infor::getAndRemoveLineAdd() {
+uint64_t Infor::getAndRemoveLineAdd() {
     mtx.lock();
-    int tmp = nLinesAdd;
+    uint64_t tmp = nLinesAdd;
     nLinesAdd = 0;
     mtx.unlock();
     return tmp;

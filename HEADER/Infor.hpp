@@ -40,7 +40,7 @@ private:
     SoundManager *soundManager;
 
     std::mutex mtx;
-    int nLinesAdd;
+    uint64_t nLinesAdd;
 
 public:
     Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, 
@@ -52,7 +52,7 @@ public:
 
     void removeLine(uint8_t lines);
     void addLine(uint8_t lines, bool spin);
-    int  getAndRemoveLineAdd();
+    uint64_t  getAndRemoveLineAdd();
 
     void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);
     void drawMessage(sf::RenderWindow *window, const std::string text);

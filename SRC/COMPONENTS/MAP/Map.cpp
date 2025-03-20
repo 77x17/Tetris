@@ -2,6 +2,8 @@
 
 #include "Block.hpp"
 
+#include <random>
+
 #define OFFSETX 4
 #define OFFSETY 0
 #define OFFRIGHT 12
@@ -96,15 +98,25 @@ bool Map::addPosible(uint8_t nLines) {
     return true;
 }
 
-void Map::add(int nLines, uint8_t posException) {
-    if (nLines == 0) return;
-    if (posException < 0 || posException >= WIDTH_MAP)
-        throw std::runtime_error("Out of range in add Map posException");
-    posException += 2;
-    for (int i = 0; i + nLines < HEIGHT_MAP; i++)
-        map[i] = map[i + nLines];
-    for (int i = HEIGHT_MAP - nLines; i < HEIGHT_MAP; i++) 
-        map[i] = (FULLMASK(REALWIDTH) ^ MASK(posException));
+#include <iostream>
+
+void Map::add(uint64_t nLinesAdd, int seed) {
+    std::mt19937 gen(seed);
+    while (nLinesAdd) {
+        std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
+        int posException = dis(gen); posException += 2;
+
+        if (getBit(nLinesAdd, 0) == 0) throw std::runtime_error("nLinesAdd have some problems");
+        int nLines = 0; while (getBit(nLinesAdd, 0)) {nLines++; nLinesAdd >>= 1;} nLinesAdd >>= 1;
+        
+        // std::cout << nLines << " " << posException << '\n';
+
+        for (int i = 0; i + nLines < HEIGHT_MAP; i++)
+            map[i] = map[i + nLines];
+        for (int i = HEIGHT_MAP - nLines; i < HEIGHT_MAP; i++) 
+            map[i] = (FULLMASK(REALWIDTH) ^ MASK(posException));
+    }
+
 }
 
 
