@@ -82,8 +82,9 @@ void Player::handleUp() {
 
 void Player::handlePut() {
     int nLines = curBlock->put(map);
-    infor->removeLine(nLines);
+    // playSoundRemoveLine -> playSound and update
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->removeLine(nLines);
 
     resetComponent();
     if (curBlock->gameOver(map))

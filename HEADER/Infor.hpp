@@ -34,6 +34,7 @@ private:
     sf::Clock     comboTimeout;
     sf::Clock     B2BMissingTimeout;
     sf::Clock     spinTimeout;
+    sf::Clock     garbageSentTimeout;
     sf::Font      font;
     std::string   message;
     std::string   combo;
@@ -41,6 +42,9 @@ private:
 
     std::mutex mtx;
     uint64_t nLinesAdd;
+
+    int garbageSent;
+    int getGarbage(int lines, bool spin, int B2B, int count);
 
 public:
     Infor(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, 
@@ -63,6 +67,7 @@ public:
     void drawSpin(sf::RenderWindow *window);
     void drawAudio(sf::RenderWindow *window, const float &volume);
     void drawGarbage(sf::RenderWindow *window);
+    void drawGarbageSent(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
 
     void compress(sf::Packet &packet);
