@@ -32,7 +32,7 @@ Player::~Player() {
 }
 
 void Player::resetComponent() {
-    collision = false; gameOver = false;
+    collision = false;
     curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
     hold->unlock();
@@ -46,7 +46,7 @@ void Player::start() {
 
 void Player::restart() {
     std::random_device rd;
-    clearScreen(rd());
+    resetMonitor(rd());
     resetComponent();
 }
 
@@ -86,7 +86,8 @@ void Player::handlePut() {
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
 
     resetComponent();
-    gameOver = curBlock->gameOver(map);
+    if (curBlock->gameOver(map))
+        setGameOver();
 }
 
 void Player::handleHardDrop() {

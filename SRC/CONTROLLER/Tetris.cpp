@@ -12,6 +12,8 @@
 #include <SFML/Graphics.hpp>
 #include <thread>
 
+#include <iostream>
+
 const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 700;
 
@@ -180,16 +182,8 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     backgroundMusic.play();
 
     competitor->start(player);
-
+    int screenStatus = -1;
     while (window->isOpen()) {
-        if (player->isGameOver()) {
-            player->restart(123);
-        }
-
-        if (competitor->isGameOver()) {
-            competitor->restart(123);
-        }
-
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -209,6 +203,27 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         window->display();
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
+
+        if (player->isGameOver() || competitor->isGameOver()) {
+            sf::Texture screenshot;
+            screenshot.create(window->getSize().x, window->getSize().y);
+            screenshot.update(*window);
+            int option = menu->drawGameOver(window, screenshot);
+
+            if (option == 0) {          // Restart
+                std::random_device rd; int seed = rd();
+                player->restart(seed);
+                competitor->restart(seed);
+            }
+            else if (option == 1) {     // Menu
+                screenStatus = 0;
+                window->close();
+            }
+            else if (option == -1) {    // Quit
+                screenStatus = -1;
+                window->close();
+            }
+        }
     }
 
     delete player;

@@ -42,7 +42,7 @@ void PlayerWithNetwork::start(uint32_t seed) {
 }
 
 void PlayerWithNetwork::restart(uint32_t seed) {
-    clearScreen(seed);
+    resetMonitor(seed);
     resetComponent();
 }
 
@@ -64,7 +64,8 @@ void PlayerWithNetwork::handlePut() {
     }
 
     resetComponent();
-    gameOver = curBlock->gameOver(map);
+    if (curBlock->gameOver(map))
+        setGameOver();
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");

@@ -96,11 +96,14 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
 
-                    // gameOver = not map->isValid(curBlock->getShape(), posY, posX);
-                    
                     infor->removeLine(tmp);
                     infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
-                    
+
+                    if (!map->isValid(curBlock->getShape(), posY, posX))
+                        setGameOver();
+
+                    mtx.unlock();
+
                     if (tmp) {
                         player->handleAddLine(tmp, infor);
                     }
@@ -109,8 +112,6 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                         int seed; packet >> seed;
                         map->add(tmp, seed);
                     }
-
-                    mtx.unlock();
                 }
                 break;
 
@@ -144,15 +145,13 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 }
                 break;
             }
-            
-            // mtx.lock();
-            // pollEvent.push(event);
-            // mtx.unlock();
         }
     }, std::ref(player));
     th.detach();
 }
 
 void Competitor::restart(uint32_t seed) {
-    clearScreen(seed);
+    mtx.lock();
+    resetMonitor(seed);
+    mtx.unlock();
 }

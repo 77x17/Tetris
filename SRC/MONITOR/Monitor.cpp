@@ -55,9 +55,9 @@ Monitor::~Monitor() {
     delete infor;    infor    = nullptr;
 }
 
-bool Monitor::isGameOver() {
-    return gameOver;
-}
+void Monitor::setGameOver() { gameOver = true; }
+
+bool Monitor::isGameOver() { return gameOver; }
 
 void Monitor::draw(sf::RenderWindow* window) {
     map ->drawOutline(window);
@@ -69,9 +69,10 @@ void Monitor::draw(sf::RenderWindow* window) {
     infor   ->draw(window);
 }
 
-void Monitor::clearScreen(uint32_t seed) {
+void Monitor::resetMonitor(uint32_t seed) {
     hold ->reset();
     map  ->reset();
     next ->reset(seed);
     infor->reset();
+    gameOver = false;
 }
