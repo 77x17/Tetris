@@ -27,7 +27,7 @@ public:
     ~Tetris();
     void start();
     void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite, sf::Music &backgroundMusic);
-    void startGameOnePlayer();
+    int  startGameOnePlayer();
     void startGameTwoPlayer(bool isHost);
 };
 

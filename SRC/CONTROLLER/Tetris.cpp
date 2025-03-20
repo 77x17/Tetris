@@ -5,6 +5,7 @@
 #include "Competitor.hpp"
 #include "SoundManager.hpp"
 #include "Menu.hpp"
+#include "Common.hpp"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
@@ -31,8 +32,9 @@ void Tetris::start() {
     while (true) {       
         int gameType = menu->createWindow(window);
         
+        int screenStatus = 0;
         if (gameType == 0) {
-            startGameOnePlayer();
+            screenStatus = startGameOnePlayer();
         }
         else if (gameType == 1) {
             startGameTwoPlayer(true);   // Server
@@ -41,6 +43,10 @@ void Tetris::start() {
             startGameTwoPlayer(false);  // Client
         }
         else if (gameType == -1) {      // Exit;
+            break;
+        }
+
+        if (screenStatus == -1) {
             break;
         }
     }
@@ -71,42 +77,64 @@ void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgrou
     backgroundMusic.setLoop(true);
 }
 
-void Tetris::startGameOnePlayer() {
+int Tetris::startGameOnePlayer() {
+    int screenStatus = -1;
+
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
     sf::Music   backgroundMusic;
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
-    Player* player = new Player(50 + WINDOW_WIDTH / 4, 10);
+    Player* player = new Player(50 + WINDOW_WIDTH / 4 - BLOCK_SIZE, 10);
     player->start();
     
     while (window->isOpen()) {
         sf::Event event;
-
-        if (player->isGameOver()) {
-            player->restart();
-        }
-
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
+                screenStatus = -1;
                 window->close();
             }
 
-            player->processEvents(event);
+            if (not player->isGameOver()) {
+                player->processEvents(event);
+            }
         }
-
-        player->autoDown();
 
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
-        window->display();
 
-        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
+        if (player->isGameOver()) {
+            // sf::Texture screenshot;
+            // screenshot.create(window->getSize().x, window->getSize().y);
+            int option = menu->drawGameOver(window, backgroundSprite, player);
+
+            if (option == 0) {          // Restart
+                player->restart();
+            }
+            else if (option == 1) {     // Menu
+                screenStatus = 0;
+                window->close();
+            }
+            else if (option == -1) {    // Quit
+                screenStatus = -1;
+                window->close();
+            }
+        }
+        else {
+            player->autoDown();
+
+            backgroundMusic.setVolume(SoundManager::getVolume() - 20);
+        }
+
+        window->display();
     }
 
     delete player;
+
+    return screenStatus;
 }
 
 void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
