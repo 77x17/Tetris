@@ -44,18 +44,23 @@ void Infor::removeLine(uint8_t lines) {
     mtx.unlock();
 }
 
-void Infor::addLine(uint8_t lines, bool spin) {
+void Infor::addLine(uint8_t lines, bool spin, int B2B, int count) {
     if (lines <= 0) throw std::runtime_error("garbage push error");
+    // Only use infor in decleration and donot access outer infor.
     
     if (spin) lines *= 2;
     else {
-        if (lines < 4) lines--;
+        // if (lines < 4) lines--;
     }
 
     mtx.lock(); 
     nLinesAdd <<= (lines + 1);
     nLinesAdd |= FULLMASK(lines);
     mtx.unlock();
+}
+
+void Infor::addLine(uint8_t lines, Infor* infor) {
+    addLine(lines, infor->spin, infor->B2B, infor->count);
 }
 
 uint64_t Infor::getAndRemoveLineAdd() {
@@ -288,14 +293,30 @@ void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
 }
 
 void Infor::drawGarbage(sf::RenderWindow *window) {
+    int nLines = __builtin_popcount(nLinesAdd);
     sf::RectangleShape garbageBar;
-    garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLinesAdd * BLOCK_SIZE));
+    garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLines * BLOCK_SIZE));
     garbageBar.setFillColor(sf::Color(255, 0, 0, 100));
-    garbageBar.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLinesAdd * BLOCK_SIZE);
+    garbageBar.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
+
+    sf::RectangleShape line;
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+    line.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), 2));
+    
+    for (int i = 0; i + 1 < 64; i++) 
+        if (getBit(nLinesAdd, i)) {
+            nLines--;
+            if (getBit(nLinesAdd, i + 1) == 0){
+                line.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
+                window->draw(line);
+            }
+        }
+
 
     window->draw(garbageBar);
 }
 
-void Infor::extract(sf::Packet &packet) {
-    packet << B2B << count;
+// Guarantee inorder.
+void Infor::compress(sf::Packet &packet) {
+    packet << spin << B2B << count;
 }

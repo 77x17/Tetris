@@ -5,6 +5,8 @@
 
 #include "Player.hpp"
 
+class Infor;
+
 class PlayerWithNetwork: public Player {
 private:
     sf::TcpSocket socket;
@@ -21,7 +23,7 @@ public:
     void handlePut();
     void handleHold();
     void handleUp();
-    void handleAddLine(uint8_t nLines, bool spin);
+    void handleAddLine(uint8_t nLines, Infor* inforCompetitor);
 };
 
 #endif

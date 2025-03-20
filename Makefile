@@ -43,7 +43,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 # Include dependency files
 -include $(DEP_FILES)
 
-# Clean build files
-clean:
-	@rm -rf $(OBJ_DIR) $(TARGET)
-	@echo "Cleaned build files."
+# # Clean build files
+# clean:
+# 	@rm -rf $(OBJ_DIR) $(TARGET)
+# 	@echo "Cleaned build files."

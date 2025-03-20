@@ -32,8 +32,6 @@ public:
     void restart(uint32_t seed);    
     // void initPollEvent();
     void draw(sf::RenderWindow* window);
-
-    void handleAddLine(uint8_t nLines, bool spin);
 };
 
 #endif

@@ -51,7 +51,8 @@ public:
     void reset();
 
     void removeLine(uint8_t lines);
-    void addLine(uint8_t lines, bool spin);
+    void addLine(uint8_t lines, bool spin, int B2B, int count);
+    void addLine(uint8_t nLines, Infor* infor);
     uint64_t  getAndRemoveLineAdd();
 
     void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);
@@ -64,7 +65,7 @@ public:
     void drawGarbage(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
 
-    void extract(sf::Packet &packet);
+    void compress(sf::Packet &packet);
 };
 
 #endif

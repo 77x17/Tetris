@@ -102,7 +102,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     infor->playSoundRemoveLine(tmp, spin, (char)typeBlock);
                     
                     if (tmp) {
-                        player->handleAddLine(tmp, spin);
+                        player->handleAddLine(tmp, infor);
                     }
                     else {
                         uint64_t tmp = infor->getAndRemoveLineAdd();
@@ -116,9 +116,10 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
                 case RECVLINE: {
                     uint8_t nLines; 
-                    bool    spin; 
-                    packet >> nLines >> spin;
-                    infor->addLine(nLines, spin);
+                    bool    spin;
+                    int B2B, count;
+                    packet >> nLines >> spin >> B2B >> count;
+                    infor->addLine(nLines, spin, B2B, count);
                 }
                 break;
 
@@ -154,8 +155,4 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
 void Competitor::restart(uint32_t seed) {
     clearScreen(seed);
-}
-
-void Competitor::handleAddLine(uint8_t nLines, bool spin) {
-    infor->addLine(nLines, spin);
 }

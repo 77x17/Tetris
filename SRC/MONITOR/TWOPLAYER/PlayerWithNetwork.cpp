@@ -87,9 +87,10 @@ void PlayerWithNetwork::handleUp() {
     }
 }
 
-void PlayerWithNetwork::handleAddLine(uint8_t nLines, bool spin) {
-    infor->addLine(nLines, spin);
-    sf::Packet packet; packet << RECVLINE << nLines << spin;
+void PlayerWithNetwork::handleAddLine(uint8_t nLines, Infor* inforCompetitor) {
+    infor->addLine(nLines, infor);
+    sf::Packet packet; packet << RECVLINE << nLines;
+    inforCompetitor->compress(packet);
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
