@@ -72,8 +72,6 @@ void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgrou
 }
 
 void Tetris::startGameOnePlayer() {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io", sf::Style::Close);
-
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
     sf::Music   backgroundMusic;
@@ -133,8 +131,6 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
 void Tetris::startGameTwoPlayer(bool isHost) {
     PlayerWithNetwork* player = nullptr;
     Competitor* competitor    = nullptr;
-
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetr.io " + (std::string)(isHost ? "Server" : "Client"), sf::Style::Close);
 
     isFinish.store(false);
     std::thread connectThread(&Tetris::makeConnection, this, isHost, 

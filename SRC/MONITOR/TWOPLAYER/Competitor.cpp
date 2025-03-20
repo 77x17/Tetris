@@ -115,7 +115,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 break;
 
                 case RECVLINE: {
-                    uint8_t nLines; bool spin; 
+                    uint8_t nLines; 
+                    bool    spin; 
                     packet >> nLines >> spin;
                     infor->addLine(nLines, spin);
                 }
@@ -123,7 +124,9 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
                 case HOLD: {
                     mtx.lock();
-                    curBlock = hold->interchange(curBlock);
+                    if (hold->canHold()) {
+                        curBlock = hold->interchange(curBlock);
+                    }
                     hold->lock();
                     if (curBlock == nullptr) curBlock = next->updateNext();
                     mtx.unlock();

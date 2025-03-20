@@ -40,12 +40,12 @@ Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     int GARBAGE_POSITION_X = GRID_POSITION_X - BLOCK_SIZE;
     int GARBAGE_POSITION_Y = Y_COORDINATE + GRID_HEIGHT * BLOCK_SIZE;
 
-    hold      = new Hold         (   HOLD_POSITION_X,    HOLD_POSITION_Y,    HOLD_WIDTH             ,  HOLD_HEIGHT);
-    map       = new Map          (   GRID_POSITION_X,    GRID_POSITION_Y,    GRID_WIDTH             ,  GRID_HEIGHT);
-    next      = new LinkListBlock(   NEXT_POSITION_X,    NEXT_POSITION_Y,    NEXT_WIDTH             ,  NEXT_HEIGHT);
+    hold      = new Hold         (   HOLD_POSITION_X,    HOLD_POSITION_Y,    HOLD_WIDTH             ,    HOLD_HEIGHT);
+    map       = new Map          (   GRID_POSITION_X,    GRID_POSITION_Y,    GRID_WIDTH             ,    GRID_HEIGHT);
+    next      = new LinkListBlock(   NEXT_POSITION_X,    NEXT_POSITION_Y,    NEXT_WIDTH             ,    NEXT_HEIGHT);
     infor     = new Infor        (  INFOR_POSITION_X,   INFOR_POSITION_Y,   INFOR_WIDTH * BLOCK_SIZE,
-                                    AUDIO_POSITION_X,   AUDIO_POSITION_Y,   AUDIO_WIDTH             , AUDIO_HEIGHT,
-                                  GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH             ,  GRID_HEIGHT);
+                                    AUDIO_POSITION_X,   AUDIO_POSITION_Y,   AUDIO_WIDTH             ,   AUDIO_HEIGHT,
+                                  GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH             , GARBAGE_HEIGHT);
 }
 
 Monitor::~Monitor() {

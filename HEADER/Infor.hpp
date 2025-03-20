@@ -2,6 +2,7 @@
 #define INFOR_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <mutex>
 
 class SoundManager;
@@ -51,7 +52,7 @@ public:
 
     void removeLine(uint8_t lines);
     void addLine(uint8_t lines, bool spin);
-    int getAndRemoveLineAdd();
+    int  getAndRemoveLineAdd();
 
     void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);
     void drawMessage(sf::RenderWindow *window, const std::string text);
@@ -63,6 +64,7 @@ public:
     void drawGarbage(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
 
+    void extract(sf::Packet &packet);
 };
 
 #endif

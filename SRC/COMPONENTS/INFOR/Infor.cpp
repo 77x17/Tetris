@@ -293,3 +293,7 @@ void Infor::drawGarbage(sf::RenderWindow *window) {
 
     window->draw(garbageBar);
 }
+
+void Infor::extract(sf::Packet &packet) {
+    packet << B2B << count;
+}

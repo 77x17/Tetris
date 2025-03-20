@@ -17,6 +17,7 @@ Menu::~Menu() {}
 
 int Menu::createWindow(sf::RenderWindow *&window) {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
+
     std::string menuItems[] = {"Single Player", "Multiple Player (Server)", "Multiple Player (Client)", "Exit"};
     int menuSize = sizeof(menuItems) / sizeof(menuItems[0]);
     int selectedItem = 0;
@@ -31,13 +32,16 @@ int Menu::createWindow(sf::RenderWindow *&window) {
                                 50 + i * 60);
     }
 
-    while (window->isOpen()) {
+    bool start = false;
+    while (window->isOpen() and not start) {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 selectedItem = menuSize - 1;
-
-                window->close();
+                
+                start = true;
+                break;
+                // window->close();
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Up) {
@@ -48,8 +52,9 @@ int Menu::createWindow(sf::RenderWindow *&window) {
                     if (selectedItem == menuSize - 1) {
                         window->clear(MENU_BG_COLOR);
                     }
-
-                    window->close();
+                    
+                    start = true;
+                    // window->close();
                 }
             }
         }
@@ -65,8 +70,8 @@ int Menu::createWindow(sf::RenderWindow *&window) {
         window->display();
     }
 
-    delete window;
-    window = nullptr;
+    // delete window;
+    // window = nullptr;
 
     return (selectedItem == menuSize - 1 ? -1 : selectedItem);
 }
