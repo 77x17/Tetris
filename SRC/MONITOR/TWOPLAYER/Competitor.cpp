@@ -106,7 +106,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     }
                     else {
                         int tmp = infor->getAndRemoveLineAdd();
-                        map->add(tmp);
+                        int pos = 0; packet >> pos;
+                        map->add(tmp, pos);
                     }
 
                     mtx.unlock();

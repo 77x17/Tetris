@@ -96,12 +96,15 @@ bool Map::addPosible(uint8_t nLines) {
     return true;
 }
 
-void Map::add(int nLines) {
+void Map::add(int nLines, uint8_t posException) {
     if (nLines == 0) return;
+    posException += 2;
+    if (posException < 0 || posException >= WIDTH_MAP) 
+        throw std::runtime_error("Out of range in add Map posException");
     for (int i = 0; i + nLines < HEIGHT_MAP; i++)
         map[i] = map[i + nLines];
     for (int i = HEIGHT_MAP - nLines; i < HEIGHT_MAP; i++) 
-        map[i] = FULLMASK(REALWIDTH);
+        map[i] = (FULLMASK(REALWIDTH) ^ MASK(posException));
 }
 
 

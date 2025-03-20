@@ -6,6 +6,7 @@
 #include "Map.hpp"
 
 #include <iostream>
+#include <random>
 #include <SFML/Network.hpp>
 
 PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listener, uint32_t seed):Player(X_COORDINATE, Y_COORDINATE) {
@@ -49,8 +50,6 @@ void PlayerWithNetwork::handlePut() {
     sf::Packet packet; packet << PUT;
     curBlock->compressWithSpin(packet);
 
-    if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
     // Player::handlePut();
 
     int nLines = curBlock->put(map);
@@ -58,10 +57,20 @@ void PlayerWithNetwork::handlePut() {
     infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
     
-    if (nLines == 0) map->add(infor->getAndRemoveLineAdd());
+    if (nLines == 0) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 10);
+        int randomNumber = dis(gen);
+        packet << randomNumber;
+        map->add(infor->getAndRemoveLineAdd(), randomNumber);
+    }
 
     resetComponent();
     gameOver = curBlock->gameOver(map);
+
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
 }
 
 void PlayerWithNetwork::handleHold() {
