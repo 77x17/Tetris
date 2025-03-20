@@ -122,10 +122,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, listener, seed);
     }
     else {
-        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.115.212", 55001);
-        // player = new PlayerWithNetwork(50, 10, "10.0.115.212", 55000);
-        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.108.217", 55001);
-        player = new PlayerWithNetwork(50, 10, "10.0.108.217", 55000);
+        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
+        player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
+        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.108.217", 55001);
+        // player = new PlayerWithNetwork(50, 10, "10.0.108.217", 55000);
     }
     isFinish.store(true);
 }
@@ -188,7 +188,6 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
-    player->setCompetitor(competitor);
     competitor->start(player);
 
     while (window->isOpen()) {

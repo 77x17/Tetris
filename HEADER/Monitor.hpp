@@ -9,7 +9,7 @@ class Map;
 class Infor;
 class CurrentBlock;
 
-enum MessageCode {CURBLOCK, PUT, HOLD, SPIN};
+enum MessageCode {CURBLOCK, PUT, HOLD, SPIN, RECVLINE};
 
 class Monitor {
 private:

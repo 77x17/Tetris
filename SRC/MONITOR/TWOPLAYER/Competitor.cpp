@@ -106,11 +106,17 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     }
                     else {
                         int tmp = infor->getAndRemoveLineAdd();
-                        std::cout << "MONITOR: " << tmp << '\n';
                         map->add(tmp);
                     }
 
                     mtx.unlock();
+                }
+                break;
+
+                case RECVLINE: {
+                    uint8_t nLines; bool spin; 
+                    packet >> nLines >> spin;
+                    infor->addLine(nLines, spin);
                 }
                 break;
 

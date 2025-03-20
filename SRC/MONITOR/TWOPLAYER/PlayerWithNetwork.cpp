@@ -4,7 +4,6 @@
 #include "LinkListBlock.hpp"
 #include "Infor.hpp"
 #include "Map.hpp"
-#include "Competitor.hpp"
 
 #include <iostream>
 #include <SFML/Network.hpp>
@@ -28,8 +27,6 @@ PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const c
     start(seed);
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
 }
-
-void PlayerWithNetwork::setCompetitor(Competitor* com) { competitor = com; }
 
 void PlayerWithNetwork::sendCurBlock() {
     sf::Packet packet; packet << CURBLOCK;
@@ -60,12 +57,8 @@ void PlayerWithNetwork::handlePut() {
     
     infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
-    if (nLines) {
-        std::cout << "Player: " << nLines << "\n";
-        competitor->handleAddLine(nLines, curBlock->spin);
-    }
-    else
-        map->add(infor->getAndRemoveLineAdd());
+    
+    if (nLines == 0) map->add(infor->getAndRemoveLineAdd());
 
     resetComponent();
     gameOver = curBlock->gameOver(map);
@@ -90,4 +83,8 @@ void PlayerWithNetwork::handleUp() {
 
 void PlayerWithNetwork::handleAddLine(uint8_t nLines, bool spin) {
     infor->addLine(nLines, spin);
+    sf::Packet packet; packet << RECVLINE << nLines << spin;
+
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
 }
