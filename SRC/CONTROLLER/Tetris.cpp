@@ -105,11 +105,13 @@ int Tetris::startGameOnePlayer() {
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
+        window->display();
 
         if (player->isGameOver()) {
-            // sf::Texture screenshot;
-            // screenshot.create(window->getSize().x, window->getSize().y);
-            int option = menu->drawGameOver(window, backgroundSprite, player);
+            sf::Texture screenshot;
+            screenshot.create(window->getSize().x, window->getSize().y);
+            screenshot.update(*window);
+            int option = menu->drawGameOver(window, screenshot);
 
             if (option == 0) {          // Restart
                 player->restart();
@@ -128,8 +130,6 @@ int Tetris::startGameOnePlayer() {
 
             backgroundMusic.setVolume(SoundManager::getVolume() - 20);
         }
-
-        window->display();
     }
 
     delete player;
@@ -165,45 +165,12 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                                     std::ref(competitor), std::ref(player));
     connectThread.detach();
 
-    {
-        sf::Clock waitingClock;
-        uint8_t count = 0;
-        std::string waiting = "Waiting for another player"; 
-        sf::Text waitingText(waiting, font, 40);
-        waitingText.setPosition(WINDOW_WIDTH  / 2 - waitingText.getGlobalBounds().width / 2, 
-                                WINDOW_HEIGHT / 2 - waitingText.getGlobalBounds().height / 2);
-        while (window->isOpen() && !isFinish) {
-            sf::Event event;
-            while (window->pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window->close();
-                    
-                    delete player;
-                    delete competitor;
-
-                    return;
-                }
-            }
-
-            window->clear(sf::Color(30, 30, 30));
-            if (waitingClock.getElapsedTime().asSeconds() >= 0.5f) {
-                count++;
-
-                if (count == 4) {
-                    count = 0;
-                    waiting.erase(waiting.end() - 6, waiting.end());
-
-                    waitingText.setString(waiting);
-                } 
-                else {
-                    waitingText.setString(waiting += " .");
-                }
-
-                waitingClock.restart();
-            }
-            window->draw(waitingText);
-            window->display();
-        }
+    int connectStatus = menu->waitingForConnection(window, isFinish);
+    if (connectStatus == -1) { // Error - exit
+        delete player;
+        delete competitor;
+        
+        return;
     }
 
     sf::Texture backgroundTexture;

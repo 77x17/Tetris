@@ -103,7 +103,50 @@ int Menu::createWindow(sf::RenderWindow *&window) {
     return (selectedItem == menuSize - 1 ? -1 : selectedItem);
 }
 
-int Menu::drawGameOver(sf::RenderWindow *window, sf::Sprite backgroundSprite, Player *player) {
+int Menu::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
+    sf::Clock waitingClock;
+    uint8_t count = 0;
+    std::string waiting = "Waiting for another player"; 
+    sf::Text waitingText(waiting, font, 40);
+    waitingText.setPosition(WINDOW_WIDTH  / 2 - waitingText.getGlobalBounds().width / 2, 
+                            WINDOW_HEIGHT / 2 - waitingText.getGlobalBounds().height / 2);
+
+    while (window->isOpen() && !isFinish) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window->close();
+                
+                return -1;
+            }
+        }
+
+        window->clear(sf::Color(30, 30, 30));
+        if (waitingClock.getElapsedTime().asSeconds() >= 0.5f) {
+            count++;
+
+            if (count == 4) {
+                count = 0;
+                waiting.erase(waiting.end() - 6, waiting.end());
+
+                waitingText.setString(waiting);
+            } 
+            else {
+                waitingText.setString(waiting += " .");
+            }
+
+            waitingClock.restart();
+        }
+        window->draw(waitingText);
+        window->display();
+    }
+    return 0;
+}
+
+int Menu::drawGameOver(sf::RenderWindow *window, sf::Texture screenshot) {
+    sf::Sprite background;                  // previous screen
+    background.setTexture(screenshot);
+    
     overlayTimeout.restart();
 
     sf::RectangleShape overlay(sf::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -141,9 +184,13 @@ int Menu::drawGameOver(sf::RenderWindow *window, sf::Sprite backgroundSprite, Pl
                 if (event.key.code == sf::Keyboard::Up) {
                     selectedItem = (selectedItem - 1 + menuSize) % menuSize;
                     mouseSelect  = false;
+                    
+                    canPress     = true;
                 } else if (event.key.code == sf::Keyboard::Down) {
                     selectedItem = (selectedItem + 1           ) % menuSize;
                     mouseSelect  = false;
+
+                    canPress     = true;
                 } else if (event.key.code == sf::Keyboard::Space and canPress) {
                     if (selectedItem == menuSize - 1) {
                         window->clear(MENU_BG_COLOR);
@@ -151,11 +198,6 @@ int Menu::drawGameOver(sf::RenderWindow *window, sf::Sprite backgroundSprite, Pl
                     
                     choose = true;
                     break;
-                }
-            }
-            else if (event.type == sf::Event::KeyReleased) {
-                if (event.key.code == sf::Keyboard::Space) {
-                    canPress = true;
                 }
             }
             else if (event.type == sf::Event::MouseButtonPressed) {
@@ -178,8 +220,8 @@ int Menu::drawGameOver(sf::RenderWindow *window, sf::Sprite backgroundSprite, Pl
         }
 
         window->clear();
-        window->draw(backgroundSprite); // Draw background
-        player->draw(window);
+
+        window->draw(background); // Draw background
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
         overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f))); 

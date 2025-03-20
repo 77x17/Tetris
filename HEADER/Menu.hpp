@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <atomic>
 
 class Player;
 
@@ -16,5 +17,6 @@ public:
     ~Menu();
 
     int createWindow(sf::RenderWindow *&window);
-    int drawGameOver(sf::RenderWindow *window, sf::Sprite backgroundSprite, Player *player);
+    int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
+    int drawGameOver(sf::RenderWindow *window, sf::Texture screenshot);
 };
