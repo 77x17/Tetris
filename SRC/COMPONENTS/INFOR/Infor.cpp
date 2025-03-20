@@ -92,15 +92,15 @@ void Infor::removeLine(uint8_t lines) {
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
     mtx.unlock();
 
-    // if (lines == 0) {
-    //     // nothing
-    //     return;
-    // }
+    if (lines == 0) {
+        // nothing
+        return;
+    }
     
-    // garbageSent = getGarbage(lines, spin, B2B, count);
-    // if (garbageSent != 0) {
-    //     garbageSentTimeout.restart();
-    // }
+    garbageSent = getGarbage(lines, spin, B2B, count);
+    if (garbageSent != 0) {
+        garbageSentTimeout.restart();
+    }
 }
 
 // garbage receive
@@ -108,9 +108,9 @@ void Infor::addLine(uint8_t lines, bool spin, int B2B, int count) {
     if (lines <= 0) throw std::runtime_error("garbage push error");
     // Only use infor in decleration and donot access outer infor.
     
-    // lines = getGarbage(lines, spin, B2B, count);
-
+    
     mtx.lock(); 
+    lines = getGarbage(lines, spin, B2B, count);
     nLinesAdd <<= (lines + 1);
     nLinesAdd |= FULLMASK(lines);
     mtx.unlock();

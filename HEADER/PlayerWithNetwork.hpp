@@ -2,7 +2,6 @@
 #define PLAYERWITHNETWORK_HPP
 
 #include <SFML/Window/Event.hpp>
-#include <mutex>
 
 #include "Player.hpp"
 
@@ -11,7 +10,6 @@ class Infor;
 class PlayerWithNetwork: public Player {
 private:
     sf::TcpSocket socket;
-    std::mutex mtx;
     
 public:
     PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);

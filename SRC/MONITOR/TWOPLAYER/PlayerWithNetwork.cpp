@@ -51,9 +51,9 @@ void PlayerWithNetwork::handlePut() {
     curBlock->compressWithSpin(packet);
 
     // Player::handlePut();
-    mtx.lock();
+
     int nLines = curBlock->put(map);
-    mtx.unlock();
+
     
     infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
@@ -61,9 +61,7 @@ void PlayerWithNetwork::handlePut() {
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
         packet << seed;
-        mtx.lock();
         map->add(infor->getAndRemoveLineAdd(), seed);
-        mtx.unlock();
     }
 
     resetComponent();
