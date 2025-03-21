@@ -134,7 +134,10 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     soundManager->play("spin");
                 }
                 break;
-
+                case GAMEOVER: {
+                    setGameOver();
+                }
+                break;
                 default: {
                     
                 }

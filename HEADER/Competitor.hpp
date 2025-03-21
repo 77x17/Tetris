@@ -30,7 +30,7 @@ public:
     ~Competitor();
     void start(PlayerWithNetwork* &player);
     void restart(uint32_t seed);    
-    // void initPollEvent();
+
     void draw(sf::RenderWindow* window);
 };
 

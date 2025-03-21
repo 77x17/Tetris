@@ -204,28 +204,27 @@ void Tetris::startGameTwoPlayer(bool isHost) {
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
 
-        // if (player->isGameOver() || competitor->isGameOver()) {
-        //     sf::Texture screenshot;
-        //     screenshot.create(window->getSize().x, window->getSize().y);
-        //     screenshot.update(*window);
-        //     int option = menu->drawGameOver(window, screenshot);
+        if (player->isGameOver() || competitor->isGameOver()) {
+            sf::Texture screenshot;
+            screenshot.create(window->getSize().x, window->getSize().y);
+            screenshot.update(*window);
+            int option = menu->drawGameOver(window, screenshot);
 
-        //     if (option == 0) {          // Restart
-        //         std::random_device rd; int seed = rd();
-        //         // player->ready(seed);
-        //         // monitor->waiting();
-        //         player->restart(seed);
-        //         competitor->restart(seed);
-        //     }
-        //     else if (option == 1) {     // Menu
-        //         screenStatus = 0;
-        //         window->close();
-        //     }
-        //     else if (option == -1) {    // Quit
-        //         screenStatus = -1;
-        //         window->close();
-        //     }
-        // }
+            if (option == 0) {          // Restart
+                int seed = player->ready(isHost);
+                std::cout << "HELO!\n";
+                player->restart(seed);
+                competitor->restart(seed);
+            }
+            else if (option == 1) {     // Menu
+                screenStatus = 0;
+                window->close();
+            }
+            else if (option == -1) {    // Quit
+                screenStatus = -1;
+                window->close();
+            }
+        }
     }
 
     delete player;

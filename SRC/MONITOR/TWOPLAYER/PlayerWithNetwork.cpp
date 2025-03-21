@@ -29,6 +29,14 @@ PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const c
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
 }
 
+void PlayerWithNetwork::setGameOver() {
+    sf::Packet packet; packet << GAMEOVER;
+
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    Monitor::setGameOver();
+}
+
 void PlayerWithNetwork::sendCurBlock() {
     sf::Packet packet; packet << CURBLOCK;
     curBlock->compress(packet);
@@ -38,6 +46,7 @@ void PlayerWithNetwork::sendCurBlock() {
 }
 
 void PlayerWithNetwork::start(uint32_t seed) {
+    resetMonitor(seed);
     resetComponent();
 }
 
@@ -49,9 +58,7 @@ void PlayerWithNetwork::restart(uint32_t seed) {
 void PlayerWithNetwork::handlePut() {
     sf::Packet packet; packet << PUT;
     curBlock->compressWithSpin(packet);
-
-    // Player::handlePut();
-
+    
     int nLines = curBlock->put(map);
 
     
@@ -96,4 +103,20 @@ void PlayerWithNetwork::handleAddLine(uint8_t nLines, Infor* inforCompetitor) {
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
+}
+
+int PlayerWithNetwork::ready(bool isHost) {
+    sf::Packet packet; int seed;
+    if (isHost) {
+        std::random_device rd; seed = rd();
+        packet << seed;
+        if (socket.send(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to send event!");
+    }
+    else {
+        if (socket.receive(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to receive event!");
+        packet >> seed;
+    }
+    return seed;
 }
