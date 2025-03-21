@@ -104,14 +104,41 @@ STATUS_CODE Tetris::startGameOnePlayer() {
 
     Player* player = new Player(50 + WINDOW_WIDTH / 4 - BLOCK_SIZE, 10);
     player->start();
-    
+
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
+
+    // Reverse change menu
+    {
+        window->clear();
+        window->draw(backgroundSprite); // Draw background
+        player->draw(window);
+        window->display();
+
+        menu->drawChangeMenu(window, true);
+    }
 
     while (not player->isGameOver()) {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 goto quitStartGameOnePlayer;
+            }
+            else if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Escape) {
+                    STATUS_CODE escapeOption = menu->drawEscape(window);
+
+                    switch (escapeOption) {
+                        case STATUS_CODE::RESUME:
+                            break;
+                        case STATUS_CODE::MENU:
+                            screenStatus = STATUS_CODE::MENU;
+                            goto quitStartGameOnePlayer;
+                        case STATUS_CODE::QUIT:
+                            goto quitStartGameOnePlayer;
+                        default:
+                            throw std::runtime_error("[escapeOption] cannot find STATUS_CODE");
+                    }
+                }
             }
 
             player->processEvents(event);
@@ -130,10 +157,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
             player->draw(window);
             window->display();
 
-            sf::Texture screenshot;
-            screenshot.create(window->getSize().x, window->getSize().y);
-            screenshot.update(*window);
-            screenStatus = menu->drawGameOver(window, screenshot);
+            screenStatus = menu->drawGameOver(window);
         }
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
@@ -160,10 +184,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, listener, seed);
     }
     else {
-        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
-        // player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
-        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "186.186.0.55", 55001);
-        player = new PlayerWithNetwork(50, 10, "186.186.0.55", 55000);
+        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
+        player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
+        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "186.186.0.55", 55001);
+        // player = new PlayerWithNetwork(50, 10, "186.186.0.55", 55000);
     }
     isFinish.store(true);
 }
@@ -215,10 +239,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
 
         if (player->isGameOver() || competitor->isGameOver()) {
-            sf::Texture screenshot;
-            screenshot.create(window->getSize().x, window->getSize().y);
-            screenshot.update(*window);
-            STATUS_CODE option = menu->drawGameOver(window, screenshot);
+            STATUS_CODE option = menu->drawGameOver(window);
 
             if (option == STATUS_CODE::RESTART) {          // Restart
                 int seed = player->ready(isHost);

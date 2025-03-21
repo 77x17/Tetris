@@ -142,7 +142,7 @@ void Player::processEvents(const sf::Event &event) {
 
             movingClock.restart();
         } 
-        else if (event.key.code == sf::Keyboard::Up) {
+        else if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::X) {
             handleUp();
         } 
         else if (event.key.code == sf::Keyboard::Space) {
