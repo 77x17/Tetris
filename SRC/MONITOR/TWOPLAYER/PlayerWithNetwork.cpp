@@ -90,7 +90,7 @@ void PlayerWithNetwork::handleUp() {
 }
 
 void PlayerWithNetwork::handleAddLine(uint8_t nLines, Infor* inforCompetitor) {
-    infor->addLine(nLines, infor);
+    infor->addLine(nLines, inforCompetitor);
     sf::Packet packet; packet << RECVLINE << nLines;
     inforCompetitor->compress(packet);
 

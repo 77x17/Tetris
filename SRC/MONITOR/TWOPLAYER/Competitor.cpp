@@ -92,7 +92,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     uint8_t state, y, x, shadowPosY, spin, typeBlock;
                     packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
                     int tmp = map->update(curBlock, y, x); 
-                    // mtx.lock();
+
+                    
                     hold->unlock();
                     delete curBlock; curBlock = next->updateNext();
 
@@ -101,8 +102,6 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
                     if (!map->isValid(curBlock->getShape(), posY, posX))
                         setGameOver();
-
-                    // mtx.unlock();
 
                     if (tmp) {
                         player->handleAddLine(tmp, infor);
