@@ -96,7 +96,7 @@ int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
 uint8_t Infor::removeLine(uint8_t lines) {
     if (lines == 0) {
         // nothing
-        return;
+        return 0;
     }
 
     garbageSent = getGarbage(lines, spin, B2B, count);
