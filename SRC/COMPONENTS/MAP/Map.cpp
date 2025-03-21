@@ -102,7 +102,6 @@ bool Map::addPosible(uint64_t nLines) {
 
 void Map::add(uint64_t nLinesAdd, int seed) {
     std::mt19937 gen(seed);
-    int CNT = 0;
     while (nLinesAdd) {
         std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
         int posException = dis(gen); posException += 2;
