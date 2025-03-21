@@ -54,7 +54,7 @@ public:
 
     void reset();
 
-    void removeLine(uint8_t lines);
+    uint8_t removeLine(uint8_t lines);
     void addLine(uint8_t lines, bool spin, int B2B, int count);
     void addLine(uint8_t nLines, Infor* infor);
     uint64_t  getAndRemoveLineAdd();

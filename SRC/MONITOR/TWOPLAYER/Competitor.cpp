@@ -91,17 +91,18 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 case PUT: {
                     uint8_t state, y, x, shadowPosY, spin, typeBlock;
                     packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
-                    int nLinesRemove = map->update(curBlock, y, x); 
+                    int nLinesRemove = map->update(curBlock, y, x);
 
-                    infor->playSoundRemoveLine(nLinesRemove, spin, (char)typeBlock);
-                    infor->removeLine(nLinesRemove);
-
-                    if (nLinesRemove) {
-                        player->handleAddLine(nLinesRemove, infor);
-                    }
-                    else {
+                    if (nLinesRemove == 0) {
                         int seed; packet >> seed;
                         map->add(infor->getAndRemoveLineAdd(), seed);
+                    }
+
+                    infor->playSoundRemoveLine(nLinesRemove, spin, (char)typeBlock);
+                    nLinesRemove = infor->removeLine(nLinesRemove);
+
+                    if (nLinesRemove > 0) {
+                        player->handleAddLine(nLinesRemove, infor);
                     }
 
                     delete curBlock; curBlock = next->updateNext();

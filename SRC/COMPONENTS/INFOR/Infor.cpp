@@ -93,7 +93,7 @@ int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
 }
 
 // garbage sent
-void Infor::removeLine(uint8_t lines) {
+uint8_t Infor::removeLine(uint8_t lines) {
     if (lines == 0) {
         // nothing
         return;
@@ -109,7 +109,9 @@ void Infor::removeLine(uint8_t lines) {
     mtx.lock();
     nLinesAdd >>= lines; 
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
+    lines -= __builtin_popcount(nLinesAdd);
     mtx.unlock();
+    return lines;
 }
 #include <iostream>
 // garbage receive
