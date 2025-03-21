@@ -100,30 +100,31 @@ void Infor::removeLine(uint8_t lines) {
         return;
     }
 
-    nLine += lines;
-
     garbageSent = getGarbage(lines, spin, B2B, count);
     if (garbageSent != 0) {
         garbageSentTimeout.restart();
     }
+
+    nLine += lines;
 
     mtx.lock();
     nLinesAdd >>= lines; 
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
     mtx.unlock();
 }
-
+#include <iostream>
 // garbage receive
 void Infor::addLine(uint8_t lines, bool spin, int B2B, int count) {
     if (lines <= 0) throw std::runtime_error("garbage push error");
     // Only use infor in decleration and donot access outer infor.
-    
     lines = getGarbage(lines, spin, B2B, count);
-    
-    mtx.lock(); 
-    nLinesAdd <<= (lines + 1);
-    nLinesAdd |= FULLMASK(lines);
-    mtx.unlock();
+
+    if (lines) {
+        mtx.lock();
+        nLinesAdd <<= (lines + 1);
+        nLinesAdd |= FULLMASK(lines);
+        mtx.unlock();
+    }
 }
 
 void Infor::addLine(uint8_t lines, Infor* infor) {
@@ -329,7 +330,7 @@ void Infor::drawGarbage(sf::RenderWindow *window) {
     mtx.lock();
     uint64_t tmp = nLinesAdd;
     mtx.unlock();
-    
+
     int nLines = __builtin_popcount(tmp);
     sf::RectangleShape garbageBar;
     garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLines * BLOCK_SIZE));

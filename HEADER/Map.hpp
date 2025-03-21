@@ -28,7 +28,7 @@ public:
     
     void reset();
 
-    bool addPosible(uint8_t nLiness);
+    bool addPosible(uint64_t nLiness);
     void add(uint64_t nLines, int seed);
 
     void draw(sf::RenderWindow* window);

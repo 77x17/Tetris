@@ -91,10 +91,10 @@ void Map::remove(uint8_t pos) {
     map[0] = EMPTYLINE;
 }
 
-bool Map::addPosible(uint8_t nLines) {
-    for (int i = 0; i < nLines; i++) 
-        if (map[i] != EMPTYLINE)
-            return false;
+bool Map::addPosible(uint64_t nLines) {
+    // for (int i = 0; i < nLines; i++) 
+    //     if (map[i] != EMPTYLINE)
+    //         return false;
     return true;
 }
 
@@ -102,15 +102,13 @@ bool Map::addPosible(uint8_t nLines) {
 
 void Map::add(uint64_t nLinesAdd, int seed) {
     std::mt19937 gen(seed);
+    int CNT = 0;
     while (nLinesAdd) {
         std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
         int posException = dis(gen); posException += 2;
-
         if (getBit(nLinesAdd, 0) == 0) throw std::runtime_error("nLinesAdd have some problems");
         int nLines = 0; while (getBit(nLinesAdd, 0)) {nLines++; nLinesAdd >>= 1;} nLinesAdd >>= 1;
         
-        // std::cout << nLines << " " << posException << '\n';
-
         for (int i = 0; i + nLines < HEIGHT_MAP; i++)
             map[i] = map[i + nLines];
         for (int i = HEIGHT_MAP - nLines; i < HEIGHT_MAP; i++) 

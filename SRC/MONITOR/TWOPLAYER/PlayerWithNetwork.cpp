@@ -55,8 +55,8 @@ void PlayerWithNetwork::handlePut() {
     int nLines = curBlock->put(map);
 
     
-    infor->removeLine(nLines);
     infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->removeLine(nLines);
     
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
