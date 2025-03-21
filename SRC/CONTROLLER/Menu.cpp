@@ -20,9 +20,11 @@ Menu::Menu() : mouseSelect(false) {
 Menu::~Menu() {}
 
 int Menu::createWindow(sf::RenderWindow *&window) {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
+    if (window == nullptr or not window->isOpen()) {
+        window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
+    }
 
-    std::string menuItems[] = {"Single Player", "Multiple Player (Server)", "Multiple Player (Client)", "Quit"};
+    std::string menuItems[] = {"Single Player", "Tetr.io with Bot", "Multiple Player (Server)", "Multiple Player (Client)", "Quit"};
     int menuSize = sizeof(menuItems) / sizeof(menuItems[0]);
     int selectedItem = 0;
     sf::Text menuText[menuSize];

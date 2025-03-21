@@ -38,10 +38,13 @@ void Tetris::start() {
         if (gameType == 0) {
             screenStatus = startGameOnePlayer();
         }
-        else if (gameType == 1) {
-            startGameTwoPlayer(true);   // Server
+        else if (gameType == 1) {       // versus Bot
+            startGameVersusBot();
         }
         else if (gameType == 2) {
+            startGameTwoPlayer(true);   // Server
+        }
+        else if (gameType == 3) {
             startGameTwoPlayer(false);  // Client
         }
         else if (gameType == -1) {      // Exit;
@@ -137,6 +140,10 @@ int Tetris::startGameOnePlayer() {
     delete player;
 
     return screenStatus;
+}
+
+void Tetris::startGameVersusBot() {
+    
 }
 
 void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
