@@ -121,7 +121,7 @@ uint8_t Infor::removeLine(uint8_t lines) {
     else realAddLines -= nLinesAddCurrent;
     
     mtx.unlock();
-    return realAddLines;
+    return garbageSent;
 }
 #include <iostream>
 // garbage receive

@@ -162,8 +162,8 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
     else {
         // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
         // player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
-        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.108.217", 55001);
-        player = new PlayerWithNetwork(50, 10, "10.0.108.217", 55000);
+        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "186.186.0.55", 55001);
+        player = new PlayerWithNetwork(50, 10, "186.186.0.55", 55000);
     }
     isFinish.store(true);
 }
