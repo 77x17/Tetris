@@ -25,7 +25,7 @@ public:
     void handlePut();
     void handleHold();
     void handleUp();
-    void handleAddLine(uint8_t nLines, Infor* inforCompetitor);
+    void handleAddLine(uint8_t nLines);
 
     int ready(bool isHost);
 };

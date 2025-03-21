@@ -107,23 +107,23 @@ uint8_t Infor::removeLine(uint8_t lines) {
     nLine += lines;
 
     mtx.lock();
-    uint8_t tmp = __builtin_popcount(nLinesAdd);
+    uint8_t nLinesAddCurrent = __builtin_popcount(nLinesAdd);
 
-    nLinesAdd >>= lines; 
+    nLinesAdd >>= garbageSent; 
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
-    
-    if (tmp > lines) lines = 0;
-    else lines -= tmp;
+
+    if (nLinesAddCurrent > garbageSent) garbageSent = 0;
+    else garbageSent -= nLinesAddCurrent;
     
     mtx.unlock();
-    return lines;
+    return garbageSent;
 }
 #include <iostream>
 // garbage receive
-void Infor::addLine(uint8_t lines, bool spin, int B2B, int count) {
+void Infor::addLine(uint8_t lines) {
     if (lines <= 0) throw std::runtime_error("garbage push error");
     // Only use infor in decleration and donot access outer infor.
-    lines = getGarbage(lines, spin, B2B, count);
+    // lines = getGarbage(lines, spin, B2B, count);
 
     if (lines) {
         mtx.lock();
@@ -133,9 +133,9 @@ void Infor::addLine(uint8_t lines, bool spin, int B2B, int count) {
     }
 }
 
-void Infor::addLine(uint8_t lines, Infor* infor) {
-    addLine(lines, infor->spin, infor->B2B, infor->count);
-}
+// void Infor::addLine(uint8_t lines, Infor* infor) {
+//     addLine(lines, infor->spin, infor->B2B, infor->count);
+// }
 
 uint64_t Infor::getAndRemoveLineAdd() {
     mtx.lock();

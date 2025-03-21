@@ -103,7 +103,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     nLinesRemove = infor->removeLine(nLinesRemove);
 
                     if (nLinesRemove > 0) {
-                        player->handleAddLine(nLinesRemove, infor);
+                        player->handleAddLine(nLinesRemove);
                     }
 
                     delete curBlock; curBlock = next->updateNext();
@@ -112,12 +112,9 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 break;
 
                 case RECVLINE: {
-                    uint8_t nLines; 
-                    bool    spin;
-                    int     B2B;
-                    int     count;
-                    packet >> nLines >> spin >> B2B >> count;
-                    infor->addLine(nLines, spin, B2B, count);
+                    uint8_t nLines;
+                    packet >> nLines;
+                    infor->addLine(nLines);
                 }
                 break;
 
