@@ -107,9 +107,9 @@ uint8_t Infor::removeLine(uint8_t lines) {
     nLine += lines;
 
     mtx.lock();
+    lines -= __builtin_popcount(nLinesAdd);
     nLinesAdd >>= lines; 
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
-    lines -= __builtin_popcount(nLinesAdd);
     mtx.unlock();
     return lines;
 }
