@@ -61,15 +61,14 @@ void PlayerWithNetwork::handlePut() {
     
     int nLines = curBlock->put(map);
 
-    
-    infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
-    infor->removeLine(nLines);
-    
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
         packet << seed;
         map->add(infor->getAndRemoveLineAdd(), seed);
     }
+    
+    infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->removeLine(nLines);
 
     resetComponent();
     if (curBlock->gameOver(map))
