@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <atomic>
 
+enum class STATUS_CODE {QUIT = -1, SINGLEPLAYER = 0, VERSUSBOT = 1, MULTIPLAYER_SERVER = 2, MULTIPLAYER_CLIENT = 3, RESTART = 0, MENU = 1};
+
 class Player;
 
 class Menu {
@@ -16,7 +18,7 @@ public:
     Menu();
     ~Menu();
 
-    int createWindow(sf::RenderWindow *&window);
+    STATUS_CODE drawMenu(sf::RenderWindow *window);
     int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
-    int drawGameOver(sf::RenderWindow *window, sf::Texture screenshot);
+    STATUS_CODE drawGameOver(sf::RenderWindow *window, sf::Texture screenshot);
 };

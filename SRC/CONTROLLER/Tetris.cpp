@@ -20,7 +20,7 @@ const int WINDOW_HEIGHT = 700;
 float SoundManager::volume = 50.0f;
 
 Tetris::Tetris() {
-    window = nullptr;
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
     menu   = new Menu();
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
@@ -31,28 +31,41 @@ Tetris::~Tetris() {
 }
 
 void Tetris::start() {
-    while (true) {       
-        int gameType = menu->createWindow(window);
+    while (window->isOpen()) {       
+        STATUS_CODE gameType = menu->drawMenu(window);
         
-        int screenStatus = 0;
-        if (gameType == 0) {
-            screenStatus = startGameOnePlayer();
+        STATUS_CODE screenStatus = STATUS_CODE::QUIT;
+        switch (gameType) {
+            case STATUS_CODE::SINGLEPLAYER: 
+                startGameOnePlayer:
+                screenStatus = startGameOnePlayer();
+                break;
+            case STATUS_CODE::VERSUSBOT:
+                startGameVersusBot();
+                break;
+            case STATUS_CODE::MULTIPLAYER_SERVER:
+                startGameTwoPlayer(true);   
+                break;
+            case STATUS_CODE::MULTIPLAYER_CLIENT:
+                startGameTwoPlayer(false);
+                break;
+            case STATUS_CODE::QUIT:
+                window->close();
+                break;
+            default:
+                throw std::runtime_error("[Menu.cpp] cannot find STATUS_CODE");
         }
-        else if (gameType == 1) {       // versus Bot
-            startGameVersusBot();
-        }
-        else if (gameType == 2) {
-            startGameTwoPlayer(true);   // Server
-        }
-        else if (gameType == 3) {
-            startGameTwoPlayer(false);  // Client
-        }
-        else if (gameType == -1) {      // Exit;
-            break;
-        }
-
-        if (screenStatus == -1) {
-            break;
+        
+        switch (screenStatus) {
+            case STATUS_CODE::MENU:
+                break;
+            case STATUS_CODE::SINGLEPLAYER:
+                goto startGameOnePlayer;
+            case STATUS_CODE::QUIT:
+                window->close();
+                break;
+            default:
+                throw std::runtime_error("[Menu.cpp] cannot find STATUS_CODE");
         }
     }
 }
@@ -82,9 +95,7 @@ void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgrou
     backgroundMusic.setLoop(true);
 }
 
-int Tetris::startGameOnePlayer() {
-    int screenStatus = -1;
-
+STATUS_CODE Tetris::startGameOnePlayer() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
     sf::Music   backgroundMusic;
@@ -94,17 +105,16 @@ int Tetris::startGameOnePlayer() {
     Player* player = new Player(50 + WINDOW_WIDTH / 4 - BLOCK_SIZE, 10);
     player->start();
     
-    while (window->isOpen()) {
+    STATUS_CODE screenStatus = STATUS_CODE::QUIT;
+
+    while (not player->isGameOver()) {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                screenStatus = -1;
-                window->close();
+                goto quitStartGameOnePlayer;
             }
 
-            if (not player->isGameOver()) {
-                player->processEvents(event);
-            }
+            player->processEvents(event);
         }
 
         window->clear();
@@ -112,38 +122,31 @@ int Tetris::startGameOnePlayer() {
         player->draw(window);
         window->display();
 
+        player->autoDown();
+
         if (player->isGameOver()) {
+            window->clear();
+            window->draw(backgroundSprite); // Draw background
+            player->draw(window);
+            window->display();
+
             sf::Texture screenshot;
             screenshot.create(window->getSize().x, window->getSize().y);
             screenshot.update(*window);
-            int option = menu->drawGameOver(window, screenshot);
-
-            if (option == 0) {          // Restart
-                player->restart();
-            }
-            else if (option == 1) {     // Menu
-                screenStatus = 0;
-                window->close();
-            }
-            else if (option == -1) {    // Quit
-                screenStatus = -1;
-                window->close();
-            }
+            screenStatus = menu->drawGameOver(window, screenshot);
         }
-        else {
-            player->autoDown();
 
-            backgroundMusic.setVolume(SoundManager::getVolume() - 20);
-        }
+        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
 
+quitStartGameOnePlayer:
     delete player;
 
     return screenStatus;
 }
 
-void Tetris::startGameVersusBot() {
-    
+STATUS_CODE Tetris::startGameVersusBot() {
+    return STATUS_CODE::MENU;
 }
 
 void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
@@ -215,19 +218,19 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             sf::Texture screenshot;
             screenshot.create(window->getSize().x, window->getSize().y);
             screenshot.update(*window);
-            int option = menu->drawGameOver(window, screenshot);
+            STATUS_CODE option = menu->drawGameOver(window, screenshot);
 
-            if (option == 0) {          // Restart
+            if (option == STATUS_CODE::RESTART) {          // Restart
                 int seed = player->ready(isHost);
                 std::cout << "HELO!\n";
-                player->restart(seed);
+                player    ->restart(seed);
                 competitor->restart(seed);
             }
-            else if (option == 1) {     // Menu
+            else if (option == STATUS_CODE::MENU) {     // Menu
                 screenStatus = 0;
                 window->close();
             }
-            else if (option == -1) {    // Quit
+            else if (option == STATUS_CODE::QUIT) {    // Quit
                 screenStatus = -1;
                 window->close();
             }

@@ -59,6 +59,7 @@ public:
     void addLine(uint8_t nLines, Infor* infor);
     uint64_t  getAndRemoveLineAdd();
 
+    void update(uint8_t lines, bool spin, char typeBlock);
     void playSoundRemoveLine(uint8_t lines, bool spin, char typeBlock);
     void drawMessage(sf::RenderWindow *window, const std::string text);
     void drawCombo(sf::RenderWindow *window, const std::string text);

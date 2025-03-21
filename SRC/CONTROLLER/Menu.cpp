@@ -4,8 +4,10 @@
 
 #include <iostream>
 
-const int WINDOW_WIDTH  = 1050;
-const int WINDOW_HEIGHT = 700;
+const int WINDOW_WIDTH   = 1100;
+const int WINDOW_HEIGHT  = 700;
+
+const int OPTION_PADDING = 100;
 
 const sf::Color MENU_BG_COLOR  = sf::Color(30, 30, 30);
 const sf::Color TEXT_COLOR     = sf::Color::White;
@@ -19,11 +21,7 @@ Menu::Menu() : mouseSelect(false) {
 
 Menu::~Menu() {}
 
-int Menu::createWindow(sf::RenderWindow *&window) {
-    if (window == nullptr or not window->isOpen()) {
-        window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
-    }
-
+STATUS_CODE Menu::drawMenu(sf::RenderWindow *window) {
     std::string menuItems[] = {"Single Player", "Tetr.io with Bot", "Multiple Player (Server)", "Multiple Player (Client)", "Quit"};
     int menuSize = sizeof(menuItems) / sizeof(menuItems[0]);
     int selectedItem = 0;
@@ -34,8 +32,7 @@ int Menu::createWindow(sf::RenderWindow *&window) {
         menuText[i].setString(menuItems[i]);
         menuText[i].setCharacterSize(40);
         menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
-        menuText[i].setPosition(window->getSize().x / 2 - menuText[i].getGlobalBounds().width / 2, 
-                                50 + i * 60);
+        menuText[i].setPosition(window->getSize().x / 3, 2 * OPTION_PADDING + i * OPTION_PADDING);
     }
 
     bool choose = false;
@@ -90,11 +87,21 @@ int Menu::createWindow(sf::RenderWindow *&window) {
                 }
             }
         }
+
         for (int i = 0; i < menuSize; i++) {
-            menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+            // menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+            if (i == selectedItem) {
+                menuText[i].setFillColor(SELECTED_COLOR);
+                menuText[i].setPosition(sf::Vector2f(window->getSize().x / 3 - 50, 2 * OPTION_PADDING + i * OPTION_PADDING));
+            }
+            else {
+                menuText[i].setFillColor(TEXT_COLOR);
+                menuText[i].setPosition(sf::Vector2f(window->getSize().x / 3, 2 * OPTION_PADDING + i * OPTION_PADDING));
+            }
         }
 
         window->clear(MENU_BG_COLOR);
+
         for (int i = 0; i < menuSize; i++) {
             window->draw(menuText[i]);
         }
@@ -102,7 +109,7 @@ int Menu::createWindow(sf::RenderWindow *&window) {
         window->display();
     }
 
-    return (selectedItem == menuSize - 1 ? -1 : selectedItem);
+    return static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
 }
 
 int Menu::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
@@ -145,7 +152,7 @@ int Menu::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFi
     return 0;
 }
 
-int Menu::drawGameOver(sf::RenderWindow *window, sf::Texture screenshot) {
+STATUS_CODE Menu::drawGameOver(sf::RenderWindow *window, sf::Texture screenshot) {
     sf::Sprite background;                  // previous screen
     background.setTexture(screenshot);
     
@@ -194,10 +201,6 @@ int Menu::drawGameOver(sf::RenderWindow *window, sf::Texture screenshot) {
 
                     canPress     = true;
                 } else if (event.key.code == sf::Keyboard::Space and canPress) {
-                    if (selectedItem == menuSize - 1) {
-                        window->clear(MENU_BG_COLOR);
-                    }
-                    
                     choose = true;
                     break;
                 }
@@ -252,8 +255,9 @@ int Menu::drawGameOver(sf::RenderWindow *window, sf::Texture screenshot) {
         for (int i = 0; i < menuSize; i++) {
             window->draw(menuText[i]);
         }
+        
         window->display();
     }
     
-    return (selectedItem == menuSize - 1 ? -1 : selectedItem);
+    return static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
 }

@@ -12,6 +12,8 @@ class Competitor;
 class NetworkManager;
 class Menu;
 
+enum class STATUS_CODE;
+
 class Tetris {
 private:
     Menu             *menu;
@@ -27,8 +29,8 @@ public:
     ~Tetris();
     void start();
     void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite, sf::Music &backgroundMusic);
-    void startGameVersusBot();
-    int  startGameOnePlayer();
+    STATUS_CODE startGameVersusBot();
+    STATUS_CODE startGameOnePlayer();
     void startGameTwoPlayer(bool isHost);
 };
 

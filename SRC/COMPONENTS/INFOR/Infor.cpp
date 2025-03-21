@@ -37,8 +37,6 @@ void Infor::reset() {
 }
 
 int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
-    // return lines;
-
     int result = 0;
     if (spin) { 
         result = lines * 2;
@@ -74,6 +72,7 @@ int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
     }
 
     // combo
+    count--;
     if (spin and lines >= 2) {
         result += count;
     }
@@ -145,6 +144,9 @@ void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
         typeBlock = block;
 
         spinTimeout.restart();
+    }
+    else {
+        spin = false;
     }
 
     if (lines == 0) {
