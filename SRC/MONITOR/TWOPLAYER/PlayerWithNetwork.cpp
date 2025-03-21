@@ -60,14 +60,15 @@ void PlayerWithNetwork::handlePut() {
     curBlock->compressWithSpin(packet);
     
     int nLines = curBlock->put(map);
-
+    
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
         packet << seed;
         map->add(infor->getAndRemoveLineAdd(), seed);
     }
-    
-    infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
+
+    infor->update(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->playSound(nLines, curBlock->spin, curBlock->getTypeBlock());
     infor->removeLine(nLines);
 
     resetComponent();

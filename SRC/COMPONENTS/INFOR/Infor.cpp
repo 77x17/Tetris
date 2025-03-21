@@ -140,7 +140,7 @@ uint64_t Infor::getAndRemoveLineAdd() {
     return tmp;
 }
 
-void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
+void Infor::update(uint8_t lines, bool isSpin, char block) {
     if (isSpin) {
         spin      = isSpin;
         typeBlock = block;
@@ -152,11 +152,6 @@ void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
     }
 
     if (lines == 0) {
-        if (count > 2) {
-            soundManager->play("comboBreak");
-        }
-
-        count = 0;
         return;
     }
 
@@ -167,8 +162,6 @@ void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
         
         if (count > 1) {
             combo = std::to_string(count - 1);
-            
-            soundManager->play("combo" + (count <= 6 ? combo : "5"));
 
             comboTimeout.restart();
         }
@@ -177,18 +170,9 @@ void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
 
         if (lines == 4) {
             B2B++;
-
-            if (B2B > 1) {
-                soundManager->play("clearB2B");
-            }
-            else {
-                soundManager->play("clearQuad");
-            }
         }
         else if (isSpin) {
             B2B++;
-
-            soundManager->play("clearSpin");
         }
         else {
             if (B2B > 1) {
@@ -198,7 +182,37 @@ void Infor::playSoundRemoveLine(uint8_t lines, bool isSpin, char block) {
             }
 
             B2B = 0;
+        }
+    }
+}
 
+void Infor::playSound(uint8_t lines, bool isSpin, char block) {
+    if (lines == 0) {
+        if (count > 2) {
+            soundManager->play("comboBreak");
+        }
+
+        count = 0;
+        return;
+    }
+
+    if (lines != 0) {
+        if (count > 1) {
+            soundManager->play("combo" + (count <= 6 ? combo : "5"));
+        }
+        
+        if (lines == 4) {
+            if (B2B > 1) {
+                soundManager->play("clearB2B");
+            }
+            else {
+                soundManager->play("clearQuad");
+            }
+        }
+        else if (isSpin) {
+            soundManager->play("clearSpin");
+        }
+        else {
             soundManager->play("clearLine");
         }
     }

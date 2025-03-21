@@ -98,7 +98,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                         map->add(infor->getAndRemoveLineAdd(), seed);
                     }
 
-                    infor->playSoundRemoveLine(nLinesRemove, spin, (char)typeBlock);
+                    infor->update(nLinesRemove, spin, (char)typeBlock);
+                    infor->playSound(nLinesRemove, spin, (char)typeBlock);
                     nLinesRemove = infor->removeLine(nLinesRemove);
 
                     if (nLinesRemove > 0) {

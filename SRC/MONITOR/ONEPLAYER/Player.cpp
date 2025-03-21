@@ -82,8 +82,9 @@ void Player::handleUp() {
 
 void Player::handlePut() {
     int nLines = curBlock->put(map);
-    // playSoundRemoveLine -> playSound and update
-    infor->playSoundRemoveLine(nLines, curBlock->spin, curBlock->getTypeBlock());
+    
+    infor->update(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->playSound(nLines, curBlock->spin, curBlock->getTypeBlock());
     infor->removeLine(nLines);
 
     resetComponent();
