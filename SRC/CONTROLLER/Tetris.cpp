@@ -256,10 +256,8 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                         competitor->ready(seed);
                         player->ready(seed);
                     }
-                    competitor->start(player);
                     isFinish.store(true);
                 }, player, competitor, isHost);
-
                 int connectStatus = menu->waitingForConnection(window, isFinish);
                 if (connectStatus == -1) { // Error - exit
                     delete player;
@@ -267,6 +265,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                     return;
                 }
                 RestartGame.detach();
+                competitor->start(player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu
                 screenStatus = 0;

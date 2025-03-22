@@ -103,6 +103,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     nLinesRemove = infor->removeLine(nLinesRemove);
 
                     if (nLinesRemove > 0) {
+                        std::cout << nLinesRemove << '\n';
                         player->handleAddLine(nLinesRemove);
                     }
 
@@ -143,7 +144,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 break;
             }
         }
-        // std::cout << "END TURN!\n";
+        std::cout << "END TURN!\n";
     }, std::ref(player));
     th.detach();
 }
