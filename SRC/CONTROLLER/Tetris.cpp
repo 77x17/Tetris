@@ -7,6 +7,7 @@
 #include "Common.hpp"
 #include "Menu.hpp"
 #include "Scene.hpp"
+#include "Bot.hpp"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
@@ -120,7 +121,6 @@ restartGameOnePlayer:
 
     {
         int HOLD_WIDTH         = 5;
-        int HOLD_HEIGHT        = 3;
 
         int GRID_WIDTH         = 10;
         int GRID_HEIGHT        = 24;
@@ -129,7 +129,9 @@ restartGameOnePlayer:
 
         scene->drawCountdown(window, 
             (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
-            (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER)
+            (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
+            -1,
+            -1
         );
     }
 
@@ -199,24 +201,147 @@ quitStartGameOnePlayer:
 }
 
 STATUS_CODE Tetris::startGameVersusBot() {
-    return STATUS_CODE::MENU;
+    sf::Texture backgroundTexture;
+    sf::Sprite  backgroundSprite;
+    sf::Music   backgroundMusic;
+    loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
+    backgroundMusic.play();
+
+restartGameVersusBot:
+    int PLAYER_X_COORDINATE = 50;
+    int PLAYER_Y_COORDINATE = 10;
+    int BOT_X_COORDINATE = 50 + WINDOW_WIDTH / 2 - 25;
+    int BOT_Y_COORDINATE = 10;
+    Player *player = new Player(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);
+    Bot *bot = new Bot(BOT_X_COORDINATE, BOT_Y_COORDINATE);
+    
+    std::random_device rd;
+    int seed = rd();
+    player->start(seed);
+    bot   ->start(seed);
+
+    STATUS_CODE screenStatus = STATUS_CODE::QUIT;
+
+    // Fade in: change menu
+    {
+        window->clear();
+        window->draw(backgroundSprite); // Draw background
+        player->draw(window);
+        bot   ->draw(window);
+        window->display();
+
+        scene->drawChangeMenu(window, true);
+    }
+
+    {
+        int HOLD_WIDTH         = 5;
+
+        int GRID_WIDTH         = 10;
+        int GRID_HEIGHT        = 24;
+        int P_GRID_POSITION_X    = PLAYER_X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
+        int P_GRID_POSITION_Y    = PLAYER_Y_COORDINATE;
+        int B_GRID_POSITION_X    = BOT_X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
+        int B_GRID_POSITION_Y    = BOT_Y_COORDINATE;
+
+        scene->drawCountdown(window, 
+            (P_GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
+            (P_GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
+            (B_GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
+            (B_GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER)
+        );
+    }
+
+    while (not player->isGameOver()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                scene->drawChangeMenu(window, false);
+
+                goto quitGameVersusBot;
+            }
+            else if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Escape) {
+                    STATUS_CODE escapeOption = scene->drawPause(window);
+
+                    switch (escapeOption) {
+                        case STATUS_CODE::RESUME:
+                            break;
+                        case STATUS_CODE::RESTART:
+                            screenStatus = STATUS_CODE::RESTART;
+                            
+                            goto quitGameVersusBot;
+                        case STATUS_CODE::MENU:
+                            screenStatus = STATUS_CODE::MENU;
+                            
+                            goto quitGameVersusBot;
+                        case STATUS_CODE::QUIT:
+                            screenStatus = STATUS_CODE::QUIT;
+                            
+                            goto quitGameVersusBot;
+                        default:
+                            throw std::runtime_error("[escapeOption] cannot find STATUS_CODE");
+                    }
+                }
+            }
+
+            player->processEvents(event);
+            bot   ->processEvents(event);
+        }
+
+        window->clear();
+        window->draw(backgroundSprite); // Draw background
+        player->draw(window);
+        bot   ->draw(window);
+        window->display();
+
+        player->autoDown();
+        bot   ->autoDown();
+
+        if (player->isGameOver()) {
+            window->clear();
+            window->draw(backgroundSprite); // Draw background
+            player->draw(window);
+            bot   ->draw(window);
+            window->display();
+
+            screenStatus = scene->drawGameOver(window);
+        }
+
+        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
+    }
+
+quitGameVersusBot:
+    delete player;
+    delete bot;
+
+    if (screenStatus == STATUS_CODE::RESTART) {
+        goto restartGameVersusBot;
+    }
+
+    return screenStatus;
 }
 
 void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
+    int PLAYER_X_COORDINATE = 50;
+    int PLAYER_Y_COORDINATE = 10;
+    int COMPETITOR_X_COORDINATE = 50 + WINDOW_WIDTH / 2 - 25;
+    int COMPETITOR_Y_COORDINATE = 10;
+    
     if (isHost) {
         sf::TcpListener listener;
         listener.listen(55001);
         std::random_device rd;
         int seed = rd();
-        player = new PlayerWithNetwork(50, 10, listener, seed);
+        
+        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, listener, seed);
         listener.listen(55000);
-        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, listener, seed);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
     }
     else {
-        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
-        // player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
-        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.100.230", 55001);
-        player = new PlayerWithNetwork(50, 10, "10.0.100.230", 55000);
+        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
+        // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.100.230", 55001);
+        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.100.230", 55000);
     }
     isFinish.store(true);
 }
@@ -246,7 +371,6 @@ void Tetris::startGameTwoPlayer(bool isHost) {
 
     competitor->start(player);
 
-    int screenStatus = -1;
     while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -298,11 +422,9 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                 competitor->start(player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu
-                screenStatus = 0;
                 window->close();
             }
             else if (option == STATUS_CODE::QUIT) {    // Quit
-                screenStatus = -1;
                 window->close();
             }
         }
