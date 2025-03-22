@@ -14,7 +14,7 @@ enum class STATUS_CODE {
     RESTART            = 0, 
     MENU               = 1, 
     
-    RESUME             = 0
+    RESUME             = 2
 };
 
 enum class MENU_CODE {
@@ -39,6 +39,8 @@ private:
     int                 menuSize;
     sf::Text           *menuTexts;
     sf::RectangleShape *menuBars;
+    float              *currentBarPositionX;
+    float              *targetBarPositionX;
 
     MENU_CODE           menuCode;
 

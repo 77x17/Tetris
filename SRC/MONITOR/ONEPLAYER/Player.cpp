@@ -203,6 +203,11 @@ void Player::autoDown() {
         
         movingClock.restart();
     }
+
+    if (not curBlock->collisionBottom(map)) {
+        collision = false;
+    }
+
     if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
         if (not curBlock->fallDown(map)) {
             handlePut();
