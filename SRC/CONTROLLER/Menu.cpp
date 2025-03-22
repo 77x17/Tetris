@@ -13,32 +13,33 @@ const sf::Color SELECTED_COLOR = sf::Color::Yellow;
 
 constexpr float TIME_OUT = 1.0f;
 
-Menu::Menu(sf::RenderWindow *window, const std::string menuItems[], MENU_CODE menuCode) : 
+Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, MENU_CODE menuCode) : 
     selected(false), 
     selectedItem(0), 
     mouseSelect(false), 
-    mousePosPrev(sf::Vector2i()) 
+    mousePosPrev(sf::Vector2i()),
+    menuCode(menuCode)
 {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-
-    menuSize  = sizeof(menuItems) / sizeof(menuItems[0]);
-    menuTexts = new sf::Text[menuSize];
-    menuBars  = new sf::RectangleShape[menuSize];
 
     soundManager = new SoundManager();
     soundManager->loadSound("move"    , "ASSETS/sfx/menutap.mp3");
     soundManager->loadSound("selected", "ASSETS/sfx/menutap.mp3");
+
+    menuSize  = menuItems.size();
+    menuTexts = new sf::Text[menuSize];
+    menuBars  = new sf::RectangleShape[menuSize];
     
     switch (menuCode) {
-        case MENU_CODE::MENU: {
+        case MENU_CODE::MAIN: {
             for (int i = 0; i < menuSize; i++) {
                 menuTexts[i].setFont(font);
                 menuTexts[i].setString(menuItems[i]);
                 menuTexts[i].setCharacterSize(40);
                 menuTexts[i].setFillColor(TEXT_COLOR);
                 menuTexts[i].setPosition(sf::Vector2f(
-                    window->getSize().x / 2 - menuTexts[i].getGlobalBounds().width / 2, 
-                    200 + i * 60
+                    window->getSize().x / 3, 
+                    OPTION_PADDING + i * OPTION_PADDING
                 ));
                 
                 menuBars[i].setSize(sf::Vector2f(
@@ -54,7 +55,7 @@ Menu::Menu(sf::RenderWindow *window, const std::string menuItems[], MENU_CODE me
 
             break;
         }
-        case MENU_CODE::ESCAPE  : 
+        case MENU_CODE::PAUSE: 
         case MENU_CODE::GAMEOVER: {
             for (int i = 0; i < menuSize; i++) {
                 menuTexts[i].setFont(font);
@@ -63,7 +64,7 @@ Menu::Menu(sf::RenderWindow *window, const std::string menuItems[], MENU_CODE me
                 menuTexts[i].setFillColor(TEXT_COLOR);
                 menuTexts[i].setPosition(sf::Vector2f(
                     window->getSize().x / 2 - menuTexts[i].getGlobalBounds().width / 2, 
-                    200 + i * 60
+                    2 * OPTION_PADDING + i * 60
                 ));
             }
             
@@ -84,6 +85,19 @@ Menu::~Menu() {
     delete menuBars;
 }
 
+bool Menu::notSelected() { 
+    return not selected; 
+}
+
+STATUS_CODE Menu::getSelectedItem() {
+    STATUS_CODE result = static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
+    
+    selected = false;
+    selectedItem = 0;
+    
+    return result; 
+}
+
 void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
     if (event.type == sf::Event::Closed) {
         selectedItem = menuSize - 1;
@@ -96,29 +110,61 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
             mouseSelect  = false;
 
             soundManager->play("move");
-        } else if (event.key.code == sf::Keyboard::Down or event.key.code == sf::Keyboard::S) {
+        } 
+        else if (event.key.code == sf::Keyboard::Down or event.key.code == sf::Keyboard::S) {
             selectedItem = (selectedItem + 1           ) % menuSize;
             mouseSelect  = false;
 
             soundManager->play("move");
-        } else if (event.key.code == sf::Keyboard::Space or event.key.code == sf::Keyboard::Enter) {
+        } 
+        else if (event.key.code == sf::Keyboard::Space or event.key.code == sf::Keyboard::Enter) {
             selected = true;
+            
+            soundManager->play("selected");
+        }
+        else if (menuCode == MENU_CODE::PAUSE and event.key.code == sf::Keyboard::Escape) {
+            selectedItem = 0;
+            selected     = true;
             
             soundManager->play("selected");
         }
     }
     else if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
-            // Lấy vị trí con trỏ trong cửa sổ
-            sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
-            for (int i = 0; i < menuSize; i++) {
-                if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                    selectedItem = i;
-                    
-                    selected = true;
-                    
-                    soundManager->play("selected");
-                    
+            switch (menuCode) {
+                case MENU_CODE::MAIN: {
+                    // Lấy vị trí con trỏ trong cửa sổ
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
+                    for (int i = 0; i < menuSize; i++) {
+                        if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                            selectedItem = i;
+                            
+                            selected = true;
+                            
+                            soundManager->play("selected");
+                            
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case MENU_CODE::PAUSE: 
+                case MENU_CODE::GAMEOVER: {
+                    // Lấy vị trí con trỏ trong cửa sổ
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
+                    for (int i = 0; i < menuSize; i++) {
+                        if (menuTexts[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                            selectedItem = i;
+                            
+                            selected = true;
+                            
+                            soundManager->play("selected");
+                            
+                            break;
+                        }
+                    }
+
                     break;
                 }
             }
@@ -126,7 +172,7 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
     }
 }
 
-void Menu::update(sf::RenderWindow *window, MENU_CODE menuCode) {
+void Menu::update(sf::RenderWindow *window) {
     // Lấy vị trí con trỏ trong cửa sổ
     sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
     if (mousePos != mousePosPrev) {
@@ -135,37 +181,78 @@ void Menu::update(sf::RenderWindow *window, MENU_CODE menuCode) {
 
     mousePosPrev = mousePos;
 
-    if (mouseSelect) {
-        for (int i = 0; i < menuSize; i++) {
-            if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                if (selectedItem != i) {
-                    selectedItem = i;
-                    
-                    soundManager->play("move");
+    switch (menuCode) {
+        case MENU_CODE::MAIN: {
+            if (mouseSelect) {
+                for (int i = 0; i < menuSize; i++) {
+                    if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                        if (selectedItem != i) {
+                            selectedItem = i;
+                            
+                            soundManager->play("move");
+                        }
+                    }
                 }
             }
+
+            for (int i = 0; i < menuSize; i++) {
+                if (i == selectedItem) {
+                    menuTexts[i].setFillColor(SELECTED_COLOR);
+                    menuTexts[i].setPosition(sf::Vector2f(window->getSize().x / 3 - SELECTED_PADDING, OPTION_PADDING + i * OPTION_PADDING));
+        
+                    menuBars[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING - SELECTED_PADDING, OPTION_PADDING + i * OPTION_PADDING));
+                }
+                else {
+                    menuTexts[i].setFillColor(TEXT_COLOR);
+                    menuTexts[i].setPosition(sf::Vector2f(window->getSize().x / 3, OPTION_PADDING + i * OPTION_PADDING));
+        
+                    menuBars[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING, OPTION_PADDING + i * OPTION_PADDING));
+                }
+            }
+
+            break;
+        }
+        case MENU_CODE::PAUSE:
+        case MENU_CODE::GAMEOVER : {
+            if (mouseSelect) {
+                for (int i = 0; i < menuSize; i++) {
+                    if (menuTexts[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                        if (selectedItem != i) {
+                            selectedItem = i;
+                            
+                            soundManager->play("move");
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < menuSize; i++) {
+                menuTexts[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+            }
+            
+            break;
         }
     }
-
-    for (int i = 0; i < menuSize; i++) {
-        if (i == selectedItem) {
-            menuTexts[i].setFillColor(SELECTED_COLOR);
-            menuTexts[i].setPosition(sf::Vector2f(window->getSize().x / 3 - SELECTED_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-
-            menuBars[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING - SELECTED_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-        }
-        else {
-            menuTexts[i].setFillColor(TEXT_COLOR);
-            menuTexts[i].setPosition(sf::Vector2f(window->getSize().x / 3, OPTION_PADDING + i * OPTION_PADDING));
-
-            menuBars[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-        }
-    }
+    
 }
 
-void Menu::draw(sf::RenderWindow *window, MENU_CODE menuCode) {
-    for (int i = 0; i < menuSize; i++) {
-        window->draw(menuBars[i]);
-        window->draw(menuTexts[i]);
+void Menu::draw(sf::RenderWindow *window) {
+    switch (menuCode) {
+        case MENU_CODE::MAIN: {
+            for (int i = 0; i < menuSize; i++) {
+                window->draw(menuBars[i]);
+                window->draw(menuTexts[i]);
+            }
+
+            break;
+        }
+        case MENU_CODE::PAUSE   :
+        case MENU_CODE::GAMEOVER: {
+            for (int i = 0; i < menuSize; i++) {
+                window->draw(menuTexts[i]);
+            }
+
+            break;
+        }
     }
 }

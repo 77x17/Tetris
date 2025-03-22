@@ -5,13 +5,7 @@
 
 #include <iostream>
 
-const int BAR_PADDING      = 20;
-const int OPTION_PADDING   = 100;
-const int SELECTED_PADDING = 50;
-
-const sf::Color MENU_BAR_COLOR = sf::Color(60, 60, 60, 200);
-const sf::Color TEXT_COLOR     = sf::Color::White;
-const sf::Color SELECTED_COLOR = sf::Color::Yellow;
+const int TITLE_PADDING   = 100;
 
 constexpr float TIME_OUT = 1.0f;
 
@@ -41,10 +35,34 @@ Scene::Scene(sf::RenderWindow *window) : mouseSelect(false) {
     float posX = (windowSize.x - newWidth ) / 2;
     float posY = (windowSize.y - newHeight) / 2;
     menuBackground.setPosition(posX, posY);
+
+    mainMenu = new Menu(window, {
+        "Single Player",
+        "Tetr.io with Bot",
+        "Multiple Player (Server)",
+        "Multiple Player (Client)",
+        "Quit"
+    }, MENU_CODE::MAIN);
+
+    pauseMenu = new Menu(window, {
+        "Resume",
+        "Menu",
+        "Quit"
+    }, MENU_CODE::PAUSE);
+
+    gameOverMenu = new Menu(window, {
+        "Restart",
+        "Menu",
+        "Quit"
+    }, MENU_CODE::GAMEOVER);
 }
 
 Scene::~Scene() {
     delete soundManager;
+
+    delete mainMenu;
+    delete pauseMenu;
+    delete gameOverMenu;
 }
 
 void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
@@ -85,135 +103,38 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
 }
 
 STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
-    std::string menuItems[] = {"Single Player", "Tetr.io with Bot", "Multiple Player (Server)", "Multiple Player (Client)", "Quit"};
-    int menuSize = sizeof(menuItems) / sizeof(menuItems[0]);
-    sf::RectangleShape menuBar[menuSize];
-    sf::Text menuText[menuSize];
-    int selectedItem = 0;
-    for (int i = 0; i < menuSize; i++) {
-        menuText[i].setFont(font);
-        menuText[i].setString(menuItems[i]);
-        menuText[i].setCharacterSize(40);
-        menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
-        menuText[i].setPosition(window->getSize().x / 3, OPTION_PADDING + i * OPTION_PADDING);
-
-        menuBar[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-        menuBar[i].setSize(sf::Vector2f(window->getSize().x - (window->getSize().x / 3 - BAR_PADDING) + SELECTED_PADDING, OPTION_PADDING - BAR_PADDING));
-        menuBar[i].setFillColor(MENU_BAR_COLOR);
-    }
-    
     {
         window->clear();
 
         window->draw(menuBackground);
 
-        for (int i = 0; i < menuSize; i++) {
-            window->draw(menuBar[i]);
-            window->draw(menuText[i]);
-        }
+        mainMenu->draw(window);
 
         window->display();
 
         drawChangeMenu(window, true);
     }
 
-    bool choose = false;
-    sf::Vector2i mousePosPrev = sf::Vector2i();
-    while (window->isOpen() and not choose) {
+    while (window->isOpen() and mainMenu->notSelected()) {
         sf::Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                selectedItem = menuSize - 1;
-                
-                choose = true;
-                break;
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
-                    selectedItem = (selectedItem - 1 + menuSize) % menuSize;
-                    mouseSelect  = false;
-
-                    soundManager->play("move");
-                } else if (event.key.code == sf::Keyboard::Down or event.key.code == sf::Keyboard::S) {
-                    selectedItem = (selectedItem + 1           ) % menuSize;
-                    mouseSelect  = false;
-
-                    soundManager->play("move");
-                } else if (event.key.code == sf::Keyboard::Space or event.key.code == sf::Keyboard::Enter) {
-                    choose = true;
-                    
-                    soundManager->play("selected");
-                    
-                    break;
-                }
-            }
-            else if (event.type == sf::Event::MouseButtonPressed) {
-                if (event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window); // Lấy vị trí con trỏ trong cửa sổ
-                    for (int i = 0; i < menuSize; i++) {
-                        if (menuBar[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                            selectedItem = i;
-                            
-                            choose = true;
-                            
-                            soundManager->play("selected");
-                            
-                            break;
-                        }
-                    }
-                }
-            }
+            mainMenu->processEvents(window, event);
         }
 
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*window); // Lấy vị trí con trỏ trong cửa sổ
-        if (mousePos != mousePosPrev) {
-            mouseSelect = true;
-        }
-
-        mousePosPrev = mousePos;
-
-        if (mouseSelect) {
-            for (int i = 0; i < menuSize; i++) {
-                if (menuBar[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                    if (selectedItem != i) {
-                        selectedItem = i;
-                        
-                        soundManager->play("move");
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < menuSize; i++) {
-            if (i == selectedItem) {
-                menuText[i].setFillColor(SELECTED_COLOR);
-                menuText[i].setPosition(sf::Vector2f(window->getSize().x / 3 - SELECTED_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-
-                menuBar[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING - SELECTED_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-            }
-            else {
-                menuText[i].setFillColor(TEXT_COLOR);
-                menuText[i].setPosition(sf::Vector2f(window->getSize().x / 3, OPTION_PADDING + i * OPTION_PADDING));
-
-                menuBar[i].setPosition(sf::Vector2f(window->getSize().x / 3 - BAR_PADDING, OPTION_PADDING + i * OPTION_PADDING));
-            }
-        }
+        mainMenu->update(window);
 
         window->clear();
 
         window->draw(menuBackground);
 
-        for (int i = 0; i < menuSize; i++) {
-            window->draw(menuBar[i]);
-            window->draw(menuText[i]);
-        }
+        mainMenu->draw(window);
 
         window->display();
     }
 
     drawChangeMenu(window, false);
 
-    return static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
+    return mainMenu->getSelectedItem();
 }
 
 int Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
@@ -260,254 +181,103 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     sf::Texture screenshot;
     screenshot.create(window->getSize().x, window->getSize().y);
     screenshot.update(*window);
-
     sf::Sprite background;
     background.setTexture(screenshot);
-    
-    overlayTimeout.restart();
 
+    overlayTimeout.restart();
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
 
-    sf::Text gameOver("GAME OVER", font, 50);
-    gameOver.setPosition(window->getSize().x / 2 - gameOver.getGlobalBounds().width / 2, 100);
+    sf::Text titleText("GAME OVER", font, 50);
+    titleText.setPosition(window->getSize().x / 2 - titleText.getGlobalBounds().width / 2, TITLE_PADDING);
     
-    std::string menuItems[] = {"Restart", "Menu", "Quit"};
-    int menuSize = sizeof(menuItems) / sizeof(menuItems[0]);
-    int selectedItem = 0;
-    sf::Text menuText[menuSize];
-
-    for (int i = 0; i < menuSize; i++) {
-        menuText[i].setFont(font);
-        menuText[i].setString(menuItems[i]);
-        menuText[i].setCharacterSize(40);
-        menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
-        menuText[i].setPosition(window->getSize().x / 2 - menuText[i].getGlobalBounds().width / 2, 
-                                200 + i * 60);
-    }
-
-    bool choose = false;
-    bool canPress = false;
-    sf::Vector2i mousePosPrev = sf::Vector2i();
-    while (window->isOpen() and not choose) {
+    while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
         sf::Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                selectedItem = menuSize - 1;
-                
-                choose = true;
-                break;
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
-                    selectedItem = (selectedItem - 1 + menuSize) % menuSize;
-                    mouseSelect  = false;
-                    
-                    canPress     = true;
-
-                    soundManager->play("move");
-                } else if (event.key.code == sf::Keyboard::Down or event.key.code == sf::Keyboard::S) {
-                    selectedItem = (selectedItem + 1           ) % menuSize;
-                    mouseSelect  = false;
-                    
-                    canPress     = true;
-
-                    soundManager->play("move");
-                } else if (canPress and (event.key.code == sf::Keyboard::Space or event.key.code == sf::Keyboard::Enter)) {
-                    choose = true;
-
-                    soundManager->play("selected");
-
-                    break;
-                }
-            }
-            else if (event.type == sf::Event::MouseButtonPressed) {
-                if (event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window); // Lấy vị trí con trỏ trong cửa sổ
-                    for (int i = 0; i < menuSize; i++) {
-                        if (menuText[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                            selectedItem = i;
-
-                            choose = true;
-
-                            soundManager->play("selected");
-
-                            break;
-                        }
-                    }
-                }
-            }
+            // Chờ để hủy Restart ngay lập tức
         }
-
-        if (overlayTimeout.getElapsedTime().asSeconds() > TIME_OUT) {
-            canPress = true;
-        }
-
-        window->clear();
-
-        window->draw(background); // Draw background
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
         overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
+        
+        window->clear();
+        window->draw(background); // Draw background
         window->draw(overlay);
-        
-        window->draw(gameOver);        
-        
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*window); // Lấy vị trí con trỏ trong cửa sổ
-        if (mousePos != mousePosPrev) {
-            mouseSelect = true;
-        }
-        
-        mousePosPrev = mousePos;
+        window->draw(titleText);    
+        window->display();
+    }
 
-        if (mouseSelect) {
-            for (int i = 0; i < menuSize; i++) {
-                if (menuText[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                    if (selectedItem != i) {
-                        selectedItem = i;
-
-                        soundManager->play("move");
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < menuSize; i++) {
-            menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+    while (window->isOpen() and gameOverMenu->notSelected()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            gameOverMenu->processEvents(window, event);
         }
 
-        for (int i = 0; i < menuSize; i++) {
-            window->draw(menuText[i]);
-        }
+        gameOverMenu->update(window);
 
+        window->clear();
+        window->draw(background); // Draw background
+        window->draw(overlay);
+        window->draw(titleText);        
+        gameOverMenu->draw(window);
         window->display();
     }
     
     drawChangeMenu(window, false);
 
-    return static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
+    return gameOverMenu->getSelectedItem();
 }
 
-STATUS_CODE Scene::drawEscape(sf::RenderWindow *window) {
+STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     sf::Texture screenshot;
     screenshot.create(window->getSize().x, window->getSize().y);
     screenshot.update(*window);
-
     sf::Sprite background;
     background.setTexture(screenshot);
     
     overlayTimeout.restart();
-
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
- 
-    std::string menuItems[] = {"Resume", "Menu", "Quit"};
-    int menuSize = sizeof(menuItems) / sizeof(menuItems[0]);
-    int selectedItem = 0;
-    sf::Text menuText[menuSize];
 
-    for (int i = 0; i < menuSize; i++) {
-        menuText[i].setFont(font);
-        menuText[i].setString(menuItems[i]);
-        menuText[i].setCharacterSize(40);
-        menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
-        menuText[i].setPosition(window->getSize().x / 2 - menuText[i].getGlobalBounds().width / 2, 
-                                200 + i * 60);
-    }
+    sf::Text titleText("PAUSE", font, 50);
+    titleText.setPosition(window->getSize().x / 2 - titleText.getGlobalBounds().width / 2, TITLE_PADDING);
 
-    bool choose = false;
-    sf::Vector2i mousePosPrev = sf::Vector2i();
-    while (window->isOpen() and not choose) {
+    while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
         sf::Event event;
         while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                selectedItem = menuSize - 1;
-                
-                choose = true;
-                break;
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
-                    selectedItem = (selectedItem - 1 + menuSize) % menuSize;
-                    mouseSelect  = false;
-                    
-                    soundManager->play("move");
-                } 
-                else if (event.key.code == sf::Keyboard::Down or event.key.code == sf::Keyboard::S) {
-                    selectedItem = (selectedItem + 1           ) % menuSize;
-                    mouseSelect  = false;
-
-                    soundManager->play("move");
-                } 
-                else if (event.key.code == sf::Keyboard::Space) {
-                    choose = true;
-
-                    soundManager->play("selected");
-                    
-                    break;
-                }
-                else if (event.key.code == sf::Keyboard::Escape) {
-                    choose = true;
-                    selectedItem = 0;
-
-                    soundManager->play("selected");
-
-                    break;
-                }
-            }
-            else if (event.type == sf::Event::MouseButtonPressed) {
-                if (event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window); // Lấy vị trí con trỏ trong cửa sổ
-                    for (int i = 0; i < menuSize; i++) {
-                        if (menuText[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                            selectedItem = i;
-
-                            choose = true;
-
-                            soundManager->play("selected");
-
-                            break;
-                        }
-                    }
-                }
-            }
+            // Chờ để hủy Restart ngay lập tức
         }
-
-        window->clear();
-
-        window->draw(background); // Draw background
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-        overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f))); 
+        overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
+        
+        window->clear();
+        window->draw(background); // Draw background
         window->draw(overlay);
-        
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*window); // Lấy vị trí con trỏ trong cửa sổ
-        if (mousePos != mousePosPrev) {
-            mouseSelect = true;
-        }
-        
-        mousePosPrev = mousePos;
-
-        if (mouseSelect) {
-            for (int i = 0; i < menuSize; i++) {
-                if (menuText[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                    if (selectedItem != i) {
-                        selectedItem = i;
-                        
-                        soundManager->play("move");
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < menuSize; i++) {
-            menuText[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
-        }
-
-        for (int i = 0; i < menuSize; i++) {
-            window->draw(menuText[i]);
-        }
-
+        window->draw(titleText);    
         window->display();
     }
 
-    if (selectedItem == 0) {
+    while (window->isOpen() and pauseMenu->notSelected()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            pauseMenu->processEvents(window, event);
+        }
+
+        float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+        overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f))); 
+
+        pauseMenu->update(window);
+
+        window->clear();
+        window->draw(background); // Draw background
+        window->draw(overlay);
+        window->draw(titleText);
+        pauseMenu->draw(window);
+        window->display();
+    }
+
+    STATUS_CODE result = pauseMenu->getSelectedItem();
+
+    if (result == STATUS_CODE::RESUME) {
         overlayTimeout.restart(); 
         while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
             sf::Event tempEvent;
@@ -531,5 +301,5 @@ STATUS_CODE Scene::drawEscape(sf::RenderWindow *window) {
         drawChangeMenu(window, false);
     }
 
-    return static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
+    return result;
 }

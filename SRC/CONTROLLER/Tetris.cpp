@@ -108,7 +108,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
 
-    // Reverse change menu
+    // Fade in: change menu
     {
         window->clear();
         window->draw(backgroundSprite); // Draw background
@@ -122,17 +122,20 @@ STATUS_CODE Tetris::startGameOnePlayer() {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
+                scene->drawChangeMenu(window, false);
+
                 goto quitStartGameOnePlayer;
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) {
-                    STATUS_CODE escapeOption = scene->drawEscape(window);
+                    STATUS_CODE escapeOption = scene->drawPause(window);
 
                     switch (escapeOption) {
                         case STATUS_CODE::RESUME:
                             break;
                         case STATUS_CODE::MENU:
                             screenStatus = STATUS_CODE::MENU;
+                            
                             goto quitStartGameOnePlayer;
                         case STATUS_CODE::QUIT:
                             goto quitStartGameOnePlayer;

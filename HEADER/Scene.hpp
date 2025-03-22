@@ -6,6 +6,7 @@
 enum class STATUS_CODE;
 
 class SoundManager;
+class Menu;
 
 class Scene {
 private:
@@ -16,6 +17,10 @@ private:
     sf::Clock     overlayTimeout;
     bool          mouseSelect;
 
+    Menu         *mainMenu;
+    Menu         *pauseMenu;
+    Menu         *gameOverMenu;
+
 public:
     Scene(sf::RenderWindow *window);
     ~Scene();
@@ -24,7 +29,7 @@ public:
     void drawChangeMenu(sf::RenderWindow *window, bool fadeIn = false);
 
     STATUS_CODE drawMenu(sf::RenderWindow *window);
-    STATUS_CODE drawEscape(sf::RenderWindow *window);
+    STATUS_CODE drawPause(sf::RenderWindow *window);
     int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
     STATUS_CODE drawGameOver(sf::RenderWindow *window);
 };

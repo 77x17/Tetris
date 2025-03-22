@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 enum class STATUS_CODE {
     QUIT               = -1,
@@ -17,8 +18,8 @@ enum class STATUS_CODE {
 };
 
 enum class MENU_CODE {
-    MENU     = 0,
-    ESCAPE   = 1,
+    MAIN     = 0,
+    PAUSE    = 1,
     GAMEOVER = 2
 };
 
@@ -39,13 +40,19 @@ private:
     sf::Text           *menuTexts;
     sf::RectangleShape *menuBars;
 
+    MENU_CODE           menuCode;
+
 public:
-    Menu(sf::RenderWindow *window, const std::string menuItems[], MENU_CODE menuCode);
+    Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, MENU_CODE menuCode);
     ~Menu();
+
+    bool notSelected();
+
+    STATUS_CODE getSelectedItem();
 
     void processEvents(sf::RenderWindow *window, sf::Event event);
 
-    void update(sf::RenderWindow *window, MENU_CODE menuCode);
+    void update(sf::RenderWindow *window);
 
-    void draw(sf::RenderWindow *window, MENU_CODE menuCode);
+    void draw(sf::RenderWindow *window);
 };
