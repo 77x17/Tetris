@@ -115,9 +115,9 @@ void Map::add(uint64_t nLinesAdd, int seed) {
     std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
     int posException = dis(gen);
 
-    while(nLinesAdd && p <= 1) {
+    while(nLinesAdd && p >= 1) {
         if (getBit(nLinesAdd, 0))
-            map[--p] = (FULLMASK(REALWIDTH) ^ MASK(posException + 2));
+            map[--p] = (FULLMASK(REALWIDTH) ^ MASK(posException + NUMOFFSET));
         else {
             std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
             posException = dis(gen);
