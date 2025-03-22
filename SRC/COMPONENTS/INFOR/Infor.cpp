@@ -32,9 +32,7 @@ Infor::~Infor() {
     delete soundManager;
 }
 
-void Infor::reset() {
-    nLine = 0; count = 0; B2B = 0; B2BMissing = 0; nLinesAdd = 0;
-}
+void Infor::reset() { nLine = 0; count = 0; B2B = 0; B2BMissing = 0; nLinesAdd = 0; }
 
 int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
     int result = 0;

@@ -21,11 +21,11 @@
 // }
 
 Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed) : Monitor(X_COORDINATE, Y_COORDINATE) {
-    listenner.accept(recvSock);
-    std::cout << "New client connected: " << recvSock.getRemoteAddress() << " SEED:" << seed << std::endl;
+    listenner.accept(socket);
+    std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
 
     next->setSeed(seed);
-    recvSock.send(&seed, sizeof(seed));
+    socket.send(&seed, sizeof(seed));
     curBlock = nullptr;
 
     soundManager = new SoundManager();
@@ -35,14 +35,14 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &list
 }
 
 Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port) : Monitor(X_COORDINATE, Y_COORDINATE) {
-    recvSock.connect(ipv4, port);
+    socket.connect(ipv4, port);
     
     uint32_t seed = 0; std::size_t tmp=0;
-    if (recvSock.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
+    if (socket.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
         throw std::runtime_error("Failed to receive seed!");
     }
 
-    std::cout << "New client connected: " << recvSock.getRemoteAddress() << " SEED:" << seed << std::endl;
+    std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
     
     next->setSeed(seed);
     curBlock = nullptr;
@@ -69,10 +69,10 @@ void Competitor::draw(sf::RenderWindow* window) {
 void Competitor::start(PlayerWithNetwork* &player) { // Player
     curBlock = next->updateNext();
     std::thread th([this](PlayerWithNetwork* &player){
-        while (true) {
+        while (!isGameOver()) {
             sf::Packet packet;
-            if (recvSock.receive(packet) != sf::Socket::Done)
-                throw std::runtime_error("Failed to receive event!");
+            if (socket.receive(packet) != sf::Socket::Done)
+                throw std::runtime_error("Failed to receive event! FROM competitor handler process");
     
             int messageCodeInt;
             packet >> messageCodeInt;
@@ -138,17 +138,27 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 }
                 break;
                 default: {
-                    
+                    throw std::runtime_error("Error: Invalid value encountered - " + std::to_string(messageCodeInt));
                 }
                 break;
             }
         }
+        // std::cout << "END TURN!\n";
     }, std::ref(player));
     th.detach();
 }
 
-void Competitor::restart(uint32_t seed) {
-    mtx.lock();
+void Competitor::ready(int &seed) {
+    int code = -1;
+    while (code != RESTART) {
+        sf::Packet packet;
+        // std::cout << "FROM COMPETITOR\n";
+        if (socket.receive(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to receive event from Ready signal!");
+        // std::cout << "FROM COMPETITORFIN\n";
+        packet >> code;
+        std::cout << code << '\n';
+        packet >> seed;
+    }
     resetMonitor(seed);
-    mtx.unlock();
 }
