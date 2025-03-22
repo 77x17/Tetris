@@ -203,7 +203,6 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     isFinish.store(false);
     std::thread connectThread(&Tetris::makeConnection, this, isHost, 
                                     std::ref(competitor), std::ref(player));
-    connectThread.detach();
 
     int connectStatus = scene->waitingForConnection(window, isFinish);
     if (connectStatus == -1) { // Error - exit
@@ -212,6 +211,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         
         return;
     }
+    connectThread.detach();
 
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
@@ -220,6 +220,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     backgroundMusic.play();
 
     competitor->start(player);
+
     int screenStatus = -1;
     while (window->isOpen()) {
         sf::Event event;
@@ -227,14 +228,16 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             if (event.type == sf::Event::Closed) {
                 window->close();
             }
-                
             player->processEvents(event);
         }
 
-        player->autoDown();
+        if (competitor->isGameOver()) player->setGameOver();
+        if (!player->isGameOver()) {
+            player->autoDown();
+            player->sendCurBlock();
+        }
         
         window->clear();
-        player->sendCurBlock();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
         competitor->draw(window);
@@ -242,14 +245,32 @@ void Tetris::startGameTwoPlayer(bool isHost) {
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
 
-        if (player->isGameOver() || competitor->isGameOver()) {
+        if (player->isGameOver()) {
             STATUS_CODE option = scene->drawGameOver(window);
 
-            if (option == STATUS_CODE::RESTART) {          // Restart
-                int seed = player->ready(isHost);
-                std::cout << "HELO!\n";
-                player    ->restart(seed);
-                competitor->restart(seed);
+            if (option == STATUS_CODE::RESTART) {
+                isFinish.store(false);
+                std::thread RestartGame([this](PlayerWithNetwork* player, Competitor* competitor, bool isHost) {
+                    int seed = 0;
+                    if (isHost) {
+                        std::random_device rd; seed = rd();
+                        player->ready(seed);
+                        competitor->ready(seed);
+                    }
+                    else {
+                        competitor->ready(seed);
+                        player->ready(seed);
+                    }
+                    isFinish.store(true);
+                }, player, competitor, isHost);
+                int connectStatus = scene->waitingForConnection(window, isFinish);
+                if (connectStatus == -1) { // Error - exit
+                    delete player;
+                    delete competitor;
+                    return;
+                }
+                RestartGame.detach();
+                competitor->start(player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu
                 screenStatus = 0;
