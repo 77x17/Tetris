@@ -200,7 +200,6 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     isFinish.store(false);
     std::thread connectThread(&Tetris::makeConnection, this, isHost, 
                                     std::ref(competitor), std::ref(player));
-    connectThread.detach();
 
     int connectStatus = scene->waitingForConnection(window, isFinish);
     if (connectStatus == -1) { // Error - exit
