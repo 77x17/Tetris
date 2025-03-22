@@ -67,16 +67,16 @@ void PlayerWithNetwork::handlePut() {
         map->add(infor->getAndRemoveLineAdd(), seed);
     }
 
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+
     infor->update(nLines, curBlock->spin, curBlock->getTypeBlock());
     infor->playSound(nLines, curBlock->spin, curBlock->getTypeBlock());
     infor->removeLine(nLines);
 
     resetComponent();
-    if (curBlock->gameOver(map))
+    if (curBlock->gameOver(map) && !isGameOver())
         setGameOver();
-
-    if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
 }
 
 void PlayerWithNetwork::handleHold() {
@@ -99,24 +99,14 @@ void PlayerWithNetwork::handleUp() {
 void PlayerWithNetwork::handleAddLine(uint8_t nLines) {
     infor->addLine(nLines);
     sf::Packet packet; packet << RECVLINE << nLines;
-    // inforCompetitor->compress(packet);
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
 }
 
-int PlayerWithNetwork::ready(bool isHost) {
-    sf::Packet packet; int seed;
-    if (isHost) {
-        std::random_device rd; seed = rd();
-        packet << seed;
-        if (socket.send(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to send event!");
-    }
-    else {
-        if (socket.receive(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to receive event!");
-        packet >> seed;
-    }
-    return seed;
+void PlayerWithNetwork::ready(int& seed) {
+    sf::Packet packet; packet << RESTART << seed;
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    restart(seed);
 }

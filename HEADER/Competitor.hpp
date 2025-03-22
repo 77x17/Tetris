@@ -14,7 +14,7 @@ class PlayerWithNetwork;
 
 class Competitor : public Monitor {
 private:
-    sf::TcpSocket recvSock;
+    sf::TcpSocket socket;
     std::mutex mtx;
     
     Block* curBlock;
@@ -29,7 +29,7 @@ public:
     Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
     ~Competitor();
     void start(PlayerWithNetwork* &player);
-    void restart(uint32_t seed);    
+    void ready(int& seed);
 
     void draw(sf::RenderWindow* window);
 };

@@ -101,21 +101,30 @@ bool Map::addPosible(uint64_t nLines) {
 #include <iostream>
 
 void Map::add(uint64_t nLinesAdd, int seed) {
+    if (nLinesAdd == 0) return;
+
+    if (getBit(nLinesAdd, 0) == 0) throw std::runtime_error("nLinesAdd have some problems");
+    
+    int nLines = __builtin_popcount(nLinesAdd);
+
+    for (int i = 1; i + nLines < HEIGHT_MAP; i++)
+        map[i] = map[i + nLines];
+    int p = HEIGHT_MAP;
+
     std::mt19937 gen(seed);
-    while (nLinesAdd) {
-        std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
-        int posException = dis(gen); posException += 2;
-        if (getBit(nLinesAdd, 0) == 0) throw std::runtime_error("nLinesAdd have some problems");
-        int nLines = 0; while (getBit(nLinesAdd, 0)) {nLines++; nLinesAdd >>= 1;} nLinesAdd >>= 1;
-        
-        for (int i = 0; i + nLines < HEIGHT_MAP; i++)
-            map[i] = map[i + nLines];
-        for (int i = HEIGHT_MAP - nLines; i < HEIGHT_MAP; i++) 
-            map[i] = (FULLMASK(REALWIDTH) ^ MASK(posException));
+    std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
+    int posException = dis(gen);
+
+    while(nLinesAdd && p >= 1) {
+        if (getBit(nLinesAdd, 0))
+            map[--p] = (FULLMASK(REALWIDTH) ^ MASK(posException + NUMOFFSET));
+        else {
+            std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
+            posException = dis(gen);
+        }
+        nLinesAdd >>= 1;
     }
-
 }
-
 
 void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
@@ -130,6 +139,15 @@ void Map::draw(sf::RenderWindow *window) {
         }
     }
 }
+
+/*
+i += (i & -i)
+1011
+
+0101
+
+00000
+*/
 
 void Map::drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX) {
     block->drawGhost(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X);
