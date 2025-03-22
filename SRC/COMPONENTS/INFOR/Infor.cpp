@@ -371,14 +371,6 @@ void Infor::drawGarbage(sf::RenderWindow *window) {
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
     line.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), 2));
     
-    // for (int i = 0; i + 1 < 64; i++) 
-    //     if (getBit(tmp, i)) {
-    //         nLines--;
-    //         if (getBit(tmp, i + 1) == 0){
-    //             line.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
-    //             window->draw(line);
-    //         }
-    //     }
     nLines = 0;
     while(tmp) {
         if (!getBit(tmp, 0)) {
