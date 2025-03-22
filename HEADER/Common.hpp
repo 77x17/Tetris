@@ -15,7 +15,7 @@
 const int BLOCK_SIZE   = 20;
 const int WIDTH_BORDER = 5;
 
-const int WIDTH_MAP = 10;
+const int WIDTH_MAP  = 10;
 const int HEIGHT_MAP = 24;
 
 #endif
