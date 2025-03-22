@@ -4,8 +4,9 @@
 #include "PlayerWithNetwork.hpp"
 #include "Competitor.hpp"
 #include "SoundManager.hpp"
-#include "Menu.hpp"
 #include "Common.hpp"
+#include "Menu.hpp"
+#include "Scene.hpp"
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/TcpSocket.hpp>
@@ -21,18 +22,18 @@ float SoundManager::volume = 50.0f;
 
 Tetris::Tetris() {
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
-    menu   = new Menu();
+    scene  = new Scene(window);
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
 
 Tetris::~Tetris() {
     delete window;
-    delete menu;
+    delete scene;
 }
 
 void Tetris::start() {
     while (window->isOpen()) {       
-        STATUS_CODE gameType = menu->drawMenu(window);
+        STATUS_CODE gameType = scene->drawMenu(window);
         
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {
@@ -114,7 +115,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
         player->draw(window);
         window->display();
 
-        menu->drawChangeMenu(window, true);
+        scene->drawChangeMenu(window, true);
     }
 
     while (not player->isGameOver()) {
@@ -125,7 +126,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) {
-                    STATUS_CODE escapeOption = menu->drawEscape(window);
+                    STATUS_CODE escapeOption = scene->drawEscape(window);
 
                     switch (escapeOption) {
                         case STATUS_CODE::RESUME:
@@ -157,7 +158,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
             player->draw(window);
             window->display();
 
-            screenStatus = menu->drawGameOver(window);
+            screenStatus = scene->drawGameOver(window);
         }
 
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
@@ -201,7 +202,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                                     std::ref(competitor), std::ref(player));
     connectThread.detach();
 
-    int connectStatus = menu->waitingForConnection(window, isFinish);
+    int connectStatus = scene->waitingForConnection(window, isFinish);
     if (connectStatus == -1) { // Error - exit
         delete player;
         delete competitor;
@@ -239,7 +240,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         backgroundMusic.setVolume(SoundManager::getVolume() - 20);
 
         if (player->isGameOver() || competitor->isGameOver()) {
-            STATUS_CODE option = menu->drawGameOver(window);
+            STATUS_CODE option = scene->drawGameOver(window);
 
             if (option == STATUS_CODE::RESTART) {          // Restart
                 int seed = player->ready(isHost);

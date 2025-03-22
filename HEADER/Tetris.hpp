@@ -10,13 +10,13 @@ class Player;
 class PlayerWithNetwork;
 class Competitor;
 class NetworkManager;
-class Menu;
+class Scene;
 
 enum class STATUS_CODE;
 
 class Tetris {
 private:
-    Menu             *menu;
+    Scene            *scene;
     sf::RenderWindow *window;
 
     sf::Font          font;
