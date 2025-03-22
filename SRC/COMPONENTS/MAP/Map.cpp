@@ -109,15 +109,15 @@ void Map::add(uint64_t nLinesAdd, int seed) {
 
     for (int i = 1; i + nLines < HEIGHT_MAP; i++)
         map[i] = map[i + nLines];
-    int p = HEIGHT_MAP - nLines; p = (p < 0 ? 0 : p);
+    int p = HEIGHT_MAP;
 
     std::mt19937 gen(seed);
     std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
     int posException = dis(gen);
 
-    while(nLinesAdd) {
+    while(nLinesAdd && p <= 1) {
         if (getBit(nLinesAdd, 0))
-            map[p++] = (FULLMASK(REALWIDTH) ^ MASK(posException + 2));
+            map[--p] = (FULLMASK(REALWIDTH) ^ MASK(posException + 2));
         else {
             std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
             posException = dis(gen);
@@ -125,7 +125,6 @@ void Map::add(uint64_t nLinesAdd, int seed) {
         nLinesAdd >>= 1;
     }
 }
-
 
 void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
