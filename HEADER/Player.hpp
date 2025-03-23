@@ -43,6 +43,7 @@ public:
     void autoDown();
 
     void start();
+    void start(int seed);
     void restart();
 
     void draw(sf::RenderWindow* window);

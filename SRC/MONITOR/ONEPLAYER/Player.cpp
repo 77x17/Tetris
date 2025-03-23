@@ -44,6 +44,11 @@ void Player::start() {
     resetComponent();
 }
 
+void Player::start(int seed) {
+    next->setSeed(seed);
+    resetComponent();
+}
+
 void Player::restart() {
     std::random_device rd;
     resetMonitor(rd());

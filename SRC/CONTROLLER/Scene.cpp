@@ -305,7 +305,7 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     return result;
 }
 
-void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCenterY) {
+void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCenterY, int otherGridCenterX = -1, int otherGridCenterY = -1) {
     sf::Texture screenshot;
     screenshot.create(window->getSize().x, window->getSize().y);
     screenshot.update(*window);
@@ -346,6 +346,17 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
         window->clear();
         window->draw(background);
         window->draw(countdown);
+
+        // Second playground
+        if (otherGridCenterX != -1 and otherGridCenterY != -1) {
+            countdown.setPosition(sf::Vector2f(
+                otherGridCenterX - countdown.getGlobalBounds().width / 2,
+                otherGridCenterY - countdown.getGlobalBounds().height / 2
+            ));
+
+            window->draw(countdown);
+        }
+
         window->display();
     }
 }
