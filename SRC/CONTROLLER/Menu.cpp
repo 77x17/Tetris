@@ -200,7 +200,7 @@ void Menu::update(sf::RenderWindow *window) {
 
     switch (menuCode) {
         case MENU_CODE::MAIN: {
-            if (mouseSelect) {
+            if (not selected and mouseSelect) {
                 for (int i = 0; i < menuSize; i++) {
                     if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
                         if (selectedItem != i) {
@@ -235,7 +235,7 @@ void Menu::update(sf::RenderWindow *window) {
         }
         case MENU_CODE::PAUSE:
         case MENU_CODE::GAMEOVER : {
-            if (mouseSelect) {
+            if (not selected and mouseSelect) {
                 for (int i = 0; i < menuSize; i++) {
                     if (menuTexts[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
                         if (selectedItem != i) {
@@ -248,7 +248,19 @@ void Menu::update(sf::RenderWindow *window) {
             }
 
             for (int i = 0; i < menuSize; i++) {
-                menuTexts[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+                if (i == selectedItem) {
+                    menuTexts[i].setFillColor(SELECTED_COLOR);
+                    menuTexts[i].setScale(1.1f, 1.1f);
+                }
+                else {
+                    menuTexts[i].setFillColor(TEXT_COLOR);
+                    menuTexts[i].setScale(1.0f, 1.0f);
+                }
+
+                menuTexts[i].setPosition(sf::Vector2f(
+                    window->getSize().x / 2 - menuTexts[i].getGlobalBounds().width / 2, 
+                    2 * OPTION_PADDING + i * 60
+                ));
             }
             
             break;
@@ -266,7 +278,7 @@ void Menu::draw(sf::RenderWindow *window) {
 
             break;
         }
-        case MENU_CODE::PAUSE   :
+        case MENU_CODE::PAUSE:
         case MENU_CODE::GAMEOVER: {
             for (int i = 0; i < menuSize; i++) {
                 window->draw(menuTexts[i]);

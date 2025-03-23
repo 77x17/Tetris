@@ -130,7 +130,7 @@ bool CurrentBlock::rotateLeft(Map* map) {
         if (posX >= 0 and isValid(block->getRotateLeft(), map)) goto rotate_success;
         posX++;        
 
-        if (block->getShapeID() == 0) {
+        if (block->getShapeID() == 1) {
             posY += 2;
             if (isValid(block->getRotateLeft() , map)) goto rotate_success;
             if (isValid(block->getRotateRight(), map)) goto rotate_success;
