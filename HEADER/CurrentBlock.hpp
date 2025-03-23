@@ -1,58 +1,41 @@
 #ifndef CURRENTBLOCK_HPP
+
 #define CURRENTBLOCK_HPP
 
 #include <cstdint>
 #include <SFML/Graphics.hpp>
-#include <SFML/Network.hpp>
 
-class Block;
 class Map;
+class Block;
 class Hold;
-class SoundManager;
 
 class CurrentBlock {
 private:
     Block *block;
     int8_t posX, posY;
     int8_t shadowPosY;
-    
-    SoundManager *soundManager;
-    
-    void shadowHardDrop(Map *map);
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
     ~CurrentBlock();
 
-    bool spin; // check piece spin 
-
     bool isEmpty();
-    void setter(Block* p);
+    
+    Block* setter(Block* p);
+    void setPosition(int posX, int posY, int shadowPosy);
     void freeAndSetter(Block* p);
-    bool resetPosition(Map *map);
-
-    bool moveDown(Map *map);
-    bool fallDown(Map *map);
-    bool moveLeft(Map *map);
-    bool moveRight(Map *map);
-    bool hardDrop(Map *map);
-
-    bool collisionBottom(Map *map);
-
-    bool rotateLeft(Map* map);
-    bool rotateRight(Map* map);
 
     void swap(Hold* hold);
 
-    uint8_t put(Map* map);
-    void draw(sf::RenderWindow *window, Map *map);
-    bool isValid(uint16_t shape, Map* map);
-    char getTypeBlock();
+    bool isValid(Map* map) const;
 
-    bool gameOver(Map* map);
+    uint8_t putIntoMap(Map* map);
 
-    void compress(sf::Packet &packet);
-    void compressWithSpin(sf::Packet &packet);
+    void draw(sf::RenderWindow* window, Map* map) const;
+    // void compress(sf::Packet &packet);
+    // void compressWithSpin(sf::Packet &packet);
+
+    friend class CurrentBlockController;
 };
 
 #endif

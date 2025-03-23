@@ -101,6 +101,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
+
 restartGameOnePlayer:
     int X_COORDINATE = 50 + WINDOW_WIDTH / 4 - BLOCK_SIZE;
     int Y_COORDINATE = 10;
@@ -339,10 +340,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
     }
     else {
-        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
-        // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.100.230", 55001);
-        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.100.230", 55000);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
+        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
+        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.100.230", 55001);
+        // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.100.230", 55000);
     }
     isFinish.store(true);
 }

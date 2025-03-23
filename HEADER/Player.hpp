@@ -4,29 +4,34 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/TcpListener.hpp>
+#include <random>
 
 #include "Monitor.hpp"
 
-#include <random>
-
 class SoundManager;
+// class Monitor;
+class CurrentBlockController;
 
-class Player : public Monitor {
+class Player : public Monitor{
 private:
-    sf::Clock clock;            
+    // Monitor* monitor;
+
+    sf::Clock clock;
     sf::Clock movingClock;
 
     SoundManager *soundManager;
     float volume;
 
-    bool  moveLeftSignal;
-    bool  moveRightSignal;
-    bool  moveDownSignal;
     bool  collision;        // collision bottom (extra time to move and rotate)
 
 protected:
-    CurrentBlock *curBlock;
     
+    bool  moveLeftSignal;
+    bool  moveRightSignal;
+    bool  moveDownSignal;
+
+    CurrentBlockController* curBlock;
+
     void handleLeft();
     void handleRight();
     void handleDown();

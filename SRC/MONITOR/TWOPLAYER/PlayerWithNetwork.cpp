@@ -1,6 +1,6 @@
 #include "PlayerWithNetwork.hpp"
 
-#include "CurrentBlock.hpp"
+#include "CurrentBlockController.hpp"
 #include "LinkListBlock.hpp"
 #include "Infor.hpp"
 #include "Map.hpp"
@@ -47,18 +47,20 @@ void PlayerWithNetwork::sendCurBlock() {
 void PlayerWithNetwork::start(uint32_t seed) {
     resetMonitor(seed);
     resetComponent();
+    moveLeftSignal = false, moveRightSignal = false, moveDownSignal = false;
 }
 
 void PlayerWithNetwork::restart(uint32_t seed) {
     resetMonitor(seed);
     resetComponent();
+    moveLeftSignal = false, moveRightSignal = false, moveDownSignal = false;
 }
 
 void PlayerWithNetwork::handlePut() {
     sf::Packet packet; packet << PUT;
     curBlock->compressWithSpin(packet);
     
-    int nLines = curBlock->put(map);
+    int nLines = curBlock->putIntoMap(map);
     
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
@@ -69,8 +71,8 @@ void PlayerWithNetwork::handlePut() {
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
 
-    infor->update(nLines, curBlock->spin, curBlock->getTypeBlock());
-    infor->playSound(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
     infor->removeLine(nLines);
 
     resetComponent();
@@ -88,7 +90,7 @@ void PlayerWithNetwork::handleHold() {
 
 void PlayerWithNetwork::handleUp() {
     Player::handleUp();
-    if (curBlock->spin) {
+    if (curBlock->isJustSpin()) {
         sf::Packet packet; packet << SPIN;
         if (socket.send(packet) != sf::Socket::Done)
             throw std::runtime_error("Failed to send event!");

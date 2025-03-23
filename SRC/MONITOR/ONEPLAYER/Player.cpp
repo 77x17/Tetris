@@ -6,6 +6,9 @@
 #include "Hold.hpp"
 #include "Infor.hpp"
 #include "SoundManager.hpp"
+#include "Monitor.hpp"
+
+#include "CurrentBlockController.hpp"
 
 #include <iostream>
 
@@ -16,24 +19,21 @@ constexpr float DELAY_MOVING_TIME   = 175.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE) : Monitor(X_COORDINATE, Y_COORDINATE), 
-        volume(50.0f), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false), 
-        collision(false) {
-    curBlock = new CurrentBlock();
-    
+Player::Player(int X_COORDINATE, int Y_COORDINATE): Monitor(X_COORDINATE, Y_COORDINATE), volume(50.0f), collision(false), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false) {
+    // monitor = new Monitor(X_COORDINATE, Y_COORDINATE);
+    curBlock = new CurrentBlockController();
     soundManager = new SoundManager();
     soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
 }
 
 Player::~Player() {
     delete curBlock; curBlock = nullptr;
-    
-    delete soundManager;
+    delete soundManager; soundManager = 0;
 }
 
 void Player::resetComponent() {
     collision = false;
-    curBlock->freeAndSetter(next->updateNext());
+    curBlock->setter(next->updateNext());
     curBlock->resetPosition(map);
     hold->unlock();
 }
@@ -86,10 +86,10 @@ void Player::handleUp() {
 }
 
 void Player::handlePut() {
-    int nLines = curBlock->put(map);
+    int nLines = curBlock->putIntoMap(map);
     
-    infor->update(nLines, curBlock->spin, curBlock->getTypeBlock());
-    infor->playSound(nLines, curBlock->spin, curBlock->getTypeBlock());
+    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
     infor->removeLine(nLines);
 
     resetComponent();
@@ -110,7 +110,7 @@ void Player::handleHold() {
         hold->lock();
         curBlock->swap(hold);
         if (curBlock->isEmpty()) {
-            curBlock->freeAndSetter(next->updateNext());
+            curBlock->setter(next->updateNext());
         }
         curBlock->resetPosition(map);
 
@@ -139,7 +139,7 @@ void Player::processEvents(const sf::Event &event) {
             movingTime = DELAY_MOVING_TIME;
 
             movingClock.restart();
-        } 
+        }
         else if (event.key.code == sf::Keyboard::Down and moveDownSignal == false) {
             moveDownSignal = true;
 
