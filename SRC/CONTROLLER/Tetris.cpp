@@ -38,11 +38,10 @@ void Tetris::start() {
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {
             case STATUS_CODE::SINGLEPLAYER: 
-                startGameOnePlayer:
                 screenStatus = startGameOnePlayer();
                 break;
             case STATUS_CODE::VERSUSBOT:
-                startGameVersusBot();
+                screenStatus = startGameVersusBot();
                 break;
             case STATUS_CODE::MULTIPLAYER_SERVER:
                 startGameTwoPlayer(true);   
@@ -60,8 +59,6 @@ void Tetris::start() {
         switch (screenStatus) {
             case STATUS_CODE::MENU:
                 break;
-            case STATUS_CODE::SINGLEPLAYER:
-                goto startGameOnePlayer;
             case STATUS_CODE::QUIT:
                 window->close();
                 break;
@@ -103,7 +100,10 @@ STATUS_CODE Tetris::startGameOnePlayer() {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
-    Player* player = new Player(50 + WINDOW_WIDTH / 4 - BLOCK_SIZE, 10);
+restartGameOnePlayer:
+    int X_COORDINATE = 50 + WINDOW_WIDTH / 4 - BLOCK_SIZE;
+    int Y_COORDINATE = 10;
+    Player* player = new Player(X_COORDINATE, Y_COORDINATE);
     player->start();
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
@@ -116,6 +116,21 @@ STATUS_CODE Tetris::startGameOnePlayer() {
         window->display();
 
         scene->drawChangeMenu(window, true);
+    }
+
+    {
+        int HOLD_WIDTH         = 5;
+        int HOLD_HEIGHT        = 3;
+
+        int GRID_WIDTH         = 10;
+        int GRID_HEIGHT        = 24;
+        int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
+        int GRID_POSITION_Y    = Y_COORDINATE;
+
+        scene->drawCountdown(window, 
+            (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
+            (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER)
+        );
     }
 
     while (not player->isGameOver()) {
@@ -133,11 +148,17 @@ STATUS_CODE Tetris::startGameOnePlayer() {
                     switch (escapeOption) {
                         case STATUS_CODE::RESUME:
                             break;
+                        case STATUS_CODE::RESTART:
+                            screenStatus = STATUS_CODE::RESTART;
+                            
+                            goto quitStartGameOnePlayer;
                         case STATUS_CODE::MENU:
                             screenStatus = STATUS_CODE::MENU;
                             
                             goto quitStartGameOnePlayer;
                         case STATUS_CODE::QUIT:
+                            screenStatus = STATUS_CODE::QUIT;
+                            
                             goto quitStartGameOnePlayer;
                         default:
                             throw std::runtime_error("[escapeOption] cannot find STATUS_CODE");
@@ -170,6 +191,10 @@ STATUS_CODE Tetris::startGameOnePlayer() {
 quitStartGameOnePlayer:
     delete player;
 
+    if (screenStatus == STATUS_CODE::RESTART) {
+        goto restartGameOnePlayer;
+    }
+
     return screenStatus;
 }
 
@@ -188,10 +213,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, listener, seed);
     }
     else {
-        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
-        player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
-        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "186.186.0.55", 55001);
-        // player = new PlayerWithNetwork(50, 10, "186.186.0.55", 55000);
+        // competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "127.0.0.1", 55001);
+        // player = new PlayerWithNetwork(50, 10, "127.0.0.1", 55000);
+        competitor = new Competitor(50 + WINDOW_WIDTH / 2 - 25, 10, "10.0.100.230", 55001);
+        player = new PlayerWithNetwork(50, 10, "10.0.100.230", 55000);
     }
     isFinish.store(true);
 }

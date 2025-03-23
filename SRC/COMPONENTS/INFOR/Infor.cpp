@@ -105,21 +105,23 @@ uint8_t Infor::removeLine(uint8_t lines) {
     nLine += lines;
     int realAddLines = garbageSent;
 
-    if (not spin and lines != 4) {
-        realAddLines += 1;
-    }
+    // if (not spin and lines != 4) {
+    //     realAddLines += 1;
+    // }
 
     mtx.lock();
     uint8_t nLinesAddCurrent = __builtin_popcount(nLinesAdd);
 
     nLinesAdd >>= realAddLines;
+    if (not spin and lines != 4)
+        nLinesAdd >>= 1;
     if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
 
     if (nLinesAddCurrent > realAddLines) realAddLines = 0;
     else realAddLines -= nLinesAddCurrent;
     
     mtx.unlock();
-    return garbageSent;
+    return realAddLines;
 }
 #include <iostream>
 // garbage receive

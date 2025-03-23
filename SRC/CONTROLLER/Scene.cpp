@@ -2,6 +2,7 @@
 
 #include "Menu.hpp"
 #include "SoundManager.hpp"
+#include "Common.hpp"
 
 #include <iostream>
 
@@ -13,8 +14,7 @@ Scene::Scene(sf::RenderWindow *window) : mouseSelect(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
-    soundManager->loadSound("move"    , "ASSETS/sfx/menutap.mp3");
-    soundManager->loadSound("selected", "ASSETS/sfx/menutap.mp3");
+    soundManager->loadSound("countdown", "ASSETS/sfx/countdown.mp3");
 
     menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.png");
     menuBackground.setTexture(menuBackgroundTexture);
@@ -45,8 +45,9 @@ Scene::Scene(sf::RenderWindow *window) : mouseSelect(false) {
     }, MENU_CODE::MAIN);
 
     pauseMenu = new Menu(window, {
-        "Resume",
+        "Restart",
         "Menu",
+        "Resume",
         "Quit"
     }, MENU_CODE::PAUSE);
 
@@ -302,4 +303,49 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     }
 
     return result;
+}
+
+void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCenterY) {
+    sf::Texture screenshot;
+    screenshot.create(window->getSize().x, window->getSize().y);
+    screenshot.update(*window);
+    sf::Sprite background;
+    background.setTexture(screenshot);
+
+    sf::Clock timeout;
+    sf::Clock effectTimeout;
+    
+    soundManager->play("countdown");
+
+    int count = 3;
+    while (count >= 0) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            // clear buffer
+        }
+
+        if (timeout.getElapsedTime().asSeconds() > 1) {
+            count--;
+
+            timeout.restart();
+            effectTimeout.restart();
+        }
+
+        float alpha = 255 * (1 - effectTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+        float scaleFactor = 1.0f + 1.0f * effectTimeout.getElapsedTime().asSeconds();;  // Tăng scale
+
+        sf::Text countdown(count ? std::to_string(count) : "GO!", font, 40);
+
+        countdown.setFillColor(sf::Color(255, 255, 0, alpha)); // Vàng nhưng giảm alpha
+        countdown.setScale(scaleFactor, scaleFactor);
+        countdown.setPosition(sf::Vector2f(
+            gridCenterX - countdown.getGlobalBounds().width / 2,
+            gridCenterY - countdown.getGlobalBounds().height / 2
+        ));
+
+        window->clear();
+        window->draw(background);
+        window->draw(countdown);
+        window->display();
+    }
 }
