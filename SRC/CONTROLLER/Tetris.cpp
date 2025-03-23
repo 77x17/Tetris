@@ -288,21 +288,22 @@ restartGameVersusBot:
             bot   ->processEvents(event);
         }
 
+        player->autoDown();
+        bot   ->autoDown();
+
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
         bot   ->draw(window);
         window->display();
 
-        player->autoDown();
-        bot   ->autoDown();
-
         if (player->isGameOver()) {
-            window->clear();
-            window->draw(backgroundSprite); // Draw background
-            player->draw(window);
-            bot   ->draw(window);
-            window->display();
+            // Don't ya need it ?
+            // window->clear();
+            // window->draw(backgroundSprite); // Draw background
+            // player->draw(window);
+            // bot   ->draw(window);
+            // window->display();
 
             screenStatus = scene->drawGameOver(window);
         }

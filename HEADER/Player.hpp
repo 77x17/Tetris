@@ -39,7 +39,8 @@ protected:
 public:
     Player(int X_COORDINATE, int Y_COORDINATE);
     ~Player();
-    void processEvents(const sf::Event &event);
+    virtual void processEvents(const sf::Event &event);
+    
     void autoDown();
 
     void start();

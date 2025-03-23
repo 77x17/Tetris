@@ -14,3 +14,7 @@ void Bot::draw(sf::RenderWindow *window) {
         
     curBlock->draw(window, map);
 }
+
+void update() {
+    
+}
