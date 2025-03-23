@@ -32,7 +32,7 @@ Player::~Player() {
 }
 
 void Player::resetComponent() {
-    collision = false;
+    collision = false; moveLeftSignal = false, moveRightSignal = false, moveDownSignal = false;
     curBlock->freeAndSetter(next->updateNext());
     curBlock->resetPosition(map);
     hold->unlock();
