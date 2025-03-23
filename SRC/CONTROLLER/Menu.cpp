@@ -7,8 +7,9 @@ const int BAR_PADDING      = 20;
 const int OPTION_PADDING   = 100;
 const int SELECTED_PADDING = 90;
 
-const sf::Color MENU_BAR_COLOR = sf::Color(60, 60, 60);
-const sf::Color MENU_TITLE_BAR_COLOR = sf::Color(60, 60, 60, 200);
+const sf::Color MENU_BAR_COLOR        = sf::Color(60, 60, 60);
+const sf::Color MENU_OPTION_BAR_COLOR = sf::Color(35, 35, 35);
+const sf::Color MENU_TITLE_BAR_COLOR  = sf::Color(30, 30, 30, 200);
 
 const sf::Color TEXT_COLOR     = sf::Color::White;
 const sf::Color SELECTED_COLOR = sf::Color::Yellow;
@@ -241,16 +242,16 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
                     gradient[i][7].position = sf::Vector2f(rightX, barPos.y + barSize.y);
 
                     // Màu sắc
-                    sf::Color transparentColor = sf::Color(MENU_BAR_COLOR.r, MENU_BAR_COLOR.g, MENU_BAR_COLOR.b, 0);
+                    sf::Color transparentColor = sf::Color(MENU_OPTION_BAR_COLOR.r, MENU_OPTION_BAR_COLOR.g, MENU_OPTION_BAR_COLOR.b, 0);
 
                     gradient[i][0].color = transparentColor; // Bên trái mờ
                     gradient[i][1].color = transparentColor; // Bên trái mờ
 
-                    gradient[i][2].color = MENU_BAR_COLOR; // Giữa trái rõ
-                    gradient[i][3].color = MENU_BAR_COLOR; // Giữa trái rõ
+                    gradient[i][2].color = MENU_OPTION_BAR_COLOR; // Giữa trái rõ
+                    gradient[i][3].color = MENU_OPTION_BAR_COLOR; // Giữa trái rõ
 
-                    gradient[i][4].color = MENU_BAR_COLOR; // Giữa phải rõ
-                    gradient[i][5].color = MENU_BAR_COLOR; // Giữa phải rõ
+                    gradient[i][4].color = MENU_OPTION_BAR_COLOR; // Giữa phải rõ
+                    gradient[i][5].color = MENU_OPTION_BAR_COLOR; // Giữa phải rõ
 
                     gradient[i][6].color = transparentColor; // Bên phải mờ
                     gradient[i][7].color = transparentColor; // Bên phải mờ

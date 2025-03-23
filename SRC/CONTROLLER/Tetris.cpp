@@ -17,18 +17,15 @@
 #include <iostream>
 
 const int WINDOW_WIDTH  = 1100;
-const int WINDOW_HEIGHT = 700;
+const int WINDOW_HEIGHT = 600;
 
 float SoundManager::volume = 50.0f;
 
 Tetris::Tetris() {
-    // Lấy độ phân giải màn hình mặc định
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::Fullscreen);
 
-    // Tạo cửa sổ toàn màn hình
-    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None);
-
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::None);
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
@@ -108,7 +105,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
     backgroundMusic.play();
 
 restartGameOnePlayer:
-    int X_COORDINATE = 50 + WINDOW_WIDTH / 4 - BLOCK_SIZE;
+    int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
     int Y_COORDINATE = 10;
     Player* player = new Player(X_COORDINATE, Y_COORDINATE);
     player->start();
@@ -214,9 +211,9 @@ STATUS_CODE Tetris::startGameVersusBot() {
     backgroundMusic.play();
 
 restartGameVersusBot:
-    int PLAYER_X_COORDINATE = 50;
+    int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int PLAYER_Y_COORDINATE = 10;
-    int BOT_X_COORDINATE = 50 + WINDOW_WIDTH / 2 - 25;
+    int BOT_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int BOT_Y_COORDINATE = 10;
     Player *player = new Player(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);
     Bot *bot = new Bot(BOT_X_COORDINATE, BOT_Y_COORDINATE);
@@ -328,9 +325,9 @@ quitGameVersusBot:
 }
 
 void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
-    int PLAYER_X_COORDINATE = 50;
+    int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int PLAYER_Y_COORDINATE = 10;
-    int COMPETITOR_X_COORDINATE = 50 + WINDOW_WIDTH / 2 - 25;
+    int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int COMPETITOR_Y_COORDINATE = 10;
     
     if (isHost) {
