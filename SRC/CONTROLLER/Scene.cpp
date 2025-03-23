@@ -6,36 +6,26 @@
 
 #include <iostream>
 
-const int TITLE_PADDING   = 100;
+const int TITLE_PADDING  = 100;
 
 constexpr float TIME_OUT = 1.0f;
 
-Scene::Scene(sf::RenderWindow *window) : mouseSelect(false) {
+Scene::Scene(sf::RenderWindow *window) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
     soundManager->loadSound("countdown", "ASSETS/sfx/countdown.mp3");
     soundManager->loadSound("selected" , "ASSETS/sfx/menu_hit.mp3");
 
-    menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.png");
+    menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.jpeg");
     menuBackground.setTexture(menuBackgroundTexture);
     menuBackground.setColor(sf::Color(255, 255, 255, 50));
-
-    // Get window size & texture size
-    sf::Vector2u windowSize  = window->getSize();
-    sf::Vector2u textureSize = menuBackgroundTexture.getSize();
-    // Calculate scale factors
-    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
-    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
+    float scaleX = static_cast<float>(window->getSize().x) / menuBackgroundTexture.getSize().x;
+    float scaleY = static_cast<float>(window->getSize().y) / menuBackgroundTexture.getSize().y;
     float scale = std::max(scaleX, scaleY);
-    // Apply scale to fit window
     menuBackground.setScale(scale, scale);
-    // Center the sprite
-    float newWidth  = textureSize.x * scale;
-    float newHeight = textureSize.y * scale;
-    float posX = (windowSize.x - newWidth ) / 2;
-    float posY = (windowSize.y - newHeight) / 2;
-    menuBackground.setPosition(posX, posY);
+    menuBackgroundX = window->getSize().x;
+    menuBackground.setPosition(menuBackgroundX, 0);
 
     mainMenu = new Menu(window, {
         "SINGLEPLAYER",
@@ -103,11 +93,35 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
     }
 }
 
+void Scene::drawMenuBackground(sf::RenderWindow *window) {
+    if (menuBackgroundClock.getElapsedTime().asMilliseconds() > 16) { // ~60 FPS
+        menuBackgroundClock.restart();
+        
+        menuBackgroundX += 1.0f;
+    }
+    
+    // Nếu ảnh nền đi hết màn hình bên phair, đưa nó về bên trái
+    float backgroundWidth = menuBackgroundTexture.getSize().x * menuBackground.getScale().x;
+    if (menuBackgroundX >= backgroundWidth) {
+        menuBackgroundX -= backgroundWidth; // Đưa về trái để trôi liên tục
+    }
+
+    menuBackground.setPosition(menuBackgroundX, 0);
+    
+    menuBackground.setPosition(menuBackgroundX, 0);
+
+    // Đảm bảo vẽ hai lần để cuộn liên tục
+    menuBackground.setPosition(menuBackgroundX, 0);
+    window->draw(menuBackground);
+    menuBackground.setPosition(menuBackgroundX - backgroundWidth, 0);
+    window->draw(menuBackground);
+}
+
 STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
     {
         window->clear();
 
-        window->draw(menuBackground);
+        drawMenuBackground(window);
 
         mainMenu->draw(window);
 
@@ -128,7 +142,7 @@ backToMainMenu:
 
         window->clear();
 
-        window->draw(menuBackground);
+        drawMenuBackground(window);
 
         mainMenu->draw(window);
 
@@ -179,7 +193,7 @@ STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
 
         window->clear();
 
-        window->draw(menuBackground);
+        drawMenuBackground(window);
 
         subMenu->draw(window);
 

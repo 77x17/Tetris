@@ -12,10 +12,13 @@ class Scene {
 private:
     sf::Font      font;
     SoundManager *soundManager;
+
+    float         menuBackgroundX;
+    sf::Clock     menuBackgroundClock;
     sf::Texture   menuBackgroundTexture;
     sf::Sprite    menuBackground;
+    
     sf::Clock     overlayTimeout;
-    bool          mouseSelect;
 
     Menu         *mainMenu;
     Menu         *pauseMenu;
@@ -28,10 +31,15 @@ public:
     // fadeIn: mờ thành rõ (true) | Default* fadeOut: rõ thành mờ (false)
     void drawChangeMenu(sf::RenderWindow *window, bool fadeIn = false);
 
+    void drawMenuBackground(sf::RenderWindow *window);
+
     STATUS_CODE drawMenu(sf::RenderWindow *window);
     STATUS_CODE drawSubMenu(sf::RenderWindow *window, Menu *subMenu);
+    
     STATUS_CODE drawPause(sf::RenderWindow *window);
-    int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
     STATUS_CODE drawGameOver(sf::RenderWindow *window);
+    
+    int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
+    
     void drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCenterY, int otherGridCenterX, int otherGridCenterY);
 };
