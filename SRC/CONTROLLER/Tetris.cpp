@@ -235,9 +235,10 @@ void Tetris::startGameTwoPlayer(bool isHost) {
         if (competitor->isGameOver()) {
             player->setGameOver();
         }
+
         if (!player->isGameOver()) {
-            player->autoDown();
             player->sendCurBlock();
+            player->autoDown();
             
             window->clear();
             window->draw(backgroundSprite); // Draw background

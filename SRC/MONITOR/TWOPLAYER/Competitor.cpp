@@ -103,7 +103,6 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     nLinesRemove = infor->removeLine(nLinesRemove);
 
                     if (nLinesRemove > 0) {
-                        std::cout << nLinesRemove << '\n';
                         player->handleAddLine(nLinesRemove);
                     }
 
