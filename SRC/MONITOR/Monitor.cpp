@@ -1,5 +1,6 @@
 #include "Monitor.hpp"
 
+#include "Common.hpp"
 #include "Hold.hpp"
 #include "Map.hpp"
 #include "Infor.hpp"
@@ -10,7 +11,14 @@
 
 Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     gameOver = false;
+    hold = new Hold();
+    map  = new Map();
+    next = new LinkListBlock();
+    infor = new Infor();
+    setPosition(x, y);
+}
 
+void Monitor::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     int HOLD_WIDTH         = 5;
     int HOLD_HEIGHT        = 3;
     int HOLD_POSITION_X    = X_COORDINATE;
@@ -40,12 +48,10 @@ Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     int GARBAGE_POSITION_X = GRID_POSITION_X - BLOCK_SIZE;
     int GARBAGE_POSITION_Y = Y_COORDINATE + GRID_HEIGHT * BLOCK_SIZE;
 
-    hold      = new Hold         (   HOLD_POSITION_X,    HOLD_POSITION_Y,    HOLD_WIDTH             ,    HOLD_HEIGHT);
-    map       = new Map          (   GRID_POSITION_X,    GRID_POSITION_Y,    GRID_WIDTH             ,    GRID_HEIGHT);
-    next      = new LinkListBlock(   NEXT_POSITION_X,    NEXT_POSITION_Y,    NEXT_WIDTH             ,    NEXT_HEIGHT);
-    infor     = new Infor        (  INFOR_POSITION_X,   INFOR_POSITION_Y,   INFOR_WIDTH * BLOCK_SIZE,
-                                    AUDIO_POSITION_X,   AUDIO_POSITION_Y,   AUDIO_WIDTH             ,   AUDIO_HEIGHT,
-                                  GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH             , GARBAGE_HEIGHT);
+    hold->setPosition(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
+    map->setPosition(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
+    next->setPosition(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
+    infor->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
 }
 
 Monitor::~Monitor() {

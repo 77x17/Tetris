@@ -192,7 +192,7 @@ bool CurrentBlock::isValid(uint16_t shape, Map* map) {
 }
 
 uint8_t CurrentBlock::put(Map* map) {
-    return map->update(block, posY, posX);;
+    return map->putBlockIntoMap(block, posY, posX);;
 }
 
 char CurrentBlock::getTypeBlock() {

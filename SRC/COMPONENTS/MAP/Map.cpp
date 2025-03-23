@@ -1,23 +1,12 @@
 #include "Map.hpp"
 
 #include "Block.hpp"
+#include "Common.hpp"
+#include "CommonMap.hpp"
 
 #include <random>
 
-#define OFFSETX 4
-#define OFFSETY 0
-#define OFFRIGHT 12
-#define NUMOFFSET 2
-#define REALWIDTH 14
-#define COLORWIDTH 4 // NUMBIT FOR COLOR -> pos[1] in ith line have color in bit 14th -> 17th
-
-// **--------** REALWIDTH
-// ** NUMOFFSET 
-// **-------- OFFRIGHT
-
-#define EMPTYLINE (FULLMASK(NUMOFFSET) ^ (FULLMASK(NUMOFFSET) << OFFRIGHT))
-
-Map::Map(int x, int y, int w, int h) : GRID_POSITION_X(x), GRID_POSITION_Y(y), GRID_WIDTH(w), GRID_HEIGHT(h) {
+Map::Map() {
     texture.loadFromFile("ASSETS/blocks/blocks.png");
     map = new uint64_t[HEIGHT_MAP + 1]();
     for (int i = 0; i < HEIGHT_MAP; i++) {
@@ -26,8 +15,10 @@ Map::Map(int x, int y, int w, int h) : GRID_POSITION_X(x), GRID_POSITION_Y(y), G
     map[HEIGHT_MAP] = FULLMASK(REALWIDTH);
 }
 
+void Map::setPosition(int x, int y, int w, int h) { GRID_POSITION_X = x; GRID_POSITION_Y = y; GRID_WIDTH = w; GRID_HEIGHT = h; }
+
 Map::~Map() {
-    delete map;
+    delete[] map;
 }
 
 void Map::reset() {
@@ -98,34 +89,6 @@ bool Map::addPosible(uint64_t nLines) {
     return true;
 }
 
-#include <iostream>
-
-void Map::add(uint64_t nLinesAdd, int seed) {
-    if (nLinesAdd == 0) return;
-
-    if (getBit(nLinesAdd, 0) == 0) throw std::runtime_error("nLinesAdd have some problems");
-    
-    int nLines = __builtin_popcount(nLinesAdd);
-
-    for (int i = 1; i + nLines < HEIGHT_MAP; i++)
-        map[i] = map[i + nLines];
-    int p = HEIGHT_MAP;
-
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
-    int posException = dis(gen);
-
-    while(nLinesAdd && p >= 1) {
-        if (getBit(nLinesAdd, 0))
-            map[--p] = (FULLMASK(REALWIDTH) ^ MASK(posException + NUMOFFSET));
-        else {
-            std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
-            posException = dis(gen);
-        }
-        nLinesAdd >>= 1;
-    }
-}
-
 void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
     block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
@@ -140,21 +103,12 @@ void Map::draw(sf::RenderWindow *window) {
     }
 }
 
-/*
-i += (i & -i)
-1011
-
-0101
-
-00000
-*/
-
 void Map::drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX) {
     block->drawGhost(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X);
     block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X);
 }
 
-uint8_t Map::update(Block* block, int Y, int X) {
+uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {
     uint8_t cnt = 0;
     uint16_t shape = block->getShape();
     uint64_t color = block->getShapeID();

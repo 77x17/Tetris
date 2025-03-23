@@ -8,11 +8,7 @@ const int FONT_SIZE = 25;
 constexpr float TIME_OUT = 2.0f;
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH) : 
-        INFOR_POSITION_X(x)   , INFOR_POSITION_Y(y)   , INFOR_WIDTH(w)   , 
-        AUDIO_POSITION_X(aX)  , AUDIO_POSITION_Y(aY)  , AUDIO_WIDTH(aW)  , AUDIO_HEIGHT(aH)  ,
-        GARBAGE_POSITION_X(gX), GARBAGE_POSITION_Y(gY), GARBAGE_WIDTH(gW), GARBAGE_HEIGHT(gH),
-        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), nLinesAdd(0), garbageSent(0) {
+Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), nLinesAdd(0), garbageSent(0) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -26,6 +22,12 @@ Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY
     soundManager->loadSound("combo4"    , "ASSETS/sfx/combo/combo_4.mp3");
     soundManager->loadSound("combo5"    , "ASSETS/sfx/combo/combo_5.mp3");
     soundManager->loadSound("comboBreak", "ASSETS/sfx/combo/combobreak.mp3");
+}
+
+void Infor::setPosition(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH) {
+    INFOR_POSITION_X = x; INFOR_POSITION_Y = y; INFOR_WIDTH = w; 
+    AUDIO_POSITION_X = aX; AUDIO_POSITION_Y = aY; AUDIO_WIDTH = aW; AUDIO_HEIGHT = aH; 
+    GARBAGE_POSITION_X = gX; GARBAGE_POSITION_Y = gY; GARBAGE_WIDTH = gW; GARBAGE_HEIGHT = gH;
 }
 
 Infor::~Infor() {

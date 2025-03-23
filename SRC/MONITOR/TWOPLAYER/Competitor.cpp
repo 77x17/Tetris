@@ -91,7 +91,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 case PUT: {
                     uint8_t state, y, x, shadowPosY, spin, typeBlock;
                     packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
-                    int nLinesRemove = map->update(curBlock, y, x);
+                    int nLinesRemove = map->putBlockIntoMap(curBlock, y, x);
 
                     if (nLinesRemove == 0) {
                         int seed; packet >> seed;

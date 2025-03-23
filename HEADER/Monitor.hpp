@@ -16,7 +16,7 @@ private:
     int X_COORDINATE;
     int Y_COORDINATE;
     bool gameOver;
-    
+
 protected:
     Hold             *hold;
     Map              *map;
@@ -24,9 +24,12 @@ protected:
     LinkListBlock    *next;
 
     void resetMonitor(uint32_t seed);
+    
 public:
     Monitor(int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor();
+
+    void setPosition(int X_COORDINATE, int Y_COORDINATE);
     
     bool isGameOver();
     void setGameOver();

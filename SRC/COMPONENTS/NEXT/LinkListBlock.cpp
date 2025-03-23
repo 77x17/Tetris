@@ -21,8 +21,13 @@ void LinkListBlock::addNode(Block *block) {
     nEle++;
 }
 
-LinkListBlock::LinkListBlock(int x, int y, int w, int h) : NEXT_POSITION_X(x), NEXT_POSITION_Y(y), NEXT_WIDTH(w), NEXT_HEIGHT(h), nEle(0), head(nullptr), tail(nullptr) {
+LinkListBlock::LinkListBlock() : nEle(0), head(nullptr), tail(nullptr) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
+}
+
+void LinkListBlock::setPosition(int x, int y, int w, int h) {
+    NEXT_POSITION_X = x; NEXT_POSITION_Y = y;
+    NEXT_WIDTH = w;      NEXT_HEIGHT = h;
 }
 
 LinkListBlock::~LinkListBlock() {

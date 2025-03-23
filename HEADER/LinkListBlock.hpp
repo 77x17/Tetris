@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 #include <random>
+#include "Monitor.hpp"
 
 class Block;
 class BlockEle;
@@ -22,9 +23,11 @@ private:
 
     std::mt19937 gen;
     void addBag();
+
+    void setPosition(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
     
 public:
-    LinkListBlock(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
+    LinkListBlock();
     ~LinkListBlock();
     void setSeed(int seed);
     void reset(uint32_t seed);
@@ -33,6 +36,8 @@ public:
     Block* updateNext();
     void drawOutline(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
+
+    friend void Monitor::setPosition(int X_COORDINATE, int Y_COORDINATE);
 };
 
 #endif

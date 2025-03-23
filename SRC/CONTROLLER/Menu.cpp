@@ -166,7 +166,7 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
 
                     break;
                 }
-                case MENU_CODE::PAUSE: 
+                case MENU_CODE::PAUSE:
                 case MENU_CODE::GAMEOVER: {
                     // Lấy vị trí con trỏ trong cửa sổ
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
