@@ -150,7 +150,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
                 }
                 
                 {   // Bar - Rectangle
-                    currentBarPositionX[i] = window->getSize().x;
+                    currentBarPositionX[i] = window->getSize().x + SELECTED_PADDING;
                     targetBarPositionX[i]  = window->getSize().x / 2.5;
                     
                     menuBars[i].setSize(sf::Vector2f(
@@ -504,12 +504,12 @@ void Menu::update(sf::RenderWindow *window) {
                     if (i == selectedItem) {
                         menuTexts[i].setFillColor(SELECTED_COLOR);
 
-                        targetBarPositionX[i] = window->getSize().x;
+                        targetBarPositionX[i] = window->getSize().x + SELECTED_PADDING;
                     }
                     else {
                         menuTexts[i].setFillColor(TEXT_COLOR);
 
-                        targetBarPositionX[i] = window->getSize().x;
+                        targetBarPositionX[i] = window->getSize().x + SELECTED_PADDING;
                     }
                 }
 

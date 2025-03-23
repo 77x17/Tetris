@@ -101,7 +101,7 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
         menuBackgroundX += 1.0f;
     }
     
-    // Nếu ảnh nền đi hết màn hình bên phair, đưa nó về bên trái
+    // Nếu ảnh nền đi hết màn hình bên phải, đưa nó về bên trái
     float backgroundWidth = menuBackgroundTexture.getSize().x * menuBackground.getScale().x;
     if (menuBackgroundX >= backgroundWidth) {
         menuBackgroundX -= backgroundWidth; // Đưa về trái để trôi liên tục

@@ -22,7 +22,13 @@ const int WINDOW_HEIGHT = 700;
 float SoundManager::volume = 50.0f;
 
 Tetris::Tetris() {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
+    // Lấy độ phân giải màn hình mặc định
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
+    // Tạo cửa sổ toàn màn hình
+    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None);
+
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::None);
     scene  = new Scene(window);
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
