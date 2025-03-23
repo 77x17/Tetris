@@ -11,6 +11,7 @@
 class SoundManager;
 // class Monitor;
 class CurrentBlockController;
+class MovementController;
 
 class Player : public Monitor{
 private:
@@ -20,6 +21,8 @@ private:
     sf::Clock movingClock;
 
     SoundManager *soundManager;
+    MovementController *movementController;
+
     float volume;
 
     bool  collision;        // collision bottom (extra time to move and rotate)

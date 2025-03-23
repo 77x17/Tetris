@@ -9,26 +9,28 @@
 #include "Monitor.hpp"
 
 #include "CurrentBlockController.hpp"
+#include "MovementController.hpp"
 
-#include <iostream>
 
-constexpr float DROP_TIME           = 0.5f;
-constexpr float COLLISION_DROP_TIME = 2.5f;
+// constexpr float DROP_TIME           = 0.5f;
+// constexpr float COLLISION_DROP_TIME = 2.5f;
 
-constexpr float DELAY_MOVING_TIME   = 175.0f;
-constexpr float MOVING_TIME         = 30.0f;
-          float movingTime          = DELAY_MOVING_TIME;
+// constexpr float DELAY_MOVING_TIME   = 175.0f;
+// constexpr float MOVING_TIME         = 30.0f;
+//           float movingTime          = DELAY_MOVING_TIME;
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE): Monitor(X_COORDINATE, Y_COORDINATE), volume(50.0f), collision(false), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false) {
+Player::Player(int X_COORDINATE, int Y_COORDINATE): Monitor(X_COORDINATE, Y_COORDINATE), volume(50.0f), collision(false){
     // monitor = new Monitor(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlockController();
     soundManager = new SoundManager();
+    movementController = new MovementController();
     soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
 }
 
 Player::~Player() {
     delete curBlock; curBlock = nullptr;
-    delete soundManager; soundManager = 0;
+    delete soundManager; soundManager = nullptr;
+    delete movementController; movementController = nullptr;
 }
 
 void Player::resetComponent() {
@@ -119,58 +121,10 @@ void Player::handleHold() {
 }
 
 void Player::processEvents(const sf::Event &event) {
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Left and moveLeftSignal == false) {
-            moveLeftSignal  = true;
-            moveRightSignal = false;
-
-            handleLeft();
-            
-            movingTime = DELAY_MOVING_TIME;
-
-            movingClock.restart();
-        }
-        else if (event.key.code == sf::Keyboard::Right and moveRightSignal == false) {
-            moveLeftSignal  = false;
-            moveRightSignal = true;
-
-            handleRight();
-
-            movingTime = DELAY_MOVING_TIME;
-
-            movingClock.restart();
-        }
-        else if (event.key.code == sf::Keyboard::Down and moveDownSignal == false) {
-            moveDownSignal = true;
-
-            handleDown();
-
-            movingClock.restart();
-        } 
-        else if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::X) {
-            handleUp();
-        } 
-        else if (event.key.code == sf::Keyboard::Space) {
-            handleHardDrop();
-        } 
-        else if (event.key.code == sf::Keyboard::C) {
-            handleHold();
-        }
-    }   
-    else if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::Left) {
-            moveLeftSignal = false;
-            
-            movingTime = DELAY_MOVING_TIME;
-        }
-        else if (event.key.code == sf::Keyboard::Right) {
-            moveRightSignal = false;
-            
-            movingTime = DELAY_MOVING_TIME;
-        } 
-        else if (event.key.code == sf::Keyboard::Down) {
-            moveDownSignal = false;
-        }
+    if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+        movementController->processEvents(event, curBlock, map, infor, hold, next);
+        if(curBlock->gameOver(map))
+            setGameOver();
     }
     else if (event.type == sf::Event::MouseWheelScrolled) {
         if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
@@ -191,35 +145,36 @@ void Player::processEvents(const sf::Event &event) {
 }
 
 void Player::autoDown() {
-    if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
-        if (moveLeftSignal) {
-            handleLeft();
-            movingTime = MOVING_TIME;
-        }
-        else if (moveRightSignal) {
-            handleRight();
-            movingTime = MOVING_TIME;
-        }
+    movementController->autoDown(curBlock, map, infor, hold, next);
+    // if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
+    //     if (moveLeftSignal) {
+    //         handleLeft();
+    //         movingTime = MOVING_TIME;
+    //     }
+    //     else if (moveRightSignal) {
+    //         handleRight();
+    //         movingTime = MOVING_TIME;
+    //     }
         
-        if (moveDownSignal) {
-            handleDown();
-            movingTime = MOVING_TIME;
-        }
+    //     if (moveDownSignal) {
+    //         handleDown();
+    //         movingTime = MOVING_TIME;
+    //     }
         
-        movingClock.restart();
-    }
+    //     movingClock.restart();
+    // }
 
-    if (not curBlock->collisionBottom(map)) {
-        collision = false;
-    }
+    // if (not curBlock->collisionBottom(map)) {
+    //     collision = false;
+    // }
 
-    if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
-        if (not curBlock->fallDown(map)) {
-            handlePut();
-        }
+    // if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
+    //     if (not curBlock->fallDown(map)) {
+    //         handlePut();
+    //     }
         
-        clock.restart();
-    }
+    //     clock.restart();
+    // }
 }
 
 void Player::draw(sf::RenderWindow* window) {
