@@ -11,7 +11,7 @@
 
 Monitor::Monitor(int x, int y) : X_COORDINATE(x), Y_COORDINATE(y) {
     gameOver = false;
-    hold = new Hold();
+    hold = new Hold();  
     map  = new Map();
     next = new LinkListBlock();
     infor = new Infor();
@@ -67,6 +67,7 @@ bool Monitor::isGameOver() { return gameOver; }
 
 void Monitor::draw(sf::RenderWindow* window) {
     map ->drawOutline(window);
+
     hold->drawOutline(window);
     next->drawOutline(window);
     hold    ->draw(window);
