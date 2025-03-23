@@ -31,7 +31,6 @@ PlayerWithNetwork::PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const c
 
 void PlayerWithNetwork::setGameOver() {
     sf::Packet packet; packet << GAMEOVER;
-
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
     Monitor::setGameOver();

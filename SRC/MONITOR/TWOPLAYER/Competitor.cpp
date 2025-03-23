@@ -71,14 +71,11 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
     std::thread th([this](PlayerWithNetwork* &player){
         while (!isGameOver()) {
             sf::Packet packet;
-            std::cout << "HERE IN START!\n";
             if (socket.receive(packet) != sf::Socket::Done)
                 throw std::runtime_error("Failed to receive event! FROM competitor handler process");
     
             int messageCodeInt;
             packet >> messageCodeInt;
-            
-            std::cout << "HERE!\n";
 
             switch (messageCodeInt) {
                 case CURBLOCK: {

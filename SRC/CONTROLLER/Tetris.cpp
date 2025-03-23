@@ -234,7 +234,6 @@ void Tetris::startGameTwoPlayer(bool isHost) {
 
         if (competitor->isGameOver()) {
             player->setGameOver();
-            player->waitingComfirm();
         }
         if (!player->isGameOver()) {
             player->autoDown();
@@ -247,8 +246,9 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             window->display();
         }
         else {
-            // backgroundMusic.setVolume(SoundManager::getVolume() - 20);
+            backgroundMusic.setVolume(SoundManager::getVolume() - 20);
             STATUS_CODE option = scene->drawGameOver(window);
+            player->waitingComfirm();
 
             if (option == STATUS_CODE::RESTART) {
                 isFinish.store(false);
