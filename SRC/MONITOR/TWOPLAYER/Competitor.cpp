@@ -71,11 +71,14 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
     std::thread th([this](PlayerWithNetwork* &player){
         while (!isGameOver()) {
             sf::Packet packet;
+            std::cout << "HERE IN START!\n";
             if (socket.receive(packet) != sf::Socket::Done)
                 throw std::runtime_error("Failed to receive event! FROM competitor handler process");
     
             int messageCodeInt;
             packet >> messageCodeInt;
+            
+            std::cout << "HERE!\n";
 
             switch (messageCodeInt) {
                 case CURBLOCK: {
@@ -135,6 +138,9 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 }
                 break;
                 case GAMEOVER: {
+                    sf::Packet packet; packet << GAMEOVER;
+                    if (socket.send(packet) != sf::Socket::Done)
+                        throw std::runtime_error("Failed to send event!");
                     setGameOver();
                 }
                 break;
@@ -151,15 +157,12 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
 void Competitor::ready(int &seed) {
     int code = -1;
-    while (code != RESTART) {
-        sf::Packet packet;
-        // std::cout << "FROM COMPETITOR\n";
-        if (socket.receive(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to receive event from Ready signal!");
-        // std::cout << "FROM COMPETITORFIN\n";
-        packet >> code;
-        std::cout << code << '\n';
-        packet >> seed;
-    }
+    sf::Packet packet;
+    if (socket.receive(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to receive event from Ready signal!");
+    packet >> code;
+    if (code != RESTART) 
+        throw std::runtime_error("Error: RESTART MESSAGE WRONG! code: " + std::to_string(code));
+    packet >> seed;
     resetMonitor(seed);
 }

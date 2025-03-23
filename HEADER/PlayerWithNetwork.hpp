@@ -28,6 +28,8 @@ public:
     void handleAddLine(uint8_t nLines);
 
     void ready(int& seed);
+
+    void waitingComfirm();
 };
 
 #endif

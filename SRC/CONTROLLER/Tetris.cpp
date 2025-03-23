@@ -199,19 +199,20 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
 void Tetris::startGameTwoPlayer(bool isHost) {
     PlayerWithNetwork* player = nullptr;
     Competitor* competitor    = nullptr;
-
-    isFinish.store(false);
-    std::thread connectThread(&Tetris::makeConnection, this, isHost, 
-                                    std::ref(competitor), std::ref(player));
-
-    int connectStatus = scene->waitingForConnection(window, isFinish);
-    if (connectStatus == -1) { // Error - exit
-        delete player;
-        delete competitor;
-        
-        return;
+    {
+        isFinish.store(false);
+        std::thread connectThread(&Tetris::makeConnection, this, isHost, 
+                                        std::ref(competitor), std::ref(player));
+    
+        int connectStatus = scene->waitingForConnection(window, isFinish);
+        if (connectStatus == -1) { // Error - exit
+            delete player;
+            delete competitor;
+            
+            return;
+        }
+        connectThread.join();
     }
-    connectThread.detach();
 
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
@@ -231,21 +232,22 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             player->processEvents(event);
         }
 
-        if (competitor->isGameOver()) player->setGameOver();
+        if (competitor->isGameOver()) {
+            player->setGameOver();
+            player->waitingComfirm();
+        }
         if (!player->isGameOver()) {
             player->autoDown();
             player->sendCurBlock();
+            
+            window->clear();
+            window->draw(backgroundSprite); // Draw background
+            player->draw(window);
+            competitor->draw(window);
+            window->display();
         }
-        
-        window->clear();
-        window->draw(backgroundSprite); // Draw background
-        player->draw(window);
-        competitor->draw(window);
-        window->display();
-
-        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
-
-        if (player->isGameOver()) {
+        else {
+            // backgroundMusic.setVolume(SoundManager::getVolume() - 20);
             STATUS_CODE option = scene->drawGameOver(window);
 
             if (option == STATUS_CODE::RESTART) {
@@ -266,10 +268,10 @@ void Tetris::startGameTwoPlayer(bool isHost) {
                 int connectStatus = scene->waitingForConnection(window, isFinish);
                 if (connectStatus == -1) { // Error - exit
                     delete player;
-                    delete competitor;
+                    delete competitor; 
                     return;
                 }
-                RestartGame.detach();
+                RestartGame.join();
                 competitor->start(player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu

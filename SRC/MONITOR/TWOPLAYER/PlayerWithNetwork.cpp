@@ -43,7 +43,7 @@ void PlayerWithNetwork::sendCurBlock() {
 
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
-}
+} 
 
 void PlayerWithNetwork::start(uint32_t seed) {
     resetMonitor(seed);
@@ -109,4 +109,15 @@ void PlayerWithNetwork::ready(int& seed) {
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
     restart(seed);
+}
+
+void PlayerWithNetwork::waitingComfirm() {
+    sf::Packet packet;
+    if (socket.receive(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to receive event! FROM competitor handler process");
+    int messageCodeInt;
+    packet >> messageCodeInt;
+    if (messageCodeInt != GAMEOVER) 
+        throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
+    else std::cout << "COMFIRM SUCESSFULLY!\n";
 }
