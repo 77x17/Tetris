@@ -50,7 +50,16 @@ private:
 
     int                 menuSize;
     sf::Text           *menuTexts;
+    
+    sf::Text            menuTitle;
+    sf::RectangleShape  menuTitleBar;
+
+    sf::Text            footerVersion;
+    sf::Text            footerOwner;
+    sf::RectangleShape  footerBar;
+
     sf::RectangleShape *menuBars;
+    sf::VertexArray    *gradient;
     float              *currentBarPositionX;
     float              *targetBarPositionX;
 

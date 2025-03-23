@@ -17,7 +17,7 @@ Scene::Scene(sf::RenderWindow *window) {
     soundManager->loadSound("countdown", "ASSETS/sfx/countdown.mp3");
     soundManager->loadSound("selected" , "ASSETS/sfx/menu_hit.mp3");
 
-    menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.jpeg");
+    menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.png");
     menuBackground.setTexture(menuBackgroundTexture);
     menuBackground.setColor(sf::Color(255, 255, 255, 50));
     float scaleX = static_cast<float>(window->getSize().x) / menuBackgroundTexture.getSize().x;
@@ -81,11 +81,12 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
 
         if (fadeIn) {
             float alpha = 255 * (1 - overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-            overlay.setFillColor(sf::Color(128, 128, 128, alpha));
+            overlay.setFillColor(sf::Color(60, 60, 60, alpha));
         }
         else {
             float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-            overlay.setFillColor(sf::Color(128, 128, 128, alpha)); 
+            overlay.setFillColor(sf::Color(60, 60, 60, alpha));
+         
         }
         window->draw(overlay);
 
@@ -253,9 +254,6 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     overlayTimeout.restart();
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
 
-    sf::Text titleText("GAME OVER", font, 50);
-    titleText.setPosition(window->getSize().x / 2 - titleText.getGlobalBounds().width / 2, TITLE_PADDING);
-    
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -263,12 +261,11 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
         }
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-        overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
+        overlay.setFillColor(sf::Color(60, 60, 60, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
         
         window->clear();
         window->draw(background); // Draw background
         window->draw(overlay);
-        window->draw(titleText);    
         window->display();
     }
 
@@ -282,8 +279,7 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
 
         window->clear();
         window->draw(background); // Draw background
-        window->draw(overlay);
-        window->draw(titleText);        
+        window->draw(overlay);    
         gameOverMenu->draw(window);
         window->display();
     }
@@ -305,9 +301,6 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
 
     soundManager->play("selected");
 
-    sf::Text titleText("PAUSE", font, 50);
-    titleText.setPosition(window->getSize().x / 2 - titleText.getGlobalBounds().width / 2, TITLE_PADDING);
-
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -315,12 +308,11 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
         }
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-        overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
+        overlay.setFillColor(sf::Color(60, 60, 60, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
         
         window->clear();
         window->draw(background); // Draw background
         window->draw(overlay);
-        window->draw(titleText);    
         window->display();
     }
 
@@ -331,14 +323,13 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
         }
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-        overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f))); 
+        overlay.setFillColor(sf::Color(60, 60, 60, std::min(alpha, 200.0f)));
 
         pauseMenu->update(window);
 
         window->clear();
         window->draw(background); // Draw background
         window->draw(overlay);
-        window->draw(titleText);
         pauseMenu->draw(window);
         window->display();
     }
@@ -358,7 +349,7 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
             window->draw(background); // Draw background
             
             float alpha = 255 * (1 - overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-            overlay.setFillColor(sf::Color(128, 128, 128, std::min(alpha, 200.0f)));
+            overlay.setFillColor(sf::Color(60, 60, 60, std::min(alpha, 200.0f)));
             
             window->draw(overlay);
 
@@ -380,12 +371,11 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
     background.setTexture(screenshot);
 
     sf::Clock timeout;
-    sf::Clock effectTimeout;
     
     soundManager->play("countdown");
 
     int count = 3;
-    while (count >= 0) {
+    while (true) {
         sf::Event event;
         while (window->pollEvent(event)) {
             // clear buffer
@@ -394,12 +384,15 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
         if (timeout.getElapsedTime().asSeconds() > 1) {
             count--;
 
+            if (count < 0) {
+                break;
+            }
+
             timeout.restart();
-            effectTimeout.restart();
         }
 
-        float alpha = 255 * (1 - effectTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-        float scaleFactor = 1.0f + 1.0f * effectTimeout.getElapsedTime().asSeconds();;  // Tăng scale
+        float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
+        float scaleFactor = 1.0f + 1.0f * timeout.getElapsedTime().asSeconds();;  // Tăng scale
 
         sf::Text countdown(count ? std::to_string(count) : "GO!", font, 40);
 

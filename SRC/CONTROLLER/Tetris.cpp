@@ -22,7 +22,7 @@ const int WINDOW_HEIGHT = 700;
 float SoundManager::volume = 50.0f;
 
 Tetris::Tetris() {
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
