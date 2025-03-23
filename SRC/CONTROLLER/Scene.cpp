@@ -15,6 +15,7 @@ Scene::Scene(sf::RenderWindow *window) : mouseSelect(false) {
     
     soundManager = new SoundManager();
     soundManager->loadSound("countdown", "ASSETS/sfx/countdown.mp3");
+    soundManager->loadSound("selected" , "ASSETS/sfx/menu_hit.mp3");
 
     menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.png");
     menuBackground.setTexture(menuBackgroundTexture);
@@ -37,24 +38,23 @@ Scene::Scene(sf::RenderWindow *window) : mouseSelect(false) {
     menuBackground.setPosition(posX, posY);
 
     mainMenu = new Menu(window, {
-        "Single Player",
-        "Tetr.io with Bot",
-        "Multiple Player (Server)",
-        "Multiple Player (Client)",
-        "Quit"
+        "SINGLEPLAYER",
+        "MULTIPLAYER",
+        "OPTION",
+        "QUIT"
     }, MENU_CODE::MAIN);
 
     pauseMenu = new Menu(window, {
-        "Restart",
-        "Menu",
-        "Resume",
-        "Quit"
+        "RESUME",
+        "RESTART",
+        "MENU",
+        "QUIT"
     }, MENU_CODE::PAUSE);
 
     gameOverMenu = new Menu(window, {
-        "Restart",
-        "Menu",
-        "Quit"
+        "RESTART",
+        "MENU",
+        "QUIT"
     }, MENU_CODE::GAMEOVER);
 }
 
@@ -116,6 +116,8 @@ STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
         drawChangeMenu(window, true);
     }
 
+backToMainMenu:
+
     while (window->isOpen() and mainMenu->notSelected()) {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -133,9 +135,58 @@ STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
         window->display();
     }
 
+    STATUS_CODE sceneStatus = mainMenu->getSelectedItem();
+
+    switch (sceneStatus) {
+        case STATUS_CODE::SINGLEPLAYER: {
+            sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::SINGLEPLAYER));
+
+            break;
+        }
+        case STATUS_CODE::MULTIPLAYER: {
+            sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::MULTIPLAYER));
+
+            break;
+        }
+        case STATUS_CODE::OPTION: {
+            goto backToMainMenu;
+        }
+        case STATUS_CODE::QUIT: {
+            // quit - do nothing
+            break;
+        }
+        default:
+            throw std::invalid_argument("[Scene.cpp] - drawMenu(): STATUS_CODE error");
+    }
+
+    if (sceneStatus == STATUS_CODE::BACK) {
+        goto backToMainMenu;
+    }
+
     drawChangeMenu(window, false);
 
-    return mainMenu->getSelectedItem();
+    return sceneStatus;
+}
+
+STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
+    while (window->isOpen() and subMenu->notSelected()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            subMenu->processEvents(window, event);
+        }
+
+        subMenu->update(window);
+
+        window->clear();
+
+        window->draw(menuBackground);
+
+        subMenu->draw(window);
+
+        window->display();
+    }
+
+    return subMenu->getSelectedItem();
 }
 
 int Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
@@ -237,6 +288,8 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     
     overlayTimeout.restart();
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
+
+    soundManager->play("selected");
 
     sf::Text titleText("PAUSE", font, 50);
     titleText.setPosition(window->getSize().x / 2 - titleText.getGlobalBounds().width / 2, TITLE_PADDING);

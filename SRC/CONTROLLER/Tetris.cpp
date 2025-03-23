@@ -38,7 +38,7 @@ void Tetris::start() {
         
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {
-            case STATUS_CODE::SINGLEPLAYER: 
+            case STATUS_CODE::PRACTICE: 
                 screenStatus = startGameOnePlayer();
                 break;
             case STATUS_CODE::VERSUSBOT:
@@ -54,7 +54,7 @@ void Tetris::start() {
                 window->close();
                 break;
             default:
-                throw std::runtime_error("[Menu.cpp] cannot find STATUS_CODE");
+                throw std::runtime_error("[Tetris.cpp] - start(): STATUS_CODE error");
         }
         
         switch (screenStatus) {
@@ -64,7 +64,7 @@ void Tetris::start() {
                 window->close();
                 break;
             default:
-                throw std::runtime_error("[Menu.cpp] cannot find STATUS_CODE");
+                throw std::runtime_error("[Tetris.cpp] - start(): STATUS_CODE error");
         }
     }
 }

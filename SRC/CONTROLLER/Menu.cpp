@@ -11,8 +11,9 @@ const sf::Color MENU_BAR_COLOR = sf::Color(60, 60, 60, 200);
 const sf::Color TEXT_COLOR     = sf::Color::White;
 const sf::Color SELECTED_COLOR = sf::Color::Yellow;
 
-constexpr float TIME_OUT    = 1.0f;
-constexpr float SLIDE_SPEED = 0.05f;
+constexpr float TIME_OUT          = 1.0f;
+constexpr float SLIDE_SPEED       = 0.03f;
+constexpr float SELECTED_TIME_OUT = 0.3f;
 
 Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, MENU_CODE menuCode) : 
     selected(false), 
@@ -29,6 +30,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 
     menuSize  = menuItems.size();
     menuTexts = new sf::Text[menuSize];
+    subMenus.clear();
     
     switch (menuCode) {
         case MENU_CODE::MAIN: {
@@ -42,11 +44,57 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
                 menuTexts[i].setCharacterSize(40);
                 menuTexts[i].setFillColor(TEXT_COLOR);
                 menuTexts[i].setPosition(sf::Vector2f(
-                    window->getSize().x / 2.5, 
+                    window->getSize().x, 
                     OPTION_PADDING + i * OPTION_PADDING
                 ));
                 
-                currentBarPositionX[i] = window->getSize().x / 2.5;
+                currentBarPositionX[i] = window->getSize().x;
+                targetBarPositionX[i]  = window->getSize().x / 2.5;
+
+                menuBars[i].setSize(sf::Vector2f(
+                    window->getSize().x - (window->getSize().x / 2.5 - BAR_PADDING) + SELECTED_PADDING, 
+                    OPTION_PADDING - BAR_PADDING
+                ));
+                menuBars[i].setFillColor(MENU_BAR_COLOR);
+                menuBars[i].setPosition(sf::Vector2f(
+                    currentBarPositionX[i] - BAR_PADDING, 
+                    OPTION_PADDING + i * OPTION_PADDING
+                ));
+            }
+    
+            subMenus = {
+                new Menu(window, {
+                    "PRACTICE",
+                    "VERSUS BOT",
+                    "BACK"
+                }, MENU_CODE::SINGLEPLAYER),
+
+                new Menu(window, {
+                    "SERVER",
+                    "CLIENT",
+                    "BACK"
+                }, MENU_CODE::MULTIPLAYER)
+            };
+
+            break;
+        }
+        case MENU_CODE::SINGLEPLAYER: 
+        case MENU_CODE::MULTIPLAYER: {
+            menuBars = new sf::RectangleShape[menuSize];
+            currentBarPositionX = new float[menuSize];
+            targetBarPositionX  = new float[menuSize];
+            
+            for (int i = 0; i < menuSize; i++) {
+                menuTexts[i].setFont(font);
+                menuTexts[i].setString(menuItems[i]);
+                menuTexts[i].setCharacterSize(40);
+                menuTexts[i].setFillColor(TEXT_COLOR);
+                menuTexts[i].setPosition(sf::Vector2f(
+                    window->getSize().x, 
+                    OPTION_PADDING + i * OPTION_PADDING
+                ));
+                
+                currentBarPositionX[i] = window->getSize().x;
                 targetBarPositionX[i]  = window->getSize().x / 2.5;
 
                 menuBars[i].setSize(sf::Vector2f(
@@ -67,7 +115,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             for (int i = 0; i < menuSize; i++) {
                 menuTexts[i].setFont(font);
                 menuTexts[i].setString(menuItems[i]);
-                menuTexts[i].setCharacterSize(40);
+                menuTexts[i].setCharacterSize(30);
                 menuTexts[i].setFillColor(TEXT_COLOR);
                 menuTexts[i].setPosition(sf::Vector2f(
                     window->getSize().x / 2 - menuTexts[i].getGlobalBounds().width / 2, 
@@ -87,30 +135,126 @@ Menu::~Menu() {
 
     delete menuTexts;
 
+    for (Menu *subMenu : subMenus) {
+        delete subMenu;
+    }
+
     switch (menuCode) {
-        case MENU_CODE::MAIN: {
+        case MENU_CODE::MAIN        : 
+        case MENU_CODE::SINGLEPLAYER:
+        case MENU_CODE::MULTIPLAYER : {
             delete menuBars;
             delete currentBarPositionX;
             delete targetBarPositionX;
             break;
         }
-        default:
+        default: {
             // nothing
             break;
+        }
     }
 }
 
 bool Menu::notSelected() { 
-    return not selected; 
+    switch (menuCode) {
+        case MENU_CODE::MAIN:
+        case MENU_CODE::SINGLEPLAYER:
+        case MENU_CODE::MULTIPLAYER: {
+            if (selected) {
+                if (selectedTimeout.getElapsedTime().asSeconds() < SELECTED_TIME_OUT) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            } 
+            else {
+                return true;
+            }
+        }
+        case MENU_CODE::PAUSE:
+        case MENU_CODE::GAMEOVER: {
+            return not selected; 
+        }
+        default: {
+            throw std::invalid_argument("[Menu.cpp] - notSelected(): MENU_CODE error");
+        }
+    }
+
+    return true;
 }
 
 STATUS_CODE Menu::getSelectedItem() {
-    STATUS_CODE result = static_cast<STATUS_CODE>(selectedItem == menuSize - 1 ? -1 : selectedItem);
-    
     selected = false;
+    int cloneSelectedItem = selectedItem;
     selectedItem = 0;
-    
-    return result; 
+
+    switch (menuCode) {
+        case MENU_CODE::MAIN: {
+            switch (cloneSelectedItem) {
+                case 0: return STATUS_CODE::SINGLEPLAYER;
+                case 1: return STATUS_CODE::MULTIPLAYER;
+                case 2: return STATUS_CODE::OPTION;
+                case 3: return STATUS_CODE::QUIT;
+                default: {
+                    throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::MAIN) error.");
+                }
+            }
+
+            break;
+        }
+        case MENU_CODE::SINGLEPLAYER: {
+            switch (cloneSelectedItem) {
+                case 0: return STATUS_CODE::PRACTICE;
+                case 1: return STATUS_CODE::VERSUSBOT;
+                case 2: return STATUS_CODE::BACK;
+                default: {
+                    throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::SINGLEPLAYER) error.");
+                }
+            }
+
+            break;
+        }
+        case MENU_CODE::MULTIPLAYER: {
+            switch (cloneSelectedItem) {
+                case 0: return STATUS_CODE::MULTIPLAYER_SERVER;
+                case 1: return STATUS_CODE::MULTIPLAYER_CLIENT;
+                case 2: return STATUS_CODE::BACK;
+                default: {
+                    throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::MULTIPLAYER) error.");
+                }
+            }
+
+            break;
+        }
+        case MENU_CODE::PAUSE: {
+            switch (cloneSelectedItem) {
+                case 0: return STATUS_CODE::RESUME;
+                case 1: return STATUS_CODE::RESTART;
+                case 2: return STATUS_CODE::MENU;
+                case 3: return STATUS_CODE::QUIT;
+                default: {
+                    throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::PAUSE) error.");
+                }
+            }
+            
+            break;
+        }
+        case MENU_CODE::GAMEOVER: {
+            switch (cloneSelectedItem) {
+                case 0: return STATUS_CODE::RESTART;
+                case 1: return STATUS_CODE::MENU;
+                case 2: return STATUS_CODE::QUIT;
+                default: {
+                    throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::GAMEOVER) error.");
+                }
+            }
+            
+            break;
+        }
+    }
+
+    return STATUS_CODE::QUIT;
 }
 
 void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
@@ -120,6 +264,9 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
         selected = true;
 
         soundManager->play("selected");
+    }
+    else if (selected) {
+        // Do nothing
     }
     else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
@@ -138,18 +285,32 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
             selected = true;
             
             soundManager->play("selected");
+
+            selectedTimeout.restart();
         }
-        else if (menuCode == MENU_CODE::PAUSE and event.key.code == sf::Keyboard::Escape) {
-            selectedItem = (int)STATUS_CODE::RESUME;
+        else if (event.key.code == sf::Keyboard::Escape and menuCode == MENU_CODE::PAUSE) {
+            selectedItem = 0;
             selected     = true;
             
             soundManager->play("selected");
+
+            selectedTimeout.restart();
+        }
+        else if (event.key.code == sf::Keyboard::Escape and (menuCode == MENU_CODE::SINGLEPLAYER or menuCode == MENU_CODE::MULTIPLAYER)) {
+            selectedItem = 2;
+            selected     = true;
+            
+            soundManager->play("selected");
+
+            selectedTimeout.restart();
         }
     }
     else if (not selected and event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
             switch (menuCode) {
-                case MENU_CODE::MAIN: {
+                case MENU_CODE::MAIN: 
+                case MENU_CODE::SINGLEPLAYER: 
+                case MENU_CODE::MULTIPLAYER: {
                     // Lấy vị trí con trỏ trong cửa sổ
                     sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
                     for (int i = 0; i < menuSize; i++) {
@@ -160,6 +321,8 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                             
                             soundManager->play("selected");
                             
+                            selectedTimeout.restart();
+
                             break;
                         }
                     }
@@ -199,7 +362,9 @@ void Menu::update(sf::RenderWindow *window) {
     mousePosPrev = mousePos;
 
     switch (menuCode) {
-        case MENU_CODE::MAIN: {
+        case MENU_CODE::MAIN: 
+        case MENU_CODE::SINGLEPLAYER: 
+        case MENU_CODE::MULTIPLAYER: {
             if (not selected and mouseSelect) {
                 for (int i = 0; i < menuSize; i++) {
                     if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
@@ -213,15 +378,29 @@ void Menu::update(sf::RenderWindow *window) {
             }
 
             for (int i = 0; i < menuSize; i++) {
-                if (i == selectedItem) {
-                    menuTexts[i].setFillColor(SELECTED_COLOR);
+                if (not selected) {
+                    if (i == selectedItem) {
+                        menuTexts[i].setFillColor(SELECTED_COLOR);
 
-                    targetBarPositionX[i] = window->getSize().x / 2.5 - SELECTED_PADDING;
+                        targetBarPositionX[i] = window->getSize().x / 2.5 - SELECTED_PADDING;
+                    }
+                    else {
+                        menuTexts[i].setFillColor(TEXT_COLOR);
+
+                        targetBarPositionX[i] = window->getSize().x / 2.5;
+                    }
                 }
                 else {
-                    menuTexts[i].setFillColor(TEXT_COLOR);
+                    if (i == selectedItem) {
+                        menuTexts[i].setFillColor(SELECTED_COLOR);
 
-                    targetBarPositionX[i] = window->getSize().x / 2.5;
+                        targetBarPositionX[i] = window->getSize().x;
+                    }
+                    else {
+                        menuTexts[i].setFillColor(TEXT_COLOR);
+
+                        targetBarPositionX[i] = window->getSize().x;
+                    }
                 }
 
                 currentBarPositionX[i] += (targetBarPositionX[i] - currentBarPositionX[i]) * SLIDE_SPEED;
@@ -270,7 +449,9 @@ void Menu::update(sf::RenderWindow *window) {
 
 void Menu::draw(sf::RenderWindow *window) {
     switch (menuCode) {
-        case MENU_CODE::MAIN: {
+        case MENU_CODE::MAIN: 
+        case MENU_CODE::SINGLEPLAYER: 
+        case MENU_CODE::MULTIPLAYER: {
             for (int i = 0; i < menuSize; i++) {
                 window->draw(menuBars[i]);
                 window->draw(menuTexts[i]);
@@ -287,4 +468,14 @@ void Menu::draw(sf::RenderWindow *window) {
             break;
         }
     }
+}
+
+Menu * Menu::getSubMenu(MENU_CODE menuCode) {
+    for (Menu *subMenu : subMenus) {
+        if (subMenu->menuCode == menuCode) {
+            return subMenu;
+        }
+    }
+
+    throw std::invalid_argument("[Menu.cpp] - getSubMenu(): MENU_CODE error");
 }

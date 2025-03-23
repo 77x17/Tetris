@@ -3,32 +3,44 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-enum class STATUS_CODE {
-    QUIT               = -1,
+enum class STATUS_CODE { 
+    SINGLEPLAYER,
+    MULTIPLAYER,
+    OPTION,
+         
+    PRACTICE,
+    VERSUSBOT,
 
-    SINGLEPLAYER       = 0, 
-    VERSUSBOT          = 1, 
-    MULTIPLAYER_SERVER = 2, 
-    MULTIPLAYER_CLIENT = 3, 
+    MULTIPLAYER_SERVER,
+    MULTIPLAYER_CLIENT,
     
-    RESTART            = 0, 
-    MENU               = 1, 
-    
-    RESUME             = 2
+    RESUME,
+
+    RESTART,
+    MENU,
+
+    BACK,
+
+    QUIT
 };
 
 enum class MENU_CODE {
-    MAIN     = 0,
-    PAUSE    = 1,
-    GAMEOVER = 2
+    MAIN,
+    SINGLEPLAYER,
+    MULTIPLAYER,
+    PAUSE,
+    GAMEOVER
 };
 
+class Menu;
 class SoundManager;
 
 class Menu {
 private:
     sf::Font            font;
-          
+    
+    sf::Clock           selectedTimeout;
+
     SoundManager       *soundManager;
 
     bool                selected;
@@ -44,6 +56,8 @@ private:
 
     MENU_CODE           menuCode;
 
+    std::vector<Menu *> subMenus;
+
 public:
     Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, MENU_CODE menuCode);
     ~Menu();
@@ -57,4 +71,6 @@ public:
     void update(sf::RenderWindow *window);
 
     void draw(sf::RenderWindow *window);
+
+    Menu * getSubMenu(MENU_CODE menuCode);
 };

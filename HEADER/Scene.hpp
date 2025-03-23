@@ -29,6 +29,7 @@ public:
     void drawChangeMenu(sf::RenderWindow *window, bool fadeIn = false);
 
     STATUS_CODE drawMenu(sf::RenderWindow *window);
+    STATUS_CODE drawSubMenu(sf::RenderWindow *window, Menu *subMenu);
     STATUS_CODE drawPause(sf::RenderWindow *window);
     int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
     STATUS_CODE drawGameOver(sf::RenderWindow *window);
