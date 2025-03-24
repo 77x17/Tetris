@@ -77,7 +77,23 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
                     "SERVER",
                     "CLIENT",
                     "BACK"
-                }, MENU_CODE::MULTIPLAYER)
+                }, MENU_CODE::MULTIPLAYER),
+
+                new Menu(window, {
+                    "CONTROLS",
+                    "MOVE LEFT",
+                    "MOVE RIGHT",
+                    "MOVE DOWN",
+                    "HARD DROP",
+                    "ROTATE CLOCKWISE",
+                    "ROTATE COUNTERCLOCKWISE",
+                    "ROTATE 180 DEGREES",
+                    "HOLD",
+                    "SFX",
+                    "MUSIC",
+                    "AUDIO",
+                    "BACK"
+                }, MENU_CODE::OPTION)
             };
 
             break;
@@ -85,7 +101,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
         case MENU_CODE::SINGLEPLAYER: {
             menuTitle = sf::Text("SINGLEPLAYER", font, 40);
             menuTitle.setPosition(10, 0);
-            menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, 2 * menuTitle.getGlobalBounds().height));
+            menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, menuTitle.getGlobalBounds().height * 2));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
             menuTitleBar.setPosition(0, 0);
             menuTitleBar.setOutlineColor(sf::Color::White);
@@ -95,6 +111,17 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
         }
         case MENU_CODE::MULTIPLAYER: {
             menuTitle = sf::Text("MULTIPLAYER", font, 40);
+            menuTitle.setPosition(10, 0);
+            menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, menuTitle.getGlobalBounds().height * 2));
+            menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
+            menuTitleBar.setPosition(0, 0);
+            menuTitleBar.setOutlineColor(sf::Color::White);
+            menuTitleBar.setOutlineThickness(3);
+
+            break;
+        }
+        case MENU_CODE::OPTION: {
+            menuTitle = sf::Text("OPTION", font, 40);
             menuTitle.setPosition(10, 0);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, 2 * menuTitle.getGlobalBounds().height));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -135,10 +162,10 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
         case MENU_CODE::SINGLEPLAYER: 
         case MENU_CODE::MULTIPLAYER: {
             menuBars = new sf::RectangleShape[menuSize];
+            gradient = new sf::VertexArray[menuSize];
+            originalPositionX   = new float[menuSize];
             currentBarPositionX = new float[menuSize];
             targetBarPositionX  = new float[menuSize];
-
-            gradient = new sf::VertexArray[menuSize];
             
             for (int i = 0; i < menuSize; i++) {
                 {   // Text
@@ -151,11 +178,12 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
                 }
                 
                 {   // Bar - Rectangle
+                    originalPositionX[i]   = window->getSize().x / 2.5;
                     currentBarPositionX[i] = window->getSize().x + SELECTED_PADDING;
-                    targetBarPositionX[i]  = window->getSize().x / 2.5;
+                    targetBarPositionX[i]  = originalPositionX[i];
                     
                     menuBars[i].setSize(sf::Vector2f(
-                        window->getSize().x - (window->getSize().x / 2.5 - BAR_PADDING) + SELECTED_PADDING, 
+                        window->getSize().x - (originalPositionX[i] - BAR_PADDING) + SELECTED_PADDING, 
                         OPTION_PADDING - BAR_PADDING
                     ));
                     menuBars[i].setFillColor(MENU_BAR_COLOR);
@@ -185,6 +213,242 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
                     gradient[i][1].color = endColor;
                     gradient[i][2].color = endColor;
                 }
+            }
+
+            break;
+        }
+        case MENU_CODE::OPTION: {
+            menuBars = new sf::RectangleShape[menuSize];
+            gradient = new sf::VertexArray[menuSize];
+            originalPositionX   = new float[menuSize];
+            currentBarPositionX = new float[menuSize];
+            targetBarPositionX  = new float[menuSize];
+            
+            // Back button
+            {   // Text
+                menuTexts[menuSize - 1] = sf::Text(menuItems[menuSize - 1], font, 40);
+                menuTexts[menuSize - 1].setFillColor(TEXT_COLOR);
+                menuTexts[menuSize - 1].setPosition(sf::Vector2f(
+                    window->getSize().x, 
+                    OPTION_PADDING
+                ));
+                // Bar - Rectangle
+                originalPositionX[menuSize - 1]   = window->getSize().x / 1.25;
+                currentBarPositionX[menuSize - 1] = window->getSize().x;
+                targetBarPositionX[menuSize - 1]  = originalPositionX[menuSize - 1];
+                
+                menuBars[menuSize - 1].setSize(sf::Vector2f(
+                    window->getSize().x - (originalPositionX[menuSize - 1] - BAR_PADDING), 
+                    OPTION_PADDING - BAR_PADDING
+                ));
+                menuBars[menuSize - 1].setFillColor(MENU_BAR_COLOR);
+                menuBars[menuSize - 1].setPosition(sf::Vector2f(
+                    currentBarPositionX[menuSize - 1] - BAR_PADDING, 
+                    OPTION_PADDING
+                ));
+                // Disappear
+                gradient[menuSize - 1] = sf::VertexArray(sf::Quads, 4);
+
+                sf::Vector2f barPos  = menuBars[menuSize - 1].getPosition();
+                sf::Vector2f barSize = menuBars[menuSize - 1].getSize();
+
+                gradient[menuSize - 1][0].position = sf::Vector2f(barPos.x, barPos.y);
+                gradient[menuSize - 1][1].position = sf::Vector2f(barPos.x + barSize.x, barPos.y);
+                gradient[menuSize - 1][2].position = sf::Vector2f(barPos.x + barSize.x, barPos.y + barSize.y);
+                gradient[menuSize - 1][3].position = sf::Vector2f(barPos.x, barPos.y + barSize.y);
+                
+                sf::Color startColor = MENU_BAR_COLOR;
+                sf::Color endColor   = MENU_BAR_COLOR;     
+                endColor.a = 0; 
+
+                gradient[menuSize - 1][0].color = startColor;
+                gradient[menuSize - 1][3].color = startColor;
+                gradient[menuSize - 1][1].color = endColor;
+                gradient[menuSize - 1][2].color = endColor;
+            }
+
+            // Controls button
+            {   // Text
+                menuTexts[0] = sf::Text(menuItems[0], font, 40);
+                menuTexts[0].setFillColor(TEXT_COLOR);
+                menuTexts[0].setPosition(sf::Vector2f(
+                    window->getSize().x, 
+                    OPTION_PADDING
+                ));
+                // Bar - Rectangle
+                originalPositionX[0]   = OPTION_PADDING;
+                currentBarPositionX[0] = window->getSize().x;
+                targetBarPositionX[0]  = originalPositionX[0];
+                
+                menuBars[0].setSize(sf::Vector2f(
+                    window->getSize().x - (originalPositionX[0] - BAR_PADDING) - menuBars[menuSize - 1].getSize().x - OPTION_PADDING, 
+                    // window->getSize().y - (menuTexts[0].getPosition().y) - footerBar.getSize().y - (OPTION_PADDING - menuTitleBar.getSize().y)
+                    OPTION_PADDING - BAR_PADDING
+                ));
+                sf::Color blurColor = MENU_BAR_COLOR;
+                blurColor.a = 200;
+                menuBars[0].setFillColor(blurColor);
+                menuBars[0].setPosition(sf::Vector2f(
+                    currentBarPositionX[0] - BAR_PADDING, 
+                    OPTION_PADDING
+                ));
+            }
+
+            // Key - Controls
+            int controlHeight = window->getSize().y - (2 * OPTION_PADDING) - footerBar.getSize().y - (OPTION_PADDING - menuTitleBar.getSize().y);
+            int keyBarPadding = controlHeight / 8;
+            for (int i = 1; i < menuSize - 4; i++) {
+                menuTexts[i] = sf::Text(menuItems[i], font, 20);
+                menuTexts[i].setFillColor(TEXT_COLOR);
+                menuTexts[i].setPosition(sf::Vector2f(
+                    window->getSize().x, 
+                    2 * OPTION_PADDING + keyBarPadding * (i - 1) + keyBarPadding / 4
+                ));
+                // Bar - Rectangle
+                originalPositionX[i]   = OPTION_PADDING;
+                currentBarPositionX[i] = window->getSize().x;
+                targetBarPositionX[i]  = originalPositionX[i];
+                
+                menuBars[i].setSize(sf::Vector2f(
+                    menuBars[0].getSize().x, 
+                    keyBarPadding
+                ));
+                sf::Color blurColor = MENU_BAR_COLOR;
+                blurColor.a = 200;
+                menuBars[i].setFillColor(blurColor);
+                menuBars[i].setPosition(sf::Vector2f(
+                    currentBarPositionX[i] - BAR_PADDING, 
+                    2 * OPTION_PADDING + keyBarPadding * (i - 1)
+                ));
+            }
+
+            // Audio button
+            {   // Text
+                menuTexts[menuSize - 2] = sf::Text(menuItems[menuSize - 2], font, 40);
+                menuTexts[menuSize - 2].setFillColor(TEXT_COLOR);
+                menuTexts[menuSize - 2].setPosition(sf::Vector2f(
+                    window->getSize().x, 
+                    OPTION_PADDING + OPTION_PADDING
+                ));
+                // Bar - Rectangle
+                originalPositionX[menuSize - 2]   = window->getSize().x / 1.25;
+                currentBarPositionX[menuSize - 2] = window->getSize().x;
+                targetBarPositionX[menuSize - 2]  = originalPositionX[menuSize - 2];
+                
+                menuBars[menuSize - 2].setSize(sf::Vector2f(
+                    window->getSize().x - (originalPositionX[menuSize - 1] - BAR_PADDING), 
+                    OPTION_PADDING - BAR_PADDING
+                ));
+                menuBars[menuSize - 2].setFillColor(MENU_BAR_COLOR);
+                menuBars[menuSize - 2].setPosition(sf::Vector2f(
+                    currentBarPositionX[menuSize - 2] - BAR_PADDING, 
+                    OPTION_PADDING + OPTION_PADDING
+                ));
+                // Disappear
+                gradient[menuSize - 2] = sf::VertexArray(sf::Quads, 4);
+
+                sf::Vector2f barPos  = menuBars[menuSize - 2].getPosition();
+                sf::Vector2f barSize = menuBars[menuSize - 2].getSize();
+
+                gradient[menuSize - 2][0].position = sf::Vector2f(barPos.x, barPos.y);
+                gradient[menuSize - 2][1].position = sf::Vector2f(barPos.x + barSize.x, barPos.y);
+                gradient[menuSize - 2][2].position = sf::Vector2f(barPos.x + barSize.x, barPos.y + barSize.y);
+                gradient[menuSize - 2][3].position = sf::Vector2f(barPos.x, barPos.y + barSize.y);
+                
+                sf::Color startColor = MENU_BAR_COLOR;
+                sf::Color endColor   = MENU_BAR_COLOR;     
+                endColor.a = 0; 
+
+                gradient[menuSize - 2][0].color = startColor;
+                gradient[menuSize - 2][3].color = startColor;
+                gradient[menuSize - 2][1].color = endColor;
+                gradient[menuSize - 2][2].color = endColor;
+            }
+
+            // SFX - Audio
+            int audioHeight = window->getSize().y - (3 * OPTION_PADDING) - footerBar.getSize().y - (OPTION_PADDING - menuTitleBar.getSize().y) + BAR_PADDING;
+            {   // Text
+                menuTexts[menuSize - 4] = sf::Text(menuItems[menuSize - 4], font, 20);
+                menuTexts[menuSize - 4].setFillColor(TEXT_COLOR);
+                menuTexts[menuSize - 4].setPosition(sf::Vector2f(
+                    window->getSize().x,
+                    menuTexts[menuSize - 5].getPosition().y         // HOLD position y
+                ));
+                // Bar - Rectangle
+                originalPositionX[menuSize - 4]   = window->getSize().x / 1.25;
+                currentBarPositionX[menuSize - 4] = window->getSize().x;
+                targetBarPositionX[menuSize - 4]  = originalPositionX[menuSize - 4];
+                
+                menuBars[menuSize - 4].setSize(sf::Vector2f(
+                    (window->getSize().x - (originalPositionX[menuSize - 1] - BAR_PADDING)) / 2, 
+                    audioHeight
+                ));
+                menuBars[menuSize - 4].setFillColor(MENU_BAR_COLOR);
+                menuBars[menuSize - 4].setPosition(sf::Vector2f(
+                    currentBarPositionX[menuSize - 4] - BAR_PADDING, 
+                    OPTION_PADDING + OPTION_PADDING * 2 - BAR_PADDING
+                ));
+                // Disappear
+                gradient[menuSize - 4] = sf::VertexArray(sf::Quads, 4);
+
+                sf::Vector2f barPos  = menuBars[menuSize - 4].getPosition();
+                sf::Vector2f barSize = menuBars[menuSize - 4].getSize();
+
+                gradient[menuSize - 4][0].position = sf::Vector2f(barPos.x, barPos.y);
+                gradient[menuSize - 4][1].position = sf::Vector2f(barPos.x + barSize.x, barPos.y);
+                gradient[menuSize - 4][2].position = sf::Vector2f(barPos.x + barSize.x, barPos.y + barSize.y);
+                gradient[menuSize - 4][3].position = sf::Vector2f(barPos.x, barPos.y + barSize.y);
+                
+                sf::Color startColor = MENU_BAR_COLOR;
+                sf::Color endColor   = MENU_BAR_COLOR;     
+                endColor.a = 255 / 2; 
+
+                gradient[menuSize - 4][0].color = startColor;
+                gradient[menuSize - 4][3].color = startColor;
+                gradient[menuSize - 4][1].color = endColor;
+                gradient[menuSize - 4][2].color = endColor;
+            }
+
+            // Music - Audio
+            {     
+                menuTexts[menuSize - 3] = sf::Text(menuItems[menuSize - 3], font, 20);
+                menuTexts[menuSize - 3].setFillColor(TEXT_COLOR);
+                menuTexts[menuSize - 3].setPosition(sf::Vector2f(
+                    window->getSize().x,
+                    menuTexts[menuSize - 5].getPosition().y         // HOLD position y
+                ));
+                // Bar - Rectangle
+                originalPositionX[menuSize - 3]   = window->getSize().x / 1.25 + menuBars[menuSize - 4].getSize().x;
+                currentBarPositionX[menuSize - 3] = window->getSize().x;
+                targetBarPositionX[menuSize - 3]  = originalPositionX[menuSize - 3];
+                
+                menuBars[menuSize - 3].setSize(menuBars[menuSize - 4].getSize());
+                
+                menuBars[menuSize - 3].setFillColor(MENU_BAR_COLOR);
+                menuBars[menuSize - 3].setPosition(sf::Vector2f(
+                    currentBarPositionX[menuSize - 3] - BAR_PADDING,
+                    OPTION_PADDING + OPTION_PADDING * 2 - BAR_PADDING      
+                ));
+                // Disappear
+                gradient[menuSize - 3] = sf::VertexArray(sf::Quads, 4);
+
+                sf::Vector2f barPos  = menuBars[menuSize - 3].getPosition();
+                sf::Vector2f barSize = menuBars[menuSize - 3].getSize();
+
+                gradient[menuSize - 3][0].position = sf::Vector2f(barPos.x, barPos.y);
+                gradient[menuSize - 3][1].position = sf::Vector2f(barPos.x + barSize.x, barPos.y);
+                gradient[menuSize - 3][2].position = sf::Vector2f(barPos.x + barSize.x, barPos.y + barSize.y);
+                gradient[menuSize - 3][3].position = sf::Vector2f(barPos.x, barPos.y + barSize.y);
+                
+                sf::Color startColor = MENU_BAR_COLOR;
+                startColor.a = 255 / 2;
+                sf::Color endColor   = MENU_BAR_COLOR;     
+                endColor.a = 0; 
+
+                gradient[menuSize - 3][0].color = startColor;
+                gradient[menuSize - 3][3].color = startColor;
+                gradient[menuSize - 3][1].color = endColor;
+                gradient[menuSize - 3][2].color = endColor;
             }
 
             break;
@@ -279,9 +543,11 @@ Menu::~Menu() {
             // Không break
         }
         case MENU_CODE::SINGLEPLAYER:
-        case MENU_CODE::MULTIPLAYER : {
+        case MENU_CODE::MULTIPLAYER: 
+        case MENU_CODE::OPTION: {
             delete menuBars;
 
+            delete originalPositionX;
             delete currentBarPositionX;
             delete targetBarPositionX;
 
@@ -299,7 +565,6 @@ Menu::~Menu() {
         }
         default: {
             // nothing
-            break;
         }
     }
 }
@@ -309,6 +574,19 @@ bool Menu::notSelected() {
         case MENU_CODE::MAIN:
         case MENU_CODE::SINGLEPLAYER:
         case MENU_CODE::MULTIPLAYER: {
+            if (selected) {
+                if (selectedTimeout.getElapsedTime().asSeconds() < SELECTED_TIME_OUT) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            } 
+            else {
+                return true;
+            }
+        }
+        case MENU_CODE::OPTION: {
             if (selected) {
                 if (selectedTimeout.getElapsedTime().asSeconds() < SELECTED_TIME_OUT) {
                     return true;
@@ -369,6 +647,24 @@ STATUS_CODE Menu::getSelectedItem() {
 
             break;
         }
+        case MENU_CODE::OPTION: {
+            switch(cloneSelectedItem) {
+                case 0:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 1:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 2:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 3:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 4:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 5:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 6:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 7:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 8:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 9:  throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 10: throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 11: throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+                case 12: return STATUS_CODE::BACK;
+                default: throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::OPTION) error.");
+            }
+        }
         case MENU_CODE::PAUSE: {
             switch (cloneSelectedItem) {
                 case 0:  return STATUS_CODE::RESUME;
@@ -428,7 +724,7 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
 
             selectedTimeout.restart();
         }
-        else if (event.key.code == sf::Keyboard::Escape and menuCode == MENU_CODE::PAUSE) {
+        else if (event.key.code == sf::Keyboard::Escape and menuCode == MENU_CODE::PAUSE) {     // Back
             selectedItem = 0;
             selected     = true;
             
@@ -436,8 +732,8 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
 
             selectedTimeout.restart();
         }
-        else if (event.key.code == sf::Keyboard::Escape and (menuCode == MENU_CODE::SINGLEPLAYER or menuCode == MENU_CODE::MULTIPLAYER)) {
-            selectedItem = 2;
+        else if (event.key.code == sf::Keyboard::Escape and (menuCode == MENU_CODE::SINGLEPLAYER or menuCode == MENU_CODE::MULTIPLAYER or menuCode == MENU_CODE::OPTION)) {  // Back
+            selectedItem = menuSize - 1;
             selected     = true;
             
             soundManager->play("selected");
@@ -478,12 +774,14 @@ void Menu::update(sf::RenderWindow *window) {
                 if (selectedItem != i) {
                     selectedItem = i;
                     
-                    soundManager->play("move");
+                    if (menuTexts[i].getFillColor() == TEXT_COLOR) {
+                        soundManager->play("move");
+                    }
                 }
             }
         }
     }
-
+    
     switch (menuCode) {
         case MENU_CODE::MAIN: 
         case MENU_CODE::SINGLEPLAYER: 
@@ -493,12 +791,12 @@ void Menu::update(sf::RenderWindow *window) {
                     if (i == selectedItem) {
                         menuTexts[i].setFillColor(SELECTED_COLOR);
 
-                        targetBarPositionX[i] = window->getSize().x / 2.5 - SELECTED_PADDING;
+                        targetBarPositionX[i] = originalPositionX[i] - SELECTED_PADDING;
                     }
                     else {
                         menuTexts[i].setFillColor(TEXT_COLOR);
 
-                        targetBarPositionX[i] = window->getSize().x / 2.5;
+                        targetBarPositionX[i] = originalPositionX[i];
                     }
                 }
                 else {
@@ -516,9 +814,8 @@ void Menu::update(sf::RenderWindow *window) {
 
                 currentBarPositionX[i] += (targetBarPositionX[i] - currentBarPositionX[i]) * SLIDE_SPEED;
 
-                menuTexts[i].setPosition(sf::Vector2f(currentBarPositionX[i], OPTION_PADDING + i * OPTION_PADDING));
-        
-                menuBars[i].setPosition(sf::Vector2f(currentBarPositionX[i] - BAR_PADDING, OPTION_PADDING + i * OPTION_PADDING));
+                menuTexts[i].setPosition(sf::Vector2f(currentBarPositionX[i], menuTexts[i].getPosition().y));
+                menuBars[i].setPosition(sf::Vector2f(currentBarPositionX[i] - BAR_PADDING, menuBars[i].getPosition().y));
 
                 sf::Vector2f barPos  = menuBars[i].getPosition();
                 sf::Vector2f barSize = menuBars[i].getSize();
@@ -531,8 +828,45 @@ void Menu::update(sf::RenderWindow *window) {
 
             break;
         }
+        case MENU_CODE::OPTION: {
+            if (selected and selectedItem != menuSize - 1) {
+                selected = false;
+            }
+
+            for (int i = 0; i < menuSize; i++) {
+                if (not selected) {
+                    menuTexts[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+                    targetBarPositionX[i] = originalPositionX[i];
+                }
+                else {
+                    menuTexts[i].setFillColor(i == selectedItem ? SELECTED_COLOR : TEXT_COLOR);
+                    targetBarPositionX[i] = window->getSize().x + SELECTED_PADDING;
+                }
+
+                currentBarPositionX[i] += (targetBarPositionX[i] - currentBarPositionX[i]) * SLIDE_SPEED;
+
+                menuTexts[i].setPosition(sf::Vector2f(currentBarPositionX[i], menuTexts[i].getPosition().y));
+                menuBars[i].setPosition(sf::Vector2f(currentBarPositionX[i] - BAR_PADDING, menuBars[i].getPosition().y));
+
+                if (i >= menuSize - 4) {
+                    sf::Vector2f barPos  = menuBars[i].getPosition();
+                    sf::Vector2f barSize = menuBars[i].getSize();
+
+                    gradient[i][0].position = sf::Vector2f(barPos.x, barPos.y);
+                    gradient[i][1].position = sf::Vector2f(barPos.x + barSize.x, barPos.y);
+                    gradient[i][2].position = sf::Vector2f(barPos.x + barSize.x, barPos.y + barSize.y);
+                    gradient[i][3].position = sf::Vector2f(barPos.x, barPos.y + barSize.y);
+                }
+            }
+
+            if (selectedItem < menuSize - 4) {
+                menuTexts[0].setFillColor(SELECTED_COLOR);
+            }
+
+            break;
+        }
         case MENU_CODE::PAUSE:
-        case MENU_CODE::GAMEOVER : {
+        case MENU_CODE::GAMEOVER: {
             for (int i = 0; i < menuSize; i++) {
                 if (i == selectedItem) {
                     menuTexts[i].setFillColor(SELECTED_COLOR);
@@ -572,6 +906,42 @@ void Menu::draw(sf::RenderWindow *window) {
                 window->draw(menuTexts[i]);
             }
             
+            break;
+        }
+        case MENU_CODE::OPTION: {
+            window->draw(menuTitleBar);
+            window->draw(menuTitle);
+
+            window->draw(footerBar);
+            window->draw(footerVersion);
+            window->draw(footerOwner);
+
+            // Controls
+            window->draw(menuBars[0]);
+            window->draw(menuTexts[0]);
+            
+            // Key - Controls
+            for (int i = 1; i < menuSize - 4; i++) {
+                window->draw(menuBars[i]);
+                window->draw(menuTexts[i]);
+            }
+
+            // Audio
+            window->draw(gradient[menuSize - 2]);
+            window->draw(menuTexts[menuSize - 2]);
+
+            // SFX
+            window->draw(gradient[menuSize - 4]);
+            window->draw(menuTexts[menuSize - 4]);
+
+            // Music
+            window->draw(gradient[menuSize - 3]);
+            window->draw(menuTexts[menuSize - 3]);
+
+            // Back
+            window->draw(gradient[menuSize - 1]);
+            window->draw(menuTexts[menuSize - 1]);
+        
             break;
         }
         case MENU_CODE::PAUSE:

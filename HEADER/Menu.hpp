@@ -28,7 +28,11 @@ enum class MENU_CODE {
     MAIN,
     SINGLEPLAYER,
     MULTIPLAYER,
+
+    OPTION,
+
     PAUSE,
+
     GAMEOVER
 };
 
@@ -60,6 +64,7 @@ private:
 
     sf::RectangleShape *menuBars;
     sf::VertexArray    *gradient;
+    float              *originalPositionX;
     float              *currentBarPositionX;
     float              *targetBarPositionX;
 

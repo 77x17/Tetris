@@ -164,7 +164,9 @@ backToMainMenu:
             break;
         }
         case STATUS_CODE::OPTION: {
-            goto backToMainMenu;
+            sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::OPTION));
+
+            break;
         }
         case STATUS_CODE::QUIT: {
             // quit - do nothing
