@@ -1,21 +1,19 @@
 #ifndef MOVEMENTCONTROLLER_HPP
 #define MOVEMENTCONTROLLER_HPP
 
-
 #include <SFML/Graphics.hpp>
 #include <random>
 
-#include "Monitor.hpp"
-
 class CurrentBlockController;
+class Monitor;
 class Map;
-class Infor;
-class Hold;
 class LinkListBlock;
 
 class MovementController{
 private:
-    // Monitor* monitor;
+    Monitor* monitor; // dont't delete share pointer
+    CurrentBlockController* curBlock; // don't delete share pointer
+
     sf::Clock clock;
     sf::Clock movingClock;
 
@@ -26,22 +24,22 @@ private:
     bool  moveDownSignal;
 
 public:
-    MovementController();
+    MovementController(Monitor* monitor, CurrentBlockController* contronller);
     ~MovementController();
 
     void resetComponent();
     
-    void processEvents(const sf::Event &event, CurrentBlockController*, Monitor*);
+    void processEvents(const sf::Event &event);
     
-    void handleLeft(CurrentBlockController*, Map*);
-    void handleRight(CurrentBlockController*, Map*);
-    void handleDown(CurrentBlockController*, Map*);
-    void handleUp(CurrentBlockController*, Map*);
-    void handleHardDrop(CurrentBlockController*,  Monitor*);
-    void handlePut(CurrentBlockController*, Monitor*);
-    void handleHold(CurrentBlockController*, Monitor*);
+    void handleLeft(Map*);
+    void handleRight(Map*);
+    void handleDown(Map*);
+    void handleUp(Map*);
+    void handleHardDrop();
+    void handlePut();
+    void handleHold();
 
-    void autoDown(CurrentBlockController*, Monitor*);
+    void autoDown();
 };
 
 #endif

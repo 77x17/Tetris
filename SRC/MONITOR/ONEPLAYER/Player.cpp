@@ -16,7 +16,7 @@ Player::Player(int X_COORDINATE, int Y_COORDINATE): volume(50.0f), collision(fal
     monitor = new MonitorForOnePlayer(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlockController(monitor->getMap());
     soundManager = new SoundManager();
-    movementController = new MovementController();
+    movementController = new MovementController(monitor, curBlock);
     soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
 }
 
@@ -55,7 +55,7 @@ void Player::restart() {
 
 void Player::processEvents(const sf::Event &event) {
     if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
-        movementController->processEvents(event, curBlock, monitor);
+        movementController->processEvents(event);
         if(curBlock->gameOver())
             monitor->setGameOver();
     }
@@ -78,36 +78,7 @@ void Player::processEvents(const sf::Event &event) {
 }
 
 void Player::autoDown() {
-    movementController->autoDown(curBlock, monitor);
-    // if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
-    //     if (moveLeftSignal) {
-    //         handleLeft();
-    //         movingTime = MOVING_TIME;
-    //     }
-    //     else if (moveRightSignal) {
-    //         handleRight();
-    //         movingTime = MOVING_TIME;
-    //     }
-        
-    //     if (moveDownSignal) {
-    //         handleDown();
-    //         movingTime = MOVING_TIME;
-    //     }
-        
-    //     movingClock.restart();
-    // }
-
-    // if (not curBlock->collisionBottom(map)) {
-    //     collision = false;
-    // }
-
-    // if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
-    //     if (not curBlock->fallDown(map)) {
-    //         handlePut();
-    //     }
-        
-    //     clock.restart();
-    // }
+    movementController->autoDown();
 }
 
 void Player::draw(sf::RenderWindow* window) {

@@ -13,19 +13,16 @@ class Infor;
 class SoundManager;
 
 class CurrentBlockControllerWithNetwork: public CurrentBlockController {
-private:
-    sf::TcpSocket socket;
-    Infor* infor;
 public:
-    CurrentBlockControllerWithNetwork(Map*, Infor*);
+    CurrentBlockControllerWithNetwork(Map*);
     ~CurrentBlockControllerWithNetwork();
 
-    bool rotateLeft();
-    bool rotateRight();
+    // bool rotateLeft();
+    // bool rotateRight();
 
-    void swap(Hold* hold);
+    // void swap(Hold* hold);
 
-    uint8_t putIntoMap();
+    // uint8_t putIntoMap();
 
     void compress(sf::Packet &packet);
     void compressWithSpin(sf::Packet &packet);

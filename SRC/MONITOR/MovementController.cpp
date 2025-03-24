@@ -21,7 +21,8 @@ constexpr float DELAY_MOVING_TIME   = 175.0f;
 constexpr float MOVING_TIME         = 30.0f;
           float movingTime          = DELAY_MOVING_TIME;
 
-MovementController::MovementController(): collision(false), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false) {}
+MovementController::MovementController(Monitor* moni, CurrentBlockController* cur): monitor(moni), curBlock(cur), 
+                                collision(false), moveLeftSignal(false), moveRightSignal(false), moveDownSignal(false) {}
 
 MovementController::~MovementController() {}
 
@@ -30,7 +31,7 @@ void MovementController::resetComponent() {
     moveRightSignal = false; moveDownSignal = false;
 }
 
-void MovementController::handleLeft(CurrentBlockController* curBlock, Map* map) {
+void MovementController::handleLeft(Map* map) {
     if (curBlock->moveLeft() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
@@ -38,7 +39,7 @@ void MovementController::handleLeft(CurrentBlockController* curBlock, Map* map) 
     }
 }
 
-void MovementController::handleRight(CurrentBlockController* curBlock, Map* map) {
+void MovementController::handleRight(Map* map) {
     if (curBlock->moveRight() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
@@ -46,13 +47,13 @@ void MovementController::handleRight(CurrentBlockController* curBlock, Map* map)
     }
 }
 
-void MovementController::handleDown(CurrentBlockController* curBlock, Map* map) {
+void MovementController::handleDown(Map* map) {
     if (curBlock->moveDown() and not curBlock->collisionBottom()) {
         clock.restart();
     }
 }
 
-void MovementController::handleUp(CurrentBlockController* curBlock, Map* map) {
+void MovementController::handleUp(Map* map) {
     if (curBlock->rotateLeft() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
@@ -60,7 +61,7 @@ void MovementController::handleUp(CurrentBlockController* curBlock, Map* map) {
     }
 }
 
-void MovementController::handlePut(CurrentBlockController* curBlock, Monitor* monitor) {
+void MovementController::handlePut() {
     int nLines = curBlock->putIntoMap();
     
     (monitor->getInfor())->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
@@ -73,15 +74,15 @@ void MovementController::handlePut(CurrentBlockController* curBlock, Monitor* mo
     (monitor->getHold())->unlock();
 }
 
-void MovementController::handleHardDrop(CurrentBlockController* curBlock, Monitor* monitor) {
+void MovementController::handleHardDrop() {
     curBlock->hardDrop(); 
 
-    handlePut(curBlock, monitor);
+    handlePut();
 
     clock.restart();
 }
 
-void MovementController::handleHold(CurrentBlockController* curBlock, Monitor* monitor) {
+void MovementController::handleHold() {
     if ((monitor->getHold())->canHold()) {
         (monitor->getHold())->lock();
         curBlock->swap((monitor->getHold()));
@@ -94,13 +95,13 @@ void MovementController::handleHold(CurrentBlockController* curBlock, Monitor* m
     }
 }
 
-void MovementController::processEvents(const sf::Event &event, CurrentBlockController* curBlock, Monitor* monitor) {
+void MovementController::processEvents(const sf::Event &event) {
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Left and moveLeftSignal == false) {
             moveLeftSignal  = true;
             moveRightSignal = false;
 
-            handleLeft(curBlock, monitor->getMap());
+            handleLeft(monitor->getMap());
             
             movingTime = DELAY_MOVING_TIME;
 
@@ -110,7 +111,7 @@ void MovementController::processEvents(const sf::Event &event, CurrentBlockContr
             moveLeftSignal  = false;
             moveRightSignal = true;
 
-            handleRight(curBlock, monitor->getMap());
+            handleRight(monitor->getMap());
 
             movingTime = DELAY_MOVING_TIME;
 
@@ -119,18 +120,18 @@ void MovementController::processEvents(const sf::Event &event, CurrentBlockContr
         else if (event.key.code == sf::Keyboard::Down and moveDownSignal == false) {
             moveDownSignal = true;
 
-            handleDown(curBlock, monitor->getMap());
+            handleDown(monitor->getMap());
 
             movingClock.restart();
         } 
         else if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::X) {
-            handleUp(curBlock, monitor->getMap());
+            handleUp(monitor->getMap());
         } 
         else if (event.key.code == sf::Keyboard::Space) {
-            handleHardDrop(curBlock, monitor);
+            handleHardDrop();
         } 
         else if (event.key.code == sf::Keyboard::C) {
-            handleHold(curBlock, monitor);
+            handleHold();
         }
     }   
     else if (event.type == sf::Event::KeyReleased) {
@@ -150,19 +151,19 @@ void MovementController::processEvents(const sf::Event &event, CurrentBlockContr
     }
 }
 
-void MovementController::autoDown(CurrentBlockController* curBlock, Monitor* monitor) {
+void MovementController::autoDown() {
     if (movingClock.getElapsedTime().asMilliseconds() >= movingTime) {
         if (moveLeftSignal) {
-            handleLeft(curBlock, monitor->getMap());
+            handleLeft(monitor->getMap());
             movingTime = MOVING_TIME;
         }
         else if (moveRightSignal) {
-            handleRight(curBlock, monitor->getMap());
+            handleRight(monitor->getMap());
             movingTime = MOVING_TIME;
         }
         
         if (moveDownSignal) {
-            handleDown(curBlock, monitor->getMap());
+            handleDown(monitor->getMap());
             movingTime = MOVING_TIME;
         }
         
@@ -175,7 +176,7 @@ void MovementController::autoDown(CurrentBlockController* curBlock, Monitor* mon
 
     if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
         if (not curBlock->fallDown()) {
-            handlePut(curBlock, monitor);
+            handlePut();
         }
         
         clock.restart();

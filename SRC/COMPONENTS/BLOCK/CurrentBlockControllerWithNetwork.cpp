@@ -11,50 +11,41 @@
 #include "Block.hpp"
 #include "MessageCode.hpp"
 
-CurrentBlockControllerWithNetwork::CurrentBlockControllerWithNetwork(Map* map, Infor* infor) : CurrentBlockController(map) {}
+CurrentBlockControllerWithNetwork::CurrentBlockControllerWithNetwork(Map* map) : CurrentBlockController(map) {}
 
 CurrentBlockControllerWithNetwork::~CurrentBlockControllerWithNetwork() {}
 
-bool CurrentBlockControllerWithNetwork::rotateLeft() {
+// void CurrentBlockControllerWithNetwork::swap(Hold* hold) {
+//     sf::Packet packet; packet << HOLD;
+//     if (socket.send(packet) != sf::Socket::Done)
+//         throw std::runtime_error("Failed to send event!");
+//     CurrentBlockController::swap(hold);
+// }
+
+// uint8_t CurrentBlockControllerWithNetwork::putIntoMap() {
+//     sf::Packet packet; packet << PUT;
+//     compressWithSpin(packet);
     
-}
-
-bool CurrentBlockControllerWithNetwork::rotateRight() {
-
-    return true;
-}
-
-void CurrentBlockControllerWithNetwork::swap(Hold* hold) {
-    sf::Packet packet; packet << HOLD;
-    if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
-    CurrentBlockController::swap(hold);
-}
-
-uint8_t CurrentBlockControllerWithNetwork::putIntoMap() {
-    sf::Packet packet; packet << PUT;
-    compressWithSpin(packet);
+//     int nLines = block->putIntoMap(map);
     
-    int nLines = block->putIntoMap(map);
-    
-    if (nLines == 0) {
-        std::random_device rd; int seed = rd();
-        packet << seed;
-        map->add(infor->getAndRemoveLineAdd(), seed);
-    }
+//     if (nLines == 0) {
+//         std::random_device rd; int seed = rd();
+//         packet << seed;
+//         map->add(infor->getAndRemoveLineAdd(), seed);
+//     }
 
-    if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+//     if (socket.send(packet) != sf::Socket::Done)
+//         throw std::runtime_error("Failed to send event!");
 
-    infor->update(nLines, isJustSpin(), getTypeBlock());
-    infor->playSound(nLines, isJustSpin(), getTypeBlock());
-    infor->removeLine(nLines);
+//     infor->update(nLines, isJustSpin(), getTypeBlock());
+//     infor->playSound(nLines, isJustSpin(), getTypeBlock());
+//     infor->removeLine(nLines);
 
-    // resetComponent();
-    // if (curBlock->gameOver(map) && !isGameOver())
-    //     setGameOver();
-    return nLines;
-}
+//     // resetComponent();
+//     // if (curBlock->gameOver(map) && !isGameOver())
+//     //     setGameOver();
+//     return nLines;
+// }
 
 void CurrentBlockControllerWithNetwork::compress(sf::Packet &packet) {
     packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
