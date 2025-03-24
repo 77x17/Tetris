@@ -31,6 +31,8 @@ bool CurrentBlockController::isJustSpin() { return spin; }
 
 bool CurrentBlockController::isEmpty() { return block->isEmpty(); }
 
+CurrentBlock* CurrentBlockController::getCurrentBlock() const { return block; }
+
 void CurrentBlockController::setter(Block* p) {
     spin = false;
     block->freeAndSetter(p);
@@ -169,7 +171,7 @@ void CurrentBlockController::swap(Hold* hold) {
 }
 
 void CurrentBlockController::draw(sf::RenderWindow *window, Map *map) {
-    block->draw(window, map);
+    map->drawCurrentBlock(window, block);
 }
 
 bool CurrentBlockController::isValid(uint16_t shape, Map* map) {
@@ -177,7 +179,6 @@ bool CurrentBlockController::isValid(uint16_t shape, Map* map) {
 }
 
 uint8_t CurrentBlockController::putIntoMap(Map* map) {
-    // return map->putBlockIntoMap(block->block, block->posY, block->posX);;
     return block->putIntoMap(map);
 }
 

@@ -6,16 +6,14 @@
 #include <SFML/Network/TcpListener.hpp>
 #include <random>
 
-#include "Monitor.hpp"
-
 class SoundManager;
-// class Monitor;
+class Monitor;
 class CurrentBlockController;
 class MovementController;
 
-class Player : public Monitor{
+class Player{
 private:
-    // Monitor* monitor;
+    Monitor* monitor;
 
     sf::Clock clock;
     sf::Clock movingClock;
@@ -28,22 +26,8 @@ private:
     bool  collision;        // collision bottom (extra time to move and rotate)
 
 protected:
-    
-    bool  moveLeftSignal;
-    bool  moveRightSignal;
-    bool  moveDownSignal;
-
     CurrentBlockController* curBlock;
 
-    void handleLeft();
-    void handleRight();
-    void handleDown();
-    void handleHardDrop();
-    virtual void handlePut();
-    virtual void handleHold();
-    virtual void handleUp();
-
-    void resetComponent();
 public:
     Player(int X_COORDINATE, int Y_COORDINATE);
     ~Player();
@@ -51,8 +35,12 @@ public:
     
     void autoDown();
 
+    void resetComponent();
+
+    bool isGameOver();
+
     void start();
-    void start(int seed);
+    // void start(int seed);
     void restart();
 
     void draw(sf::RenderWindow* window);

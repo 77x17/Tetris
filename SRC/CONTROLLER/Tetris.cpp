@@ -216,10 +216,8 @@ restartGameVersusBot:
     Player *player = new Player(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);
     Bot *bot = new Bot(BOT_X_COORDINATE, BOT_Y_COORDINATE);
     
-    std::random_device rd;
-    int seed = rd();
-    player->start(seed);
-    bot   ->start(seed);
+    player->start();
+    bot   ->start();
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
 
@@ -337,10 +335,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         
         player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, listener, seed);
         listener.listen(55000);
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
+        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
     }
     else {
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
+        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
         player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
         // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.100.230", 55001);
         // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.100.230", 55000);

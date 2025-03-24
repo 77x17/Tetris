@@ -11,8 +11,8 @@ Bot::Bot(int X_COORDINATE, int Y_COORDINATE) :
 Bot::~Bot() {}
 
 void Bot::draw(sf::RenderWindow *window) {
-    Monitor::draw(window);
-    curBlock->draw(window, map);
+    // Monitor::draw(window);
+    // curBlock->draw(window, map);
 }
 
 void update() {

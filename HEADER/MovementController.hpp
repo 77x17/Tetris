@@ -31,17 +31,17 @@ public:
 
     void resetComponent();
     
-    void processEvents(const sf::Event &event, CurrentBlockController*, Map*, Infor*, Hold*, LinkListBlock*);
+    void processEvents(const sf::Event &event, CurrentBlockController*, Monitor*);
     
     void handleLeft(CurrentBlockController*, Map*);
     void handleRight(CurrentBlockController*, Map*);
     void handleDown(CurrentBlockController*, Map*);
-    void handleHardDrop(CurrentBlockController*,  Map*, Hold*, Infor*, LinkListBlock*);
-    void handlePut(CurrentBlockController*, Map*, Hold*, Infor*, LinkListBlock*);
-    void handleHold(CurrentBlockController*, Map*, Hold*, LinkListBlock*);
     void handleUp(CurrentBlockController*, Map*);
+    void handleHardDrop(CurrentBlockController*,  Monitor*);
+    void handlePut(CurrentBlockController*, Monitor*);
+    void handleHold(CurrentBlockController*, Monitor*);
 
-    void autoDown(CurrentBlockController*, Map*, Infor*, Hold*, LinkListBlock*);
+    void autoDown(CurrentBlockController*, Monitor*);
 };
 
 #endif

@@ -26,12 +26,10 @@ public:
     void freeAndSetter(Block* p);
 
     void swap(Hold* hold);
-
     bool isValid(Map* map) const;
-
     uint8_t putIntoMap(Map* map);
+    void draw(sf::RenderWindow* window, int GRID_POSITION_Y, int GRID_POSITION_X);
 
-    void draw(sf::RenderWindow* window, Map* map) const;
     // void compress(sf::Packet &packet);
     // void compressWithSpin(sf::Packet &packet);
 

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Common.hpp"
+#include "CurrentBlock.hpp"
 #include "Block.hpp"
 #include "Map.hpp"
 #include "Hold.hpp"
@@ -33,16 +34,17 @@ void CurrentBlock::swap(Hold* hold) {
     block = hold->interchange(block);
 }
 
-void CurrentBlock::draw(sf::RenderWindow *window, Map *map) const {
-    map->drawCurrentBlock(window, block, posY, shadowPosY, posX);
-}
-
 bool CurrentBlock::isValid(Map* map) const {
     return map->isValid(block->getShape(), posY, posX);
 }
 
 uint8_t CurrentBlock::putIntoMap(Map* map) {
     return map->putBlockIntoMap(block, posY, posX);;
+}
+
+void CurrentBlock::draw(sf::RenderWindow* window, int GRID_POSITION_Y, int GRID_POSITION_X) {
+    block->drawGhost(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X);
+    block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X);
 }
 
 // char CurrentBlock::getTypeBlock() {

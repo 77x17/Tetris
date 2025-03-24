@@ -3,6 +3,7 @@
 #include "Block.hpp"
 #include "Common.hpp"
 #include "CommonMap.hpp"
+#include "CurrentBlock.hpp"
 
 #include <random>
 
@@ -129,9 +130,8 @@ void Map::draw(sf::RenderWindow *window) {
     }
 }
 
-void Map::drawCurrentBlock(sf::RenderWindow* window, Block *block, int posY, int shadowPosY, int posX) {
-    block->drawGhost(window, shadowPosY, posX, GRID_POSITION_Y, GRID_POSITION_X);
-    block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X);
+void Map::drawCurrentBlock(sf::RenderWindow* window, CurrentBlock *curBlock) {
+    curBlock->draw(window, GRID_POSITION_Y, GRID_POSITION_X);
 }
 
 uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {

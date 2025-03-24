@@ -3,18 +3,17 @@
 
 #include <SFML/Graphics.hpp>
 
-class Hold;
+enum MessageCode {CURBLOCK, PUT, HOLD, SPIN, RECVLINE,  GAMEOVER, RESTART};
+
+class Infor;
+class Next;
 class LinkListBlock;
 class Map;
-class Infor;
+class Hold;
 class CurrentBlock;
-
-enum MessageCode {CURBLOCK, PUT, HOLD, SPIN, RECVLINE,  GAMEOVER, RESTART};
 
 class Monitor {
 private:
-    int X_COORDINATE;
-    int Y_COORDINATE;
     bool gameOver;
 
 protected:
@@ -23,17 +22,24 @@ protected:
     Infor            *infor;
     LinkListBlock    *next;
 
-    void resetMonitor(uint32_t seed);
-    
 public:
-    Monitor(int X_COORDINATE, int Y_COORDINATE);
-    virtual ~Monitor();
+    Monitor();
+    virtual void CreateMonitor(int X_COORDINATE, int Y_COORDINATE) = 0;
 
-    void setPosition(int X_COORDINATE, int Y_COORDINATE);
+    virtual ~Monitor();
+    
+    void resetMonitor(uint32_t seed);
+    void draw(sf::RenderWindow* window, CurrentBlock* currentBlock) const;
     
     bool isGameOver();
     void setGameOver();
-    virtual void draw(sf::RenderWindow* window);
+
+    void setNewSeed(int seed);
+
+    Map* getMap() const;
+    Hold* getHold() const;
+    LinkListBlock* getNext() const;
+    Infor* getInfor() const;
 };
 
 #endif

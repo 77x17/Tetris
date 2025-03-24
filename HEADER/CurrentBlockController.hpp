@@ -50,6 +50,7 @@ public:
     void draw(sf::RenderWindow *window, Map *map);
 
     char getTypeBlock();
+    CurrentBlock* getCurrentBlock() const;
 
     bool gameOver(Map* map);
 
