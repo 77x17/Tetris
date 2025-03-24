@@ -9,7 +9,7 @@
 #include "Block.hpp"
 #include "SoundManager.hpp"
 
-CurrentBlockController::CurrentBlockController(Map* map) : spin(false), map(map) {
+CurrentBlockController::CurrentBlockController(Map* map) : map(map) {
     soundManager = new SoundManager();
     block = new CurrentBlock();
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
@@ -27,14 +27,12 @@ CurrentBlockController::~CurrentBlockController() {
     delete soundManager;
 }
 
-bool CurrentBlockController::isJustSpin() { return spin; }
-
 bool CurrentBlockController::isEmpty() { return block->isEmpty(); }
 
 CurrentBlock* CurrentBlockController::getCurrentBlock() const { return block; }
+bool CurrentBlockController::isJustSpin() { return block->isJustSpin(); };
 
 void CurrentBlockController::setter(Block* p) {
-    spin = false;
     block->freeAndSetter(p);
 }
 
@@ -150,11 +148,11 @@ rotate_success:
     updateShadow();
 
     if (posY != 0 and not map->isValid(cur->getShape(), posY - 1, posX)) {
-        spin = true;
+        block->setSpin();
         soundManager->play("spin");
     }
     else {
-        spin = false;
+        block->resetSpin();
         soundManager->play("rotate");
     }
     return true;

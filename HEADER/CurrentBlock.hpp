@@ -14,11 +14,17 @@ private:
     Block *block;
     int8_t posX, posY;
     int8_t shadowPosY;
+
+    bool spin; // check piece spin
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
     ~CurrentBlock();
 
+    bool isJustSpin();
+    void setSpin();
+    void resetSpin();
+    
     bool isEmpty();
     
     Block* setter(Block* p);

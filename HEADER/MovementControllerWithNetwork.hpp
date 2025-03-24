@@ -1,18 +1,22 @@
 #ifndef MOVEMENT_CONTROLLER_WITH_NETWORK_HPP
 #define MOVEMENT_CONTROLLER_WITH_NETWORK_HPP
 
-// #include "MovementController.hpp"
+#include <SFML/Network/TcpSocket.hpp>
+#include "MovementController.hpp"
 
-// class MovementControllerWithNetwork{
-// private:
-// public:
-//     MovementControllerWithNetwork();
-//     ~MovementControllerWithNetwork();
-    
-//     void handleUp(CurrentBlockController*, Map*);
-//     void handlePut(CurrentBlockController*, Monitor*);
-//     void handleHold(CurrentBlockController*, Monitor*);
-// };
+class Map;
+
+class MovementControllerWithNetwork: public MovementController{
+private:
+    sf::TcpSocket socket;
+public:
+    MovementControllerWithNetwork(Monitor* monitor, CurrentBlockController* controller);
+    ~MovementControllerWithNetwork();
+
+    void handleUp(Map*);
+    void handlePut();
+    void handleHold();
+};
 
 
 #endif

@@ -11,19 +11,23 @@
 
 CurrentBlock::CurrentBlock() : block(nullptr){}
 
-CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH_MAP / 2 - BLOCK_EDGE/2), posY(0){}
+CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH_MAP / 2 - BLOCK_EDGE/2), posY(0), spin(false){}
 
 CurrentBlock::~CurrentBlock() { delete block; block = nullptr; }
 
 bool CurrentBlock::isEmpty() { return (block == nullptr); }
 
+bool CurrentBlock::isJustSpin() { return spin; }
+void CurrentBlock::setSpin() { spin = true;}
+void CurrentBlock::resetSpin() { spin = false; }
+
 Block* CurrentBlock::setter(Block* p) {
-    Block* tmp = block; block = p;
+    Block* tmp = block; block = p; spin = false;
     return tmp;
 }
 
 void CurrentBlock::freeAndSetter(Block* p) {
-    delete block; block = p;
+    delete block; block = p; spin = false;
 }
 
 void CurrentBlock::setPosition(int x, int y, int sy) {

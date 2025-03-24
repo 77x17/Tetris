@@ -14,12 +14,9 @@ class SoundManager;
 class CurrentBlockController {
 private:
     SoundManager *soundManager;
-    
-    bool spin; // check piece spin
 
     void updateShadow();
     bool isValid(uint16_t shape);
-
 protected:
     CurrentBlock *block;
     Map* map; // share pointer don't delete!
@@ -28,11 +25,11 @@ public:
     CurrentBlockController(Map* map);
     virtual ~CurrentBlockController();
 
-    bool isJustSpin();
-
     bool isEmpty();
     void setter(Block* p);
 
+    bool isJustSpin();
+    
     void resetPosition();
 
     virtual bool moveDown();

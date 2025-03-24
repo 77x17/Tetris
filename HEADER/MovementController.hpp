@@ -11,9 +11,6 @@ class LinkListBlock;
 
 class MovementController{
 private:
-    Monitor* monitor; // dont't delete share pointer
-    CurrentBlockController* curBlock; // don't delete share pointer
-
     sf::Clock clock;
     sf::Clock movingClock;
 
@@ -23,8 +20,12 @@ private:
     bool  moveRightSignal;
     bool  moveDownSignal;
 
+protected:
+    Monitor* monitor; // dont't delete share pointer
+    CurrentBlockController* curBlock; // don't delete share pointer
+
 public:
-    MovementController(Monitor* monitor, CurrentBlockController* contronller);
+    MovementController(Monitor* monitor, CurrentBlockController* controller);
     ~MovementController();
 
     void resetComponent();
@@ -34,10 +35,11 @@ public:
     void handleLeft(Map*);
     void handleRight(Map*);
     void handleDown(Map*);
-    void handleUp(Map*);
     void handleHardDrop();
-    void handlePut();
-    void handleHold();
+
+    virtual void handleUp(Map*);
+    virtual void handlePut();
+    virtual void handleHold();
 
     void autoDown();
 };
