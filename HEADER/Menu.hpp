@@ -38,14 +38,26 @@ enum class MENU_CODE {
 
 class Menu;
 class SoundManager;
+class KeyConfiguration;
 
 class Menu {
 private:
     sf::Font            font;
     
+    KeyConfiguration   *keyConfiguration;
+
     sf::Clock           selectedTimeout;
 
     SoundManager       *soundManager;
+
+    bool                optionSelected;
+    int                 optionSelectedIndex;
+    int                 optionSelectedItem;
+    std::string         optionKeyStrings[2];
+    sf::Text            optionKeyTexts[2];
+
+    bool                optionWaitForKey;
+    bool                optionWaitForReleaseKey;
 
     bool                selected;
     int                 selectedItem;

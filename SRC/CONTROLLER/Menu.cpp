@@ -2,6 +2,7 @@
 
 #include "Common.hpp"
 #include "SoundManager.hpp"
+#include "KeyConfiguration.hpp"
 
 const int BAR_PADDING      = 20;
 const int OPTION_PADDING   = 100;
@@ -19,6 +20,8 @@ constexpr float SLIDE_SPEED       = 0.03f;
 constexpr float SELECTED_TIME_OUT = 0.3f;       // Tắt mà bị delay thì Ctrl + F: selectedTimeout.restart()
 
 Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, MENU_CODE menuCode) : 
+    optionSelected(false),
+    optionWaitForKey(false),
     selected(false), 
     selectedItem(0), 
     mouseSelect(false), 
@@ -26,6 +29,8 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
     menuCode(menuCode)
 {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
+
+    keyConfiguration = new KeyConfiguration("ASSETS/keyBindings.txt");
 
     soundManager = new SoundManager();
     soundManager->loadSound("move"    , "ASSETS/sfx/menutap.mp3");
@@ -81,14 +86,14 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 
                 new Menu(window, {
                     "CONTROLS",
-                    "MOVE LEFT",
-                    "MOVE RIGHT",
-                    "MOVE DOWN",
-                    "HARD DROP",
-                    "ROTATE CLOCKWISE",
-                    "ROTATE COUNTERCLOCKWISE",
-                    "ROTATE 180 DEGREES",
-                    "HOLD",
+                    "MOVE LEFT               ",
+                    "MOVE RIGHT              ",
+                    "MOVE DOWN               ",
+                    "HARD DROP               ",
+                    "ROTATE CLOCKWISE        ",
+                    "ROTATE COUNTERCLOCKWISE ",
+                    "ROTATE 180 DEGREES      ",
+                    "HOLD                    ",
                     "SFX",
                     "MUSIC",
                     "AUDIO",
@@ -298,7 +303,13 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             int controlHeight = window->getSize().y - (2 * OPTION_PADDING) - footerBar.getSize().y - (OPTION_PADDING - menuTitleBar.getSize().y);
             int keyBarPadding = controlHeight / 8;
             for (int i = 1; i < menuSize - 4; i++) {
-                menuTexts[i] = sf::Text(menuItems[i], font, 20);
+                std::pair<std::string, std::string> keys = keyConfiguration->getKey(static_cast<EVENT>(i - 1));
+                
+                while (keys.first .size() != 10) keys.first  += ' ';
+                while (keys.second.size() != 10) keys.second += ' ';
+
+                std::string addingKey = " [ " + keys.first + " | " + keys.second + " ]";
+                menuTexts[i] = sf::Text(menuItems[i] + addingKey, font, 20);
                 menuTexts[i].setFillColor(TEXT_COLOR);
                 menuTexts[i].setPosition(sf::Vector2f(
                     window->getSize().x, 
@@ -693,17 +704,132 @@ STATUS_CODE Menu::getSelectedItem() {
 
 void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
     if (event.type == sf::Event::Closed) {
-        selectedItem = menuSize - 1;
-        
-        selected = true;
+        if (optionSelected) {
+            if (event.type == sf::Event::Closed) {
+                optionSelected = false;
+                
+                if (optionSelected == false) {
+                    std::string reWrite = menuTexts[optionSelectedIndex].getString();
+                    for (int i = 0; i < 10; i++) {
+                        reWrite[i + 27] = optionKeyStrings[0][i];
+                        reWrite[i + 40] = optionKeyStrings[1][i];
+                    }
+                    menuTexts[optionSelectedIndex].setString(reWrite);
+                }
 
-        soundManager->play("selected");
+                soundManager->play("selected");
+            }
+        }
+        else {
+            selectedItem = menuSize - 1;
+            
+            selected = true;
 
-        selectedTimeout.restart();
+            soundManager->play("selected");
+
+            selectedTimeout.restart();
+        }
     }
     else if (selected) {
         // Do nothing
     }
+    else if (optionSelected) {
+        if (optionWaitForKey and optionWaitForReleaseKey and event.type == sf::Event::KeyPressed) {
+            sf::Keyboard::Key optionNewKey = event.key.code;
+
+            if (optionNewKey == sf::Keyboard::Escape) {
+                // back
+            }
+            else {
+                keyConfiguration->removeKey(optionKeyStrings[optionSelectedItem]);
+
+                if (optionNewKey == sf::Keyboard::Backspace) {
+                    // clear keyblindings
+                }
+                else {
+                    optionKeyStrings[optionSelectedItem] = keyConfiguration->getKeyName(optionNewKey);
+                    while (optionKeyStrings[optionSelectedItem].size() != 10) {
+                        optionKeyStrings[optionSelectedItem] += ' ';
+                    }
+                    keyConfiguration->setKey(static_cast<EVENT>(selectedItem - 1), optionNewKey);
+                }
+
+                keyConfiguration->saveKey("ASSETS/keybindings.txt");
+            
+                optionSelected = false;            
+
+                optionWaitForKey = false;
+
+                for (int i = 1; i < menuSize - 4; i++) {
+                    std::pair<std::string, std::string> keys = keyConfiguration->getKey(static_cast<EVENT>(i - 1));
+                    
+                    while (keys.first .size() != 10) keys.first  += ' ';
+                    while (keys.second.size() != 10) keys.second += ' ';
+
+                    std::string newText = menuTexts[i].getString().substring(0, 24) + " [ " + keys.first + " | " + keys.second + " ]";
+                    
+                    menuTexts[i].setString(newText);
+                }
+            }
+        }
+        else if (event.type == sf::Event::KeyReleased) {
+            optionWaitForReleaseKey = true;
+        }
+        else if (optionWaitForKey) {
+            // Do nothing
+        }
+        else if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape) {
+                optionSelected = false;
+                
+                std::string reWrite = menuTexts[optionSelectedIndex].getString();
+                for (int i = 0; i < 10; i++) {
+                    reWrite[i + 27] = optionKeyStrings[0][i];
+                    reWrite[i + 40] = optionKeyStrings[1][i];
+                }
+                menuTexts[optionSelectedIndex].setString(reWrite);
+
+                soundManager->play("selected");
+            }
+            else if (event.key.code == sf::Keyboard::Left or event.key.code == sf::Keyboard::A) {
+                optionSelectedItem ^= 1;
+                
+                mouseSelect = false;
+
+                soundManager->play("move");
+            }
+            else if (event.key.code == sf::Keyboard::Right or event.key.code == sf::Keyboard::D) {
+                optionSelectedItem ^= 1;
+                
+                mouseSelect = false;
+
+                soundManager->play("move");
+            }
+            else if (event.key.code == sf::Keyboard::Space or event.key.code == sf::Keyboard::Enter) {
+                optionWaitForKey = true;
+                optionWaitForReleaseKey = true;
+
+                soundManager->play("selected");
+            }
+        }
+        else if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                // Lấy vị trí con trỏ trong cửa sổ
+                sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
+                for (int i = 0; i <= 1; i++) {
+                    if (optionKeyTexts[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                        optionSelectedItem = i;
+                        
+                        optionWaitForKey = true;
+
+                        soundManager->play("selected");
+    
+                        break;
+                    }
+                }
+            }
+        }
+    } 
     else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
             selectedItem = (selectedItem - 1 + menuSize) % menuSize;
@@ -768,14 +894,37 @@ void Menu::update(sf::RenderWindow *window) {
     if (mousePos != mousePosPrev) { mouseSelect = true; }
     mousePosPrev = mousePos;
 
-    if (not selected and mouseSelect) {
-        for (int i = 0; i < menuSize; i++) {
-            if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
-                if (selectedItem != i) {
-                    selectedItem = i;
-                    
-                    if (menuTexts[i].getFillColor() == TEXT_COLOR) {
+    if (optionSelected) {       // Option - Control
+        if (mouseSelect and not optionWaitForKey) {
+            for (int i = 0; i <= 1; i++) {
+                if (optionKeyTexts[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                    if (optionSelectedItem != i) {
+                        optionSelectedItem = i;
+                        
                         soundManager->play("move");
+                    }
+                }
+            }
+        }
+        else if (optionWaitForKey) {
+            if (optionSelectedItem == 0) {
+                optionKeyTexts[0].setString("  input...  ");
+            }
+            else {
+                optionKeyTexts[1].setString("  input...  ");
+            }
+        }
+    }
+    else {                      // Normal
+        if (not selected and mouseSelect) {
+            for (int i = 0; i < menuSize; i++) {
+                if (menuBars[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                    if (selectedItem != i) {
+                        selectedItem = i;
+                        
+                        if (menuTexts[i].getFillColor() == TEXT_COLOR) {
+                            soundManager->play("move");
+                        }
                     }
                 }
             }
@@ -830,7 +979,51 @@ void Menu::update(sf::RenderWindow *window) {
         }
         case MENU_CODE::OPTION: {
             if (selected and selectedItem != menuSize - 1) {
+                if (1 <= selectedItem and selectedItem <= menuSize - 4) {
+                    optionSelected = true;
+                    optionSelectedIndex = selectedItem;
+                    optionSelectedItem = 0;
+
+                    //                            [27]         [40]
+                    //                             |            |
+                    //                             v            v
+                    // "ROTATE COUNTERCLOCKWISE  [ ---------- | ---------- ]"
+                    optionKeyStrings[0] = menuTexts[optionSelectedIndex].getString().substring(27, 10);
+                    optionKeyStrings[1] = menuTexts[optionSelectedIndex].getString().substring(40, 10);
+                    menuTexts[optionSelectedIndex].setString(menuTexts[optionSelectedIndex].getString().substring(0, 25) + "[            |            ]");
+
+                    sf::Text temporary("A", font, 20);
+                    optionKeyTexts[0] = sf::Text(' ' + (optionKeyStrings[0][0] != ' ' ? optionKeyStrings[0] : " (create) ") + ' ', font, 20);
+                    optionKeyTexts[0].setPosition(sf::Vector2f(
+                        targetBarPositionX[optionSelectedIndex] + temporary.getGlobalBounds().width * 26,
+                        menuTexts[optionSelectedIndex].getPosition().y
+                    ));
+
+                    optionKeyTexts[1] = sf::Text(' ' + (optionKeyStrings[1][0] != ' ' ? optionKeyStrings[1] : " (create) ") + ' ', font, 20);
+                    optionKeyTexts[1].setPosition(sf::Vector2f(
+                        targetBarPositionX[optionSelectedIndex] + temporary.getGlobalBounds().width * 39,
+                        menuTexts[optionSelectedIndex].getPosition().y
+                    ));
+                }
+
                 selected = false;
+            }
+
+            if (optionSelected) {
+                for (int i = 0; i <= 1; i++) {
+                    std::string temporary = optionKeyTexts[i].getString();
+                    if (optionSelectedItem == i) {
+                        optionKeyTexts[i].setFillColor(sf::Color::Red);
+                        temporary[0] = '>';
+                        temporary.back() = '<';
+                    }
+                    else {
+                        optionKeyTexts[i].setFillColor(SELECTED_COLOR);
+                        temporary[0] = ' ';
+                        temporary.back() = ' ';
+                    }
+                    optionKeyTexts[i].setString(temporary);
+                }
             }
 
             for (int i = 0; i < menuSize; i++) {
@@ -859,7 +1052,7 @@ void Menu::update(sf::RenderWindow *window) {
                 }
             }
 
-            if (selectedItem < menuSize - 4) {
+            if (1 <= selectedItem and selectedItem < menuSize - 4) {
                 menuTexts[0].setFillColor(SELECTED_COLOR);
             }
 
@@ -924,6 +1117,11 @@ void Menu::draw(sf::RenderWindow *window) {
             for (int i = 1; i < menuSize - 4; i++) {
                 window->draw(menuBars[i]);
                 window->draw(menuTexts[i]);
+            }
+
+            if (optionSelected) {
+                window->draw(optionKeyTexts[0]);
+                window->draw(optionKeyTexts[1]);
             }
 
             // Audio
