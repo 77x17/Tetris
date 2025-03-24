@@ -2,7 +2,7 @@
 
 #include "SFML/Network.hpp"
 #include "MessageCode.hpp"
-#include "CurrentBlockControllerWithNetwork.hpp"
+#include "CurrentBlockWithNetwork.hpp"
 
 MovementControllerWithNetwork::MovementControllerWithNetwork(Monitor* monitor, CurrentBlockController* controller)
                                 : MovementController(monitor, controller) {}

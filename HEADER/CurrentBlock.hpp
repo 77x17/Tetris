@@ -10,7 +10,7 @@ class Block;
 class Hold;
 
 class CurrentBlock {
-private:
+protected:
     Block *block;
     int8_t posX, posY;
     int8_t shadowPosY;
