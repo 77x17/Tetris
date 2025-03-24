@@ -56,8 +56,6 @@ void Player::restart() {
 void Player::processEvents(const sf::Event &event) {
     if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
         movementController->processEvents(event);
-        if(curBlock->gameOver())
-            monitor->setGameOver();
     }
     else if (event.type == sf::Event::MouseWheelScrolled) {
         if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {

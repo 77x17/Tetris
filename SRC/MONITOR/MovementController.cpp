@@ -72,6 +72,8 @@ void MovementController::handlePut() {
     curBlock->setter((monitor->getNext())->updateNext());
     curBlock->resetPosition();
     (monitor->getHold())->unlock();
+    if (curBlock->gameOver())
+        monitor->setGameOver();
 }
 
 void MovementController::handleHardDrop() {

@@ -16,6 +16,8 @@ public:
     void handleUp(Map*);
     void handlePut();
     void handleHold();
+    
+    void setGameOver();
 };
 
 
