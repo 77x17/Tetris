@@ -32,15 +32,12 @@ public:
     Player(int X_COORDINATE, int Y_COORDINATE);
     ~Player();
     virtual void processEvents(const sf::Event &event);
-    
     void autoDown();
-
+    
     void resetComponent();
-
     bool isGameOver();
 
     void start();
-    // void start(int seed);
     void restart();
 
     void draw(sf::RenderWindow* window);

@@ -13,49 +13,48 @@ class SoundManager;
 
 class CurrentBlockController {
 private:
-    CurrentBlock *block;
-    
     SoundManager *soundManager;
     
     bool spin; // check piece spin
 
-    void updateShadow(Map* map);
-    bool isValid(uint16_t shape, Map* map);
+    void updateShadow();
+    bool isValid(uint16_t shape);
+
+protected:
+    CurrentBlock *block;
+    Map* map; // share pointer don't delete!
+
 public:
-    CurrentBlockController();
-    // CurrentBlockController(CurrentBlock *p);
-    ~CurrentBlockController();
+    CurrentBlockController(Map* map);
+    virtual ~CurrentBlockController();
 
     bool isJustSpin();
 
     bool isEmpty();
     void setter(Block* p);
 
-    void resetPosition(Map* map);
+    void resetPosition();
 
-    bool moveDown(Map* map);
-    bool fallDown(Map* map);
-    bool moveLeft(Map* map);
-    bool moveRight(Map* map);
-    bool hardDrop(Map* map);
+    virtual bool moveDown();
+    virtual bool fallDown();
+    virtual bool moveLeft();
+    virtual bool moveRight();
+    virtual bool hardDrop();
 
-    bool collisionBottom(Map *map);
+    bool collisionBottom();
 
-    bool rotateLeft(Map* map);
-    bool rotateRight(Map* map);
+    virtual bool rotateLeft();
+    virtual bool rotateRight();
 
-    void swap(Hold* hold);
+    virtual void swap(Hold* hold);
 
-    uint8_t putIntoMap(Map* map);
-    void draw(sf::RenderWindow *window, Map *map);
+    uint8_t putIntoMap();
+    void draw(sf::RenderWindow *window);
 
     char getTypeBlock();
     CurrentBlock* getCurrentBlock() const;
 
-    bool gameOver(Map* map);
-
-    void compress(sf::Packet &packet);
-    void compressWithSpin(sf::Packet &packet);
+    bool gameOver();
 };
 
 #endif

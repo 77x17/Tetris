@@ -9,7 +9,6 @@ class Infor;
 
 class PlayerWithNetwork: public Player {
 private:
-    sf::TcpSocket socket;
 
 public:
     PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);

@@ -3,8 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-enum MessageCode {CURBLOCK, PUT, HOLD, SPIN, RECVLINE,  GAMEOVER, RESTART};
-
 class Infor;
 class Next;
 class LinkListBlock;
@@ -33,8 +31,6 @@ public:
     
     bool isGameOver();
     void setGameOver();
-
-    void setNewSeed(int seed);
 
     Map* getMap() const;
     Hold* getHold() const;

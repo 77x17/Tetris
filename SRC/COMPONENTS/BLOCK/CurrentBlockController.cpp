@@ -9,7 +9,7 @@
 #include "Block.hpp"
 #include "SoundManager.hpp"
 
-CurrentBlockController::CurrentBlockController() : spin(false) {
+CurrentBlockController::CurrentBlockController(Map* map) : spin(false), map(map) {
     soundManager = new SoundManager();
     block = new CurrentBlock();
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
@@ -38,12 +38,12 @@ void CurrentBlockController::setter(Block* p) {
     block->freeAndSetter(p);
 }
 
-void CurrentBlockController::resetPosition(Map* map) {
+void CurrentBlockController::resetPosition() {
     block->setPosition(WIDTH_MAP / 2 - BLOCK_EDGE / 2, 0, 0);
-    updateShadow(map);
+    updateShadow();
 }
 
-bool CurrentBlockController::fallDown(Map* map) {
+bool CurrentBlockController::fallDown() {
     if (not map->isValid((block->block)->getShape(), block->posY + 1, block->posX)) 
         return false;
 
@@ -52,7 +52,7 @@ bool CurrentBlockController::fallDown(Map* map) {
     return true;
 }
 
-void CurrentBlockController::updateShadow(Map *map) {
+void CurrentBlockController::updateShadow() {
     int8_t &shadow = block->shadowPosY;
     int8_t &posX   = block->posX;
 
@@ -63,7 +63,7 @@ void CurrentBlockController::updateShadow(Map *map) {
     }
 }
 
-bool CurrentBlockController::moveDown(Map* map) {
+bool CurrentBlockController::moveDown() {
     if (not map->isValid((block->block)->getShape(), block->posY + 1, block->posX)) 
         return false; 
     block->posY++;
@@ -71,73 +71,73 @@ bool CurrentBlockController::moveDown(Map* map) {
     return true;
 }
 
-bool CurrentBlockController::moveLeft(Map* map) {
+bool CurrentBlockController::moveLeft() {
     if (not map->isValid((block->block)->getShape(), block->posY, block->posX - 1)) 
         return false; 
-    block->posX--; updateShadow(map);
+    block->posX--; updateShadow();
     soundManager->play("move");
     return true;
 }
 
-bool CurrentBlockController::moveRight(Map* map) {
+bool CurrentBlockController::moveRight() {
     if (not map->isValid((block->block)->getShape(), block->posY, block->posX + 1)) 
         return false; 
-    block->posX++; updateShadow(map);
+    block->posX++; updateShadow();
     soundManager->play("move");
     return true;
 }
 
-bool CurrentBlockController::hardDrop(Map *map) {
+bool CurrentBlockController::hardDrop() {
     block->posY = block->shadowPosY;
     soundManager->play("hardDrop");
     return true;
 }
 
-bool CurrentBlockController::collisionBottom(Map *map) {
+bool CurrentBlockController::collisionBottom() {
     return not map->isValid((block->block)->getShape(), block->posY+1, block->posX);
 }
 
-bool CurrentBlockController::rotateLeft(Map* map) {
+bool CurrentBlockController::rotateLeft() {
     Block*& cur = block->block;
     int8_t &posY = block->posY;
     int8_t &posX = block->posX;
 
-    if (not isValid(cur->getRotateLeft(), map)) {
+    if (not isValid(cur->getRotateLeft())) {
         posY++;
-        if (isValid(cur->getRotateLeft(), map)) goto rotate_success;
+        if (isValid(cur->getRotateLeft())) goto rotate_success;
         posY--;
         
         posY--;
-        if (posY >= 0 and isValid(cur->getRotateLeft(), map)) goto rotate_success;
+        if (posY >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
         posY++;
 
         posX++;
-        if (isValid(cur->getRotateLeft(), map)) goto rotate_success;
+        if (isValid(cur->getRotateLeft())) goto rotate_success;
         posX--;
 
         posX--;
-        if (posX >= 0 and isValid(cur->getRotateLeft(), map)) goto rotate_success;
+        if (posX >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
         posX++;        
 
         if (cur->getShapeID() == 0) {
             posY += 2;
-            if (isValid(cur->getRotateLeft() , map)) goto rotate_success;
-            if (isValid(cur->getRotateRight(), map)) goto rotate_success;
+            if (isValid(cur->getRotateLeft())) goto rotate_success;
+            if (isValid(cur->getRotateRight())) goto rotate_success;
             posY -= 2;
 
             posY -= 2;
-            if (posY >= 0 and isValid(cur->getRotateLeft() , map)) goto rotate_success;
-            if (posY >= 0 and isValid(cur->getRotateRight(), map)) goto rotate_success;
+            if (posY >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
+            if (posY >= 0 and isValid(cur->getRotateRight())) goto rotate_success;
             posY += 2;
             
             posX += 2;
-            if (isValid(cur->getRotateLeft() , map)) goto rotate_success;
-            if (isValid(cur->getRotateRight(), map)) goto rotate_success;
+            if (isValid(cur->getRotateLeft())) goto rotate_success;
+            if (isValid(cur->getRotateRight())) goto rotate_success;
             posX -= 2;
 
             posX -= 2;
-            if (posX >= 0 and isValid(cur->getRotateLeft() , map)) goto rotate_success;
-            if (posX >= 0 and isValid(cur->getRotateRight(), map)) goto rotate_success;
+            if (posX >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
+            if (posX >= 0 and isValid(cur->getRotateRight())) goto rotate_success;
             posX += 2;
         }
 
@@ -147,7 +147,7 @@ bool CurrentBlockController::rotateLeft(Map* map) {
 rotate_success:
     cur->rotateLeft();
 
-    updateShadow(map);
+    updateShadow();
 
     if (posY != 0 and not map->isValid(cur->getShape(), posY - 1, posX)) {
         spin = true;
@@ -160,7 +160,7 @@ rotate_success:
     return true;
 }
 
-bool CurrentBlockController::rotateRight(Map* map) {
+bool CurrentBlockController::rotateRight() {
 
     return true;
 }
@@ -170,15 +170,15 @@ void CurrentBlockController::swap(Hold* hold) {
     soundManager->play("hold");
 }
 
-void CurrentBlockController::draw(sf::RenderWindow *window, Map *map) {
+void CurrentBlockController::draw(sf::RenderWindow *window) {
     map->drawCurrentBlock(window, block);
 }
 
-bool CurrentBlockController::isValid(uint16_t shape, Map* map) {
+bool CurrentBlockController::isValid(uint16_t shape) {
     return map->isValid(shape, block->posY, block->posX);
 }
 
-uint8_t CurrentBlockController::putIntoMap(Map* map) {
+uint8_t CurrentBlockController::putIntoMap() {
     return block->putIntoMap(map);
 }
 
@@ -205,18 +205,10 @@ char CurrentBlockController::getTypeBlock() {
     return char();
 }
 
-bool CurrentBlockController::gameOver(Map* map) {
+bool CurrentBlockController::gameOver() {
     bool isGameOver = !block->isValid(map);
     if (isGameOver) {
         soundManager->play("topout");
     }
     return isGameOver;
-}
-
-void CurrentBlockController::compress(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
-}
-
-void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << spin << (uint8_t)getTypeBlock();
 }

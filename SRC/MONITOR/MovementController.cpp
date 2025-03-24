@@ -31,7 +31,7 @@ void MovementController::resetComponent() {
 }
 
 void MovementController::handleLeft(CurrentBlockController* curBlock, Map* map) {
-    if (curBlock->moveLeft(map) and curBlock->collisionBottom(map) and collision == false) {
+    if (curBlock->moveLeft() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
         clock.restart();
@@ -39,7 +39,7 @@ void MovementController::handleLeft(CurrentBlockController* curBlock, Map* map) 
 }
 
 void MovementController::handleRight(CurrentBlockController* curBlock, Map* map) {
-    if (curBlock->moveRight(map) and curBlock->collisionBottom(map) and collision == false) {
+    if (curBlock->moveRight() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
         clock.restart();
@@ -47,13 +47,13 @@ void MovementController::handleRight(CurrentBlockController* curBlock, Map* map)
 }
 
 void MovementController::handleDown(CurrentBlockController* curBlock, Map* map) {
-    if (curBlock->moveDown(map) and not curBlock->collisionBottom(map)) {
+    if (curBlock->moveDown() and not curBlock->collisionBottom()) {
         clock.restart();
     }
 }
 
 void MovementController::handleUp(CurrentBlockController* curBlock, Map* map) {
-    if (curBlock->rotateLeft(map) and curBlock->collisionBottom(map) and collision == false) {
+    if (curBlock->rotateLeft() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
         clock.restart();
@@ -61,7 +61,7 @@ void MovementController::handleUp(CurrentBlockController* curBlock, Map* map) {
 }
 
 void MovementController::handlePut(CurrentBlockController* curBlock, Monitor* monitor) {
-    int nLines = curBlock->putIntoMap(monitor->getMap());
+    int nLines = curBlock->putIntoMap();
     
     (monitor->getInfor())->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
     (monitor->getInfor())->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
@@ -69,12 +69,12 @@ void MovementController::handlePut(CurrentBlockController* curBlock, Monitor* mo
 
     collision = false;
     curBlock->setter((monitor->getNext())->updateNext());
-    curBlock->resetPosition(monitor->getMap());
+    curBlock->resetPosition();
     (monitor->getHold())->unlock();
 }
 
 void MovementController::handleHardDrop(CurrentBlockController* curBlock, Monitor* monitor) {
-    curBlock->hardDrop(monitor->getMap()); 
+    curBlock->hardDrop(); 
 
     handlePut(curBlock, monitor);
 
@@ -88,7 +88,7 @@ void MovementController::handleHold(CurrentBlockController* curBlock, Monitor* m
         if (curBlock->isEmpty()) {
             curBlock->setter((monitor->getNext())->updateNext());
         }
-        curBlock->resetPosition(monitor->getMap());
+        curBlock->resetPosition();
 
         clock.restart();
     }
@@ -169,12 +169,12 @@ void MovementController::autoDown(CurrentBlockController* curBlock, Monitor* mon
         movingClock.restart();
     }
 
-    if (not curBlock->collisionBottom(monitor->getMap())) {
+    if (not curBlock->collisionBottom()) {
         collision = false;
     }
 
     if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
-        if (not curBlock->fallDown(monitor->getMap())) {
+        if (not curBlock->fallDown()) {
             handlePut(curBlock, monitor);
         }
         

@@ -57,27 +57,7 @@ void PlayerWithNetwork::restart(uint32_t seed) {
 }
 
 void PlayerWithNetwork::handlePut() {
-    // sf::Packet packet; packet << PUT;
-    // curBlock->compressWithSpin(packet);
-    
-    // int nLines = curBlock->putIntoMap(map);
-    
-    // if (nLines == 0) {
-    //     std::random_device rd; int seed = rd();
-    //     packet << seed;
-    //     map->add(infor->getAndRemoveLineAdd(), seed);
-    // }
 
-    // if (socket.send(packet) != sf::Socket::Done)
-    //     throw std::runtime_error("Failed to send event!");
-
-    // infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    // infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    // infor->removeLine(nLines);
-
-    // resetComponent();
-    // if (curBlock->gameOver(map) && !isGameOver())
-    //     setGameOver();
 }
 
 void PlayerWithNetwork::handleHold() {

@@ -34,6 +34,7 @@ public:
     // void compressWithSpin(sf::Packet &packet);
 
     friend class CurrentBlockController;
+    friend class CurrentBlockControllerWithNetwork;
 };
 
 #endif

@@ -14,7 +14,7 @@
 
 Player::Player(int X_COORDINATE, int Y_COORDINATE): volume(50.0f), collision(false){
     monitor = new MonitorForOnePlayer(X_COORDINATE, Y_COORDINATE);
-    curBlock = new CurrentBlockController();
+    curBlock = new CurrentBlockController(monitor->getMap());
     soundManager = new SoundManager();
     movementController = new MovementController();
     soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
@@ -30,7 +30,7 @@ Player::~Player() {
 void Player::resetComponent() {
     movementController->resetComponent();
     curBlock->setter((monitor->getNext())->updateNext());
-    curBlock->resetPosition((monitor->getMap()));
+    curBlock->resetPosition();
     (monitor->getHold())->unlock();
 }
 
@@ -56,7 +56,7 @@ void Player::restart() {
 void Player::processEvents(const sf::Event &event) {
     if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
         movementController->processEvents(event, curBlock, monitor);
-        if(curBlock->gameOver(monitor->getMap()))
+        if(curBlock->gameOver())
             monitor->setGameOver();
     }
     else if (event.type == sf::Event::MouseWheelScrolled) {
