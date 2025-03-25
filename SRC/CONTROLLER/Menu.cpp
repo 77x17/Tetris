@@ -36,8 +36,9 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
     soundManager = new SoundManager();
     soundManager->loadSound("move"    , "ASSETS/sfx/menutap.mp3");
     soundManager->loadSound("selected", "ASSETS/sfx/menu_hit.mp3");
+    soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
 
-    menuSize  = menuItems.size();
+    menuSize  = menuItems.size();   
     menuTexts = new sf::Text[menuSize];
     subMenus.clear();
 
@@ -705,11 +706,9 @@ STATUS_CODE Menu::getSelectedItem() {
 
 void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
     if (event.type == sf::Event::Closed) {
-        if (optionSelected) {
+        if (optionSelected or audioSelected) {
             if (event.type == sf::Event::Closed) {
-                optionSelected = false;
-                
-                if (optionSelected == false) {
+                if (optionSelected == true) {
                     std::string reWrite = menuTexts[optionSelectedIndex].getString();
                     for (int i = 0; i < 10; i++) {
                         reWrite[i + 27] = optionKeyStrings[0][i];
@@ -717,6 +716,9 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                     }
                     menuTexts[optionSelectedIndex].setString(reWrite);
                 }
+                
+                optionSelected = false;
+                audioSelected = false;
 
                 soundManager->play("selected");
             }
@@ -831,6 +833,56 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
             }
         }
     } 
+    else if (audioSelected) {
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
+                if (selectedItem == menuSize - 4) {
+                    soundManager->increaseVolume();
+                }
+                else {
+                    soundManager->increaseMusicVolume();
+                }
+    
+                soundManager->play("scroll");
+            } 
+            else if (event.key.code == sf::Keyboard::Down or event.key.code == sf::Keyboard::S) {
+                if (selectedItem == menuSize - 4) {
+                    soundManager->decreaseVolume();
+                }
+                else {
+                    soundManager->decreaseMusicVolume();
+                }
+    
+                soundManager->play("scroll");
+            } 
+            else if (event.key.code == sf::Keyboard::Space or event.key.code == sf::Keyboard::Enter or event.key.code == sf::Keyboard::Escape) {
+                audioSelected = false;
+
+                soundManager->play("selected");
+            }
+        }
+        else if (event.type == sf::Event::MouseWheelScrolled) {
+            if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+                if (event.mouseWheelScroll.delta > 0) {  // Scroll up
+                    if (selectedItem == menuSize - 4) {
+                        soundManager->increaseVolume();
+                    }
+                    else {
+                        soundManager->increaseMusicVolume();
+                    }
+                } else {  // Scroll down
+                    if (selectedItem == menuSize - 4) {
+                        soundManager->decreaseVolume();
+                    }
+                    else {
+                        soundManager->decreaseMusicVolume();
+                    }
+                }
+                
+                soundManager->play("scroll");
+            }
+        }
+    }
     else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::W) {
             selectedItem = (selectedItem - 1 + menuSize) % menuSize;
@@ -887,6 +939,31 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
             }
         }
     }
+    else if (menuCode == MENU_CODE::OPTION) {
+        if (selectedItem == menuSize - 4 or selectedItem == menuSize - 3) {
+            if (event.type == sf::Event::MouseWheelScrolled) {
+                if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+                    if (event.mouseWheelScroll.delta > 0) {  // Scroll up
+                        if (selectedItem == menuSize - 4) {
+                            soundManager->increaseVolume();
+                        }
+                        else {
+                            soundManager->increaseMusicVolume();
+                        }
+                    } else {  // Scroll down
+                        if (selectedItem == menuSize - 4) {
+                            soundManager->decreaseVolume();
+                        }
+                        else {
+                            soundManager->decreaseMusicVolume();
+                        }
+                    }
+                    
+                    soundManager->play("scroll");
+                }
+            }
+        }
+    }
 }
 
 void Menu::update(sf::RenderWindow *window) {
@@ -915,6 +992,9 @@ void Menu::update(sf::RenderWindow *window) {
                 optionKeyTexts[1].setString("  input...  ");
             }
         }
+    }
+    else if (audioSelected) {
+        // disable mouse selected
     }
     else {                      // Normal
         if (not selected and mouseSelect) {
@@ -980,6 +1060,7 @@ void Menu::update(sf::RenderWindow *window) {
         }
         case MENU_CODE::OPTION: {
             if (selected and selectedItem != menuSize - 1) {
+                // Control
                 if (1 <= selectedItem and selectedItem <= menuSize - 5) {
                     optionSelected = true;
                     optionSelectedIndex = selectedItem;
@@ -1006,10 +1087,9 @@ void Menu::update(sf::RenderWindow *window) {
                         menuTexts[optionSelectedIndex].getPosition().y
                     ));
                 }
-
-                if (menuSize - 4 <= selected and selected <= menuSize - 3) {
+                // Audio
+                if (menuSize - 4 <= selectedItem and selectedItem <= menuSize - 3) {
                     audioSelected = true;
-
                 }
 
                 selected = false;
@@ -1057,12 +1137,17 @@ void Menu::update(sf::RenderWindow *window) {
                     gradient[i][3].position = sf::Vector2f(barPos.x, barPos.y + barSize.y);
                 }
             }
-
+            // Controls
             if (1 <= selectedItem and selectedItem <= menuSize - 5) {
                 menuTexts[0].setFillColor(SELECTED_COLOR);
             }
+            // Audio
             else if (menuSize - 4 <= selectedItem and selectedItem <= menuSize - 3) {
                 menuTexts[menuSize - 2].setFillColor(SELECTED_COLOR);
+
+                if (audioSelected) {
+                    menuTexts[selectedItem].setFillColor(sf::Color::Red);
+                }
             }
 
             break;
@@ -1144,15 +1229,7 @@ void Menu::draw(sf::RenderWindow *window) {
                 menuTexts[menuSize - 4].getPosition().y
             );
             window->draw(menuTexts[menuSize - 4]);
-
-            // Music
-            window->draw(gradient[menuSize - 3]);
-            menuTexts[menuSize - 3].setPosition(
-                menuTexts[menuSize - 3].getPosition().x + BAR_PADDING / 2,
-                menuTexts[menuSize - 3].getPosition().y
-            );
-            window->draw(menuTexts[menuSize - 3]);
-
+            
             float sfxMaxHeight = menuBars[menuSize - 4].getSize().y - menuTexts[menuSize - 4].getGlobalBounds().height;
             float sfxHeight    = sfxMaxHeight * soundManager->getVolume() / 100;
             sf::RectangleShape sfxBar(sf::Vector2f(
@@ -1164,16 +1241,24 @@ void Menu::draw(sf::RenderWindow *window) {
                 menuBars[menuSize - 4].getPosition().y - BAR_PADDING + sfxMaxHeight - sfxHeight
             );
             window->draw(sfxBar);
+
+            // Music
+            window->draw(gradient[menuSize - 3]);
+            menuTexts[menuSize - 3].setPosition(
+                menuTexts[menuSize - 3].getPosition().x + BAR_PADDING / 2,
+                menuTexts[menuSize - 3].getPosition().y
+            );
+            window->draw(menuTexts[menuSize - 3]);
             
             float musicMaxHeight = menuBars[menuSize - 3].getSize().y - menuTexts[menuSize - 3].getGlobalBounds().height;
-            float musicHeight    = musicMaxHeight;
+            float musicHeight    = musicMaxHeight * soundManager->getMusicVolume() / 100;
             sf::RectangleShape musicBar(sf::Vector2f(
                 BAR_PADDING * 1.5, 
                 musicHeight
             ));
             musicBar.setPosition(
                 menuBars[menuSize - 3].getPosition().x + menuBars[menuSize - 3].getSize().x / 2 - musicBar.getSize().x / 2,
-                menuBars[menuSize - 3].getPosition().y - BAR_PADDING
+                menuBars[menuSize - 3].getPosition().y - BAR_PADDING + musicMaxHeight - musicHeight
             );
             window->draw(musicBar);
 

@@ -20,6 +20,7 @@ const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 600;
 
 float SoundManager::volume = 50.0f;
+float SoundManager::musicVolume = 50.0f;
 
 Tetris::Tetris() {
     // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
