@@ -94,11 +94,14 @@ KeyConfiguration::KeyConfiguration(std::string filename) {
         int keyValue;
 
         input >> keyValue;
-        keyBindings[static_cast<sf::Keyboard::Key>(keyValue)] = static_cast<EVENT>(i);
-        
+        if (keyValue != -1) {
+            keyBindings[static_cast<sf::Keyboard::Key>(keyValue)] = static_cast<EVENT>(i);
+        }
         input >> keyValue;
-        keyBindings[static_cast<sf::Keyboard::Key>(keyValue)] = static_cast<EVENT>(i);
-    }
+        if (keyValue != -1) {
+            keyBindings[static_cast<sf::Keyboard::Key>(keyValue)] = static_cast<EVENT>(i);
+        }
+    }   
 
     input.close();
 }
@@ -117,7 +120,7 @@ std::pair<std::string, std::string> KeyConfiguration::getKey(EVENT event) const 
 
     for (const auto &iterator : keyBindings) {
         if (iterator.second == event) {
-            if (result.first == "") {    
+            if (result.first == "") {
                 result.first = keyNames[iterator.first];
             }
             else {
@@ -163,16 +166,15 @@ void KeyConfiguration::saveKey(std::string filename) {
 
     for (int i = 0; i <= 7; i++) {
         int count = 0;
-        int copy = -1;
         for (const auto &iterator : keyBindings) {
             if (iterator.second == static_cast<EVENT>(i)) {
                 count++;
                 output << iterator.first << '\n';
-                copy = iterator.first;
             }
         }
-        if (count == 1) {
-            output << copy << '\n';
+        while (count != 2) {
+            output << -1 << '\n';
+            ++count;
         }
     }
 

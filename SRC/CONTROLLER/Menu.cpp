@@ -741,15 +741,17 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
             sf::Keyboard::Key optionNewKey = event.key.code;
 
             if (optionNewKey == sf::Keyboard::Escape) {
-                // back
+                std::string reWrite = menuTexts[optionSelectedIndex].getString();
+                for (int i = 0; i < 10; i++) {
+                    reWrite[i + 27] = optionKeyStrings[0][i];
+                    reWrite[i + 40] = optionKeyStrings[1][i];
+                }
+                menuTexts[optionSelectedIndex].setString(reWrite);
             }
             else {
                 keyConfiguration->removeKey(optionKeyStrings[optionSelectedItem]);
 
-                if (optionNewKey == sf::Keyboard::Backspace) {
-                    // clear keyblindings
-                }
-                else {
+                if (optionNewKey != sf::Keyboard::Backspace) {
                     optionKeyStrings[optionSelectedItem] = keyConfiguration->getKeyName(optionNewKey);
                     while (optionKeyStrings[optionSelectedItem].size() != 10) {
                         optionKeyStrings[optionSelectedItem] += ' ';
@@ -779,7 +781,23 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
             optionWaitForReleaseKey = true;
         }
         else if (optionWaitForKey) {
-            // Do nothing
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    // Lấy vị trí con trỏ trong cửa sổ
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
+                    if (not optionKeyTexts[optionSelectedItem].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                        optionSelected = false;
+                        optionWaitForKey = false;
+    
+                        std::string reWrite = menuTexts[optionSelectedIndex].getString();
+                        for (int i = 0; i < 10; i++) {
+                            reWrite[i + 27] = optionKeyStrings[0][i];
+                            reWrite[i + 40] = optionKeyStrings[1][i];
+                        }
+                        menuTexts[optionSelectedIndex].setString(reWrite);
+                    }
+                }
+            }
         }
         else if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Escape) {
@@ -791,6 +809,26 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                     reWrite[i + 40] = optionKeyStrings[1][i];
                 }
                 menuTexts[optionSelectedIndex].setString(reWrite);
+
+                soundManager->play("selected");
+            }
+            else if (event.key.code == sf::Keyboard::Backspace) {
+                keyConfiguration->removeKey(optionKeyStrings[optionSelectedItem]);
+
+                optionSelected = false;
+                
+                keyConfiguration->saveKey("ASSETS/keybindings.txt");
+
+                for (int i = 1; i < menuSize - 4; i++) {
+                    std::pair<std::string, std::string> keys = keyConfiguration->getKey(static_cast<EVENT>(i - 1));
+                    
+                    while (keys.first .size() != 10) keys.first  += ' ';
+                    while (keys.second.size() != 10) keys.second += ' ';
+
+                    std::string newText = menuTexts[i].getString().substring(0, 24) + " [ " + keys.first + " | " + keys.second + " ]";
+                    
+                    menuTexts[i].setString(newText);
+                }
 
                 soundManager->play("selected");
             }
@@ -818,6 +856,7 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
         else if (event.type == sf::Event::MouseButtonPressed) {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 // Lấy vị trí con trỏ trong cửa sổ
+                bool quitEdit = true;
                 sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
                 for (int i = 0; i <= 1; i++) {
                     if (optionKeyTexts[i].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
@@ -826,9 +865,21 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                         optionWaitForKey = true;
 
                         soundManager->play("selected");
-    
+
+                        quitEdit = false;
+
                         break;
                     }
+                }
+                if (quitEdit) {
+                    optionSelected = false;
+
+                    std::string reWrite = menuTexts[optionSelectedIndex].getString();
+                    for (int i = 0; i < 10; i++) {
+                        reWrite[i + 27] = optionKeyStrings[0][i];
+                        reWrite[i + 40] = optionKeyStrings[1][i];
+                    }
+                    menuTexts[optionSelectedIndex].setString(reWrite);
                 }
             }
         }
@@ -880,6 +931,17 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                 }
                 
                 soundManager->play("scroll");
+            }
+        }
+        else if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                // Lấy vị trí con trỏ trong cửa sổ
+                sf::Vector2i mousePos = sf::Mouse::getPosition(*window); 
+                if (not menuBars[selectedItem].getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                    audioSelected = false;
+
+                    soundManager->play("selected");
+                }
             }
         }
     }
@@ -1216,6 +1278,13 @@ void Menu::draw(sf::RenderWindow *window) {
             if (optionSelected) {
                 window->draw(optionKeyTexts[0]);
                 window->draw(optionKeyTexts[1]);
+
+                sf::Text help("Exit [Esc], Delete [Backspace]", font, 20);
+                help.setPosition(
+                    menuBars[0].getPosition().x + menuBars[0].getGlobalBounds().width  - help.getGlobalBounds().width - BAR_PADDING,
+                    menuBars[0].getPosition().y + menuBars[0].getGlobalBounds().height - help.getGlobalBounds().height * 1.5
+                );
+                window->draw(help);
             }
 
             // Audio
