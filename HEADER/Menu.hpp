@@ -51,6 +51,7 @@ private:
     SoundManager       *soundManager;
 
     bool                optionSelected;
+    bool                audioSelected;
     int                 optionSelectedIndex;
     int                 optionSelectedItem;
     std::string         optionKeyStrings[2];

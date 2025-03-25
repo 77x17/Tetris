@@ -21,6 +21,7 @@ constexpr float SELECTED_TIME_OUT = 0.3f;       // Tắt mà bị delay thì Ctr
 
 Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, MENU_CODE menuCode) : 
     optionSelected(false),
+    audioSelected(false),
     optionWaitForKey(false),
     selected(false), 
     selectedItem(0), 
@@ -755,10 +756,6 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                 }
 
                 keyConfiguration->saveKey("ASSETS/keybindings.txt");
-            
-                optionSelected = false;            
-
-                optionWaitForKey = false;
 
                 for (int i = 1; i < menuSize - 4; i++) {
                     std::pair<std::string, std::string> keys = keyConfiguration->getKey(static_cast<EVENT>(i - 1));
@@ -771,6 +768,10 @@ void Menu::processEvents(sf::RenderWindow *window, sf::Event event) {
                     menuTexts[i].setString(newText);
                 }
             }
+
+            optionSelected = false;            
+
+            optionWaitForKey = false;
         }
         else if (event.type == sf::Event::KeyReleased) {
             optionWaitForReleaseKey = true;
@@ -979,7 +980,7 @@ void Menu::update(sf::RenderWindow *window) {
         }
         case MENU_CODE::OPTION: {
             if (selected and selectedItem != menuSize - 1) {
-                if (1 <= selectedItem and selectedItem <= menuSize - 4) {
+                if (1 <= selectedItem and selectedItem <= menuSize - 5) {
                     optionSelected = true;
                     optionSelectedIndex = selectedItem;
                     optionSelectedItem = 0;
@@ -1004,6 +1005,11 @@ void Menu::update(sf::RenderWindow *window) {
                         targetBarPositionX[optionSelectedIndex] + temporary.getGlobalBounds().width * 39,
                         menuTexts[optionSelectedIndex].getPosition().y
                     ));
+                }
+
+                if (menuSize - 4 <= selected and selected <= menuSize - 3) {
+                    audioSelected = true;
+
                 }
 
                 selected = false;
@@ -1052,8 +1058,11 @@ void Menu::update(sf::RenderWindow *window) {
                 }
             }
 
-            if (1 <= selectedItem and selectedItem < menuSize - 4) {
+            if (1 <= selectedItem and selectedItem <= menuSize - 5) {
                 menuTexts[0].setFillColor(SELECTED_COLOR);
+            }
+            else if (menuSize - 4 <= selectedItem and selectedItem <= menuSize - 3) {
+                menuTexts[menuSize - 2].setFillColor(SELECTED_COLOR);
             }
 
             break;
@@ -1130,11 +1139,44 @@ void Menu::draw(sf::RenderWindow *window) {
 
             // SFX
             window->draw(gradient[menuSize - 4]);
+            menuTexts[menuSize - 4].setPosition(
+                menuTexts[menuSize - 4].getPosition().x + BAR_PADDING,
+                menuTexts[menuSize - 4].getPosition().y
+            );
             window->draw(menuTexts[menuSize - 4]);
 
             // Music
             window->draw(gradient[menuSize - 3]);
+            menuTexts[menuSize - 3].setPosition(
+                menuTexts[menuSize - 3].getPosition().x + BAR_PADDING / 2,
+                menuTexts[menuSize - 3].getPosition().y
+            );
             window->draw(menuTexts[menuSize - 3]);
+
+            float sfxMaxHeight = menuBars[menuSize - 4].getSize().y - menuTexts[menuSize - 4].getGlobalBounds().height;
+            float sfxHeight    = sfxMaxHeight * soundManager->getVolume() / 100;
+            sf::RectangleShape sfxBar(sf::Vector2f(
+                BAR_PADDING * 1.5, 
+                sfxHeight
+            ));
+            sfxBar.setPosition(
+                menuBars[menuSize - 4].getPosition().x + menuBars[menuSize - 4].getSize().x / 2 - sfxBar.getSize().x / 2,
+                menuBars[menuSize - 4].getPosition().y - BAR_PADDING + sfxMaxHeight - sfxHeight
+            );
+            window->draw(sfxBar);
+            
+            float musicMaxHeight = menuBars[menuSize - 3].getSize().y - menuTexts[menuSize - 3].getGlobalBounds().height;
+            float musicHeight    = musicMaxHeight;
+            sf::RectangleShape musicBar(sf::Vector2f(
+                BAR_PADDING * 1.5, 
+                musicHeight
+            ));
+            musicBar.setPosition(
+                menuBars[menuSize - 3].getPosition().x + menuBars[menuSize - 3].getSize().x / 2 - musicBar.getSize().x / 2,
+                menuBars[menuSize - 3].getPosition().y - BAR_PADDING
+            );
+            window->draw(musicBar);
+
 
             // Back
             window->draw(gradient[menuSize - 1]);
