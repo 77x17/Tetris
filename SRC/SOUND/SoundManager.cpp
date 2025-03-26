@@ -27,10 +27,39 @@ void SoundManager::play(const std::string& name) {
     }
 }
 
+void SoundManager::pause(const std::string& name) {
+    if (sounds.find(name) != sounds.end()) {
+        if (sounds[name].getStatus() == sf::Music::Status::Playing) {
+            sounds[name].pause();
+        }
+    }
+}
+
+void SoundManager::unPause(const std::string& name) {
+    if (sounds.find(name) != sounds.end()) {
+        if (sounds[name].getStatus() == sf::Music::Status::Paused) {
+            sounds[name].play();
+        }
+    }
+}
+
+
 void SoundManager::playMusic(const std::string& name) {
     musicSounds[name].setLoop(true);
     musicSounds[name].setVolume(musicVolume);
     musicSounds[name].play();
+}
+
+void SoundManager::pauseMusic(const std::string& name) {
+    if (musicSounds[name].getStatus() == sf::Music::Status::Playing) {
+        musicSounds[name].pause();
+    }
+}
+
+void SoundManager::unPauseMusic(const std::string& name) {
+    if (musicSounds[name].getStatus() == sf::Music::Status::Paused) {
+        musicSounds[name].play();
+    }
 }
 
 void SoundManager::stopMusic(const std::string& name) {

@@ -22,13 +22,17 @@ public:
     
     static void loadMusicSound(const std::string &name, const std::string &filePath);
     void play(const std::string &name);
+    void pause(const std::string &name);
+    void unPause(const std::string &name);
 
-    static void playMusic(const std::string &name);
-    static void stopMusic(const std::string &name);
+    static void  playMusic(const std::string &name);
+    static void  pauseMusic(const std::string &name);
+    static void  unPauseMusic(const std::string &name);
+    static void  stopMusic(const std::string &name);
     static float getVolume();
     static float getMusicVolume();
     static void  setVolume(const float &volume);
-    static void setMusicVolume();
+    static void  setMusicVolume();
     static void  increaseVolume();
     static void  decreaseVolume();
     static void  increaseMusicVolume();

@@ -24,6 +24,8 @@ private:
     std::atomic<bool> isFinish;
     void makeConnection(bool isHost, Competitor* &competitor, PlayerWithNetwork* &player);
 
+    bool notFocus(sf::RenderWindow *window);
+    
 public:
     Tetris();
     ~Tetris();

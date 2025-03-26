@@ -13,7 +13,7 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Graphics.hpp>
 #include <thread>
-
+#include <windows.h>
 #include <iostream>
 
 const int WINDOW_WIDTH  = 1100;
@@ -38,6 +38,23 @@ Tetris::Tetris() {
 Tetris::~Tetris() {
     delete window;
     delete scene;
+}
+
+bool Tetris::notFocus(sf::RenderWindow *window) {
+    if (not window->hasFocus()) {
+        ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
+
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            // nothing
+        }
+
+        sf::sleep(sf::milliseconds(100));
+
+        return true;
+    }
+
+    return false;
 }
 
 void Tetris::start() {
@@ -142,6 +159,8 @@ restartGameOnePlayer:
     }
 
     while (not player->isGameOver()) {
+        if (notFocus(window)) { continue; }
+
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -254,6 +273,8 @@ restartGameVersusBot:
     }
 
     while (not player->isGameOver()) {
+        if (notFocus(window)) { continue; }
+
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
