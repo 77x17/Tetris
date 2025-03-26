@@ -4,8 +4,13 @@
 #include "Block.hpp"
 #include "Monitor.hpp"
 
-Hold::Hold(int x, int y, int w, int h) : HOLD_POSITION_X(x), HOLD_POSITION_Y(y), HOLD_WIDTH(w), HOLD_HEIGHT(h), block(nullptr), holdPosible(true) {
+Hold::Hold() : block(nullptr), holdPosible(true) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
+}
+
+void Hold::setPosition(int x, int y, int w, int h) {
+    HOLD_POSITION_X = x; HOLD_POSITION_Y = y;
+    HOLD_WIDTH = w;      HOLD_HEIGHT = h;
 }
 
 Hold::~Hold() { 

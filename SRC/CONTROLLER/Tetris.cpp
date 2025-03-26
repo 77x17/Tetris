@@ -107,6 +107,7 @@ STATUS_CODE Tetris::startGameOnePlayer() {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
+
 restartGameOnePlayer:
     int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
     int Y_COORDINATE = 10;
@@ -221,10 +222,8 @@ restartGameVersusBot:
     Player *player = new Player(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);
     Bot *bot = new Bot(BOT_X_COORDINATE, BOT_Y_COORDINATE);
     
-    std::random_device rd;
-    int seed = rd();
-    player->start(seed);
-    bot   ->start(seed);
+    player->start();
+    bot   ->start();
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
 
@@ -294,21 +293,22 @@ restartGameVersusBot:
             bot   ->processEvents(event);
         }
 
+        player->autoDown();
+        bot   ->autoDown();
+
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
         bot   ->draw(window);
         window->display();
 
-        player->autoDown();
-        bot   ->autoDown();
-
         if (player->isGameOver()) {
-            window->clear();
-            window->draw(backgroundSprite); // Draw background
-            player->draw(window);
-            bot   ->draw(window);
-            window->display();
+            // Don't ya need it ?
+            // window->clear();
+            // window->draw(backgroundSprite); // Draw background
+            // player->draw(window);
+            // bot   ->draw(window);
+            // window->display();
 
             screenStatus = scene->drawGameOver(window);
         }
@@ -376,8 +376,9 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
-    competitor->start(player);
 
+    competitor->start(player);
+    
     while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -386,15 +387,12 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             }
             player->processEvents(event);
         }
-
         if (competitor->isGameOver()) {
             player->setGameOver();
         }
-
         if (!player->isGameOver()) {
             player->sendCurBlock();
             player->autoDown();
-            
             window->clear();
             window->draw(backgroundSprite); // Draw background
             player->draw(window);

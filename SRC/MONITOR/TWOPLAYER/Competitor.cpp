@@ -2,12 +2,14 @@
 
 #include "Player.hpp"
 
+#include "MonitorForTwoPlayer.hpp"
 #include "LinkListBlock.hpp"
 #include "Map.hpp"
 #include "Hold.hpp"
-#include "Block.hpp"
+#include "CurrentBlock.hpp"
 #include "Infor.hpp"
 #include "SoundManager.hpp"
+#include "MessageCode.hpp"
 #include "PlayerWithNetwork.hpp"
 
 #include <SFML/Network.hpp>
@@ -15,61 +17,51 @@
 #include <iostream>
 #include <thread>
 
-// Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE):Monitor(X_COORDINATE, Y_COORDINATE) {
-//     curBlock->setter(next->updateNext());
-//     curBlock->resetPosition(map);
-// }
-
-Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed) : Monitor(X_COORDINATE, Y_COORDINATE) {
+Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed) {
     listenner.accept(socket);
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
-
-    next->setSeed(seed);
-    socket.send(&seed, sizeof(seed));
-    curBlock = nullptr;
-
+    monitor = new MonitorForTwoPlayer(X_COORDINATE, Y_COORDINATE);
+    curBlock = new CurrentBlock();
     soundManager = new SoundManager();
     soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
-
     mtx.unlock();
+    monitor->setNewSeed(seed);
+    socket.send(&seed, sizeof(seed));
 }
 
-Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port) : Monitor(X_COORDINATE, Y_COORDINATE) {
+Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port){
     socket.connect(ipv4, port);
-    
     uint32_t seed = 0; std::size_t tmp=0;
     if (socket.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
         throw std::runtime_error("Failed to receive seed!");
     }
-
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
     
-    next->setSeed(seed);
-    curBlock = nullptr;
-
+    monitor = new MonitorForTwoPlayer(X_COORDINATE, Y_COORDINATE);
+    curBlock = new CurrentBlock();
     soundManager = new SoundManager();
-    soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
 
+    monitor->setNewSeed(seed);
+    soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
     mtx.unlock();
 }
 
 Competitor::~Competitor() {
     delete curBlock; curBlock = nullptr;
-
+    delete monitor;
     delete soundManager;
 }
 
 void Competitor::draw(sf::RenderWindow* window) {
-    Monitor::draw(window);
     mtx.lock();
-    map->drawCurrentBlock(window, curBlock, posY, posYShadow, posX);
+    monitor->draw(window, curBlock);
     mtx.unlock();
 }
 
 void Competitor::start(PlayerWithNetwork* &player) { // Player
-    curBlock = next->updateNext();
+    curBlock->freeAndSetter((monitor->getNext())->updateNext());
     std::thread th([this](PlayerWithNetwork* &player){
-        while (!isGameOver()) {
+        while (!monitor->isGameOver()) {
             sf::Packet packet;
             if (socket.receive(packet) != sf::Socket::Done)
                 throw std::runtime_error("Failed to receive event! FROM competitor handler process");
@@ -79,52 +71,50 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
             switch (messageCodeInt) {
                 case CURBLOCK: {
-                    uint8_t state; uint8_t y, x, yShadow;
-                    packet >> state >> y >> x >> yShadow;
+                    uint8_t state; uint8_t y, x, shadowPosY;
+                    packet >> state >> y >> x >> shadowPosY;
                     mtx.lock();
-                    curBlock->setStateID(state);
-                    posX = x; posY = y; posYShadow = yShadow;
+                    curBlock->setState(state, x, y, shadowPosY);
                     mtx.unlock();
                 }
                 break;
 
                 case PUT: {
-                    uint8_t state, y, x, shadowPosY, spin, typeBlock;
-                    packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
-                    int nLinesRemove = map->update(curBlock, y, x);
+                    uint8_t state, y, x, shadowPosY, spin;
+                    packet >> state >> y >> x >> shadowPosY >> spin;
+                    curBlock->setState(state, x, y, shadowPosY);
+                    int nLinesRemove = curBlock->putIntoMap(monitor->getMap());
 
                     if (nLinesRemove == 0) {
                         int seed; packet >> seed;
-                        map->add(infor->getAndRemoveLineAdd(), seed);
+                        dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
                     }
 
-                    infor->update(nLinesRemove, spin, (char)typeBlock);
-                    infor->playSound(nLinesRemove, spin, (char)typeBlock);
-                    nLinesRemove = infor->removeLine(nLinesRemove);
+                    nLinesRemove = monitor->addLineToInfor(nLinesRemove, curBlock);
 
                     if (nLinesRemove > 0) {
                         player->handleAddLine(nLinesRemove);
                     }
-
-                    delete curBlock; curBlock = next->updateNext();
-                    hold->unlock();
+                    curBlock->setter((monitor->getNext())->updateNext());
+                    monitor->unlockHold();
                 }
                 break;
 
                 case RECVLINE: {
                     uint8_t nLines;
                     packet >> nLines;
-                    infor->addLine(nLines);
+                    dynamic_cast<MonitorForTwoPlayer*>(monitor)->inforReceiveLineFromCompetitor(nLines);
                 }
                 break;
 
                 case HOLD: {
                     mtx.lock();
-                    if (hold->canHold()) {
-                        curBlock = hold->interchange(curBlock);
+                    if (monitor->canHold()) {
+                        monitor->exchangeCurrentBlock(curBlock);
                     }
-                    hold->lock();
-                    if (curBlock == nullptr) curBlock = next->updateNext();
+                    monitor->lockHold();
+                    if (curBlock->isEmpty())
+                        curBlock->setter((monitor->getNext())->updateNext());
                     mtx.unlock();
                 }
                 break;
@@ -137,7 +127,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     sf::Packet packet; packet << GAMEOVER;
                     if (socket.send(packet) != sf::Socket::Done)
                         throw std::runtime_error("Failed to send event!");
-                    setGameOver();
+                    monitor->setGameOver();
                 }
                 break;
                 default: {
@@ -151,6 +141,10 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
     th.detach();
 }
 
+bool Competitor::isGameOver() {
+    return monitor->isGameOver();
+}
+
 void Competitor::ready(int &seed) {
     int code = -1;
     sf::Packet packet;
@@ -160,5 +154,5 @@ void Competitor::ready(int &seed) {
     if (code != RESTART) 
         throw std::runtime_error("Error: RESTART MESSAGE WRONG! code: " + std::to_string(code));
     packet >> seed;
-    resetMonitor(seed);
+    monitor->resetMonitor(seed);
 }

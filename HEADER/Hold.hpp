@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-class Block; 
+class Block;
 
 class Hold {
 private:
@@ -16,9 +16,12 @@ private:
     bool     holdPosible;
     sf::Font font;
 
+    
 public:
-    Hold(int HOLD_POSITION_X, int HOLD_POSITION_Y, int HOLD_WIDTH, int HOLD_HEIGHT);
+
+    Hold();
     ~Hold();
+    void setPosition(int HOLD_POSITION_X, int HOLD_POSITION_Y, int HOLD_WIDTH, int HOLD_HEIGHT);
 
     void reset();
     
@@ -28,6 +31,7 @@ public:
     void unlock();
     void drawOutline(sf::RenderWindow *window);
     void draw(sf::RenderWindow *window);
+
 };
 
 #endif

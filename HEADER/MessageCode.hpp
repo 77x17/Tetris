@@ -1,0 +1,6 @@
+#ifndef MESSAGECODE_HPP
+#define MESSAGECODE_HPP
+
+enum MessageCode {CURBLOCK, PUT, HOLD, SPIN, RECVLINE,  GAMEOVER, RESTART};
+
+#endif

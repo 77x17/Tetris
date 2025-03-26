@@ -1,58 +1,53 @@
 #ifndef CURRENTBLOCK_HPP
+
 #define CURRENTBLOCK_HPP
 
 #include <cstdint>
 #include <SFML/Graphics.hpp>
-#include <SFML/Network.hpp>
 
-class Block;
 class Map;
+class Block;
 class Hold;
-class SoundManager;
 
 class CurrentBlock {
-private:
+protected:
     Block *block;
     int8_t posX, posY;
     int8_t shadowPosY;
-    
-    SoundManager *soundManager;
-    
-    void shadowHardDrop(Map *map);
+
+    bool spin; // check piece spin
+
+    void updateShadow(Map*);
+
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
     ~CurrentBlock();
 
-    bool spin; // check piece spin 
-
+    bool isJustSpin();
+    void setSpin();
+    void resetSpin();
+    
     bool isEmpty();
-    void setter(Block* p);
+    
+    Block* setter(Block* p);
+    void setState(int stateID, int posX, int posY, int sh);
+
     void freeAndSetter(Block* p);
-    bool resetPosition(Map *map);
-
-    bool moveDown(Map *map);
-    bool fallDown(Map *map);
-    bool moveLeft(Map *map);
-    bool moveRight(Map *map);
-    bool hardDrop(Map *map);
-
-    bool collisionBottom(Map *map);
-
-    bool rotateLeft(Map* map);
-    bool rotateRight(Map* map);
 
     void swap(Hold* hold);
-
-    uint8_t put(Map* map);
-    void draw(sf::RenderWindow *window, Map *map);
-    bool isValid(uint16_t shape, Map* map);
+    bool isValid(Map* map) const;
+    uint8_t putIntoMap(Map* map);
+    void draw(sf::RenderWindow* window, int GRID_POSITION_Y, int GRID_POSITION_X);
+    
     char getTypeBlock();
 
-    bool gameOver(Map* map);
+    void resetPosition(Map*);
 
-    void compress(sf::Packet &packet);
-    void compressWithSpin(sf::Packet &packet);
+    // void compress(sf::Packet &packet);
+    // void compressWithSpin(sf::Packet &packet);
+
+    friend class CurrentBlockController;
 };
 
 #endif

@@ -22,10 +22,13 @@ private:
 
     std::mt19937 gen;
     void addBag();
-    
+
 public:
-    LinkListBlock(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
+    LinkListBlock();
     ~LinkListBlock();
+    
+    void setPosition(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
+    
     void setSeed(int seed);
     void reset(uint32_t seed);
 
