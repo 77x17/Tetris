@@ -1294,12 +1294,13 @@ void Menu::draw(sf::RenderWindow *window) {
             // SFX
             window->draw(gradient[menuSize - 4]);
             menuTexts[menuSize - 4].setPosition(
-                menuTexts[menuSize - 4].getPosition().x + BAR_PADDING,
+                // menuTexts[menuSize - 4].getPosition().x,
+                menuBars[menuSize - 4].getPosition().x + menuBars[menuSize - 4].getSize().x / 2 - menuTexts[menuSize - 4].getLocalBounds().width / 2 - 1.5,
                 menuTexts[menuSize - 4].getPosition().y
             );
             window->draw(menuTexts[menuSize - 4]);
             
-            float sfxMaxHeight = menuBars[menuSize - 4].getSize().y - menuTexts[menuSize - 4].getGlobalBounds().height;
+            float sfxMaxHeight = (menuTexts[menuSize - 4].getPosition().y - menuBars[menuSize - 4].getPosition().y) - menuTexts[menuSize - 4].getGlobalBounds().height + BAR_PADDING;
             float sfxHeight    = sfxMaxHeight * soundManager->getVolume() / 100;
             sf::RectangleShape sfxBar(sf::Vector2f(
                 BAR_PADDING * 1.5, 
@@ -1307,19 +1308,20 @@ void Menu::draw(sf::RenderWindow *window) {
             ));
             sfxBar.setPosition(
                 menuBars[menuSize - 4].getPosition().x + menuBars[menuSize - 4].getSize().x / 2 - sfxBar.getSize().x / 2,
-                menuBars[menuSize - 4].getPosition().y - BAR_PADDING + sfxMaxHeight - sfxHeight
+                menuBars[menuSize - 4].getPosition().y + sfxMaxHeight - sfxHeight - BAR_PADDING
             );
             window->draw(sfxBar);
 
             // Music
             window->draw(gradient[menuSize - 3]);
             menuTexts[menuSize - 3].setPosition(
-                menuTexts[menuSize - 3].getPosition().x + BAR_PADDING / 2,
+                // menuTexts[menuSize - 3].getPosition().x,
+                menuBars[menuSize - 3].getPosition().x + menuBars[menuSize - 3].getSize().x / 2 - menuTexts[menuSize - 3].getGlobalBounds().width / 2 - 1.5,
                 menuTexts[menuSize - 3].getPosition().y
             );
             window->draw(menuTexts[menuSize - 3]);
             
-            float musicMaxHeight = menuBars[menuSize - 3].getSize().y - menuTexts[menuSize - 3].getGlobalBounds().height;
+            float musicMaxHeight = (menuTexts[menuSize - 3].getPosition().y - menuBars[menuSize - 3].getPosition().y) - menuTexts[menuSize - 3].getGlobalBounds().height + BAR_PADDING;
             float musicHeight    = musicMaxHeight * soundManager->getMusicVolume() / 100;
             sf::RectangleShape musicBar(sf::Vector2f(
                 BAR_PADDING * 1.5, 
@@ -1327,7 +1329,7 @@ void Menu::draw(sf::RenderWindow *window) {
             ));
             musicBar.setPosition(
                 menuBars[menuSize - 3].getPosition().x + menuBars[menuSize - 3].getSize().x / 2 - musicBar.getSize().x / 2,
-                menuBars[menuSize - 3].getPosition().y - BAR_PADDING + musicMaxHeight - musicHeight
+                menuBars[menuSize - 3].getPosition().y + musicMaxHeight - musicHeight - BAR_PADDING
             );
             window->draw(musicBar);
 

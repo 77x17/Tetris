@@ -23,8 +23,10 @@ float SoundManager::volume = 50.0f;
 float SoundManager::musicVolume = 50.0f;
 
 Tetris::Tetris() {
-    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::Fullscreen);
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
+    // window = new sf::RenderWindow(desktop, "Tetris"); // Không viền
+    // window->setPosition(sf::Vector2i(0, 0)); // Đặt vị trí góc trên cùng bên trái
 
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);
