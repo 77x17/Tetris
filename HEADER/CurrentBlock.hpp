@@ -37,6 +37,8 @@ public:
     uint8_t putIntoMap(Map* map);
     void draw(sf::RenderWindow* window, int GRID_POSITION_Y, int GRID_POSITION_X);
 
+    char getTypeBlock();
+
     // void compress(sf::Packet &packet);
     // void compressWithSpin(sf::Packet &packet);
 

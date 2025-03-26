@@ -40,7 +40,7 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int
     monitor = new MonitorForTwoPlayer(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlock();
     soundManager = new SoundManager();
-    
+
     monitor->setNewSeed(seed);
     soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
     mtx.unlock();
@@ -80,8 +80,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 break;
 
                 case PUT: {
-                    uint8_t state, y, x, shadowPosY, spin, typeBlock;
-                    packet >> state >> y >> x >> shadowPosY >> spin >> typeBlock;
+                    uint8_t state, y, x, shadowPosY, spin;
+                    packet >> state >> y >> x >> shadowPosY >> spin;
                     curBlock->setState(state, x, y, shadowPosY);
                     int nLinesRemove = curBlock->putIntoMap(monitor->getMap());
 
@@ -90,9 +90,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                         (monitor->getMap())->add((monitor->getInfor())->getAndRemoveLineAdd(), seed);
                     }
 
-                    (monitor->getInfor())->update(nLinesRemove, spin, (char)typeBlock);
-                    (monitor->getInfor())->playSound(nLinesRemove, spin, (char)typeBlock);
-                    nLinesRemove = (monitor->getInfor())->removeLine(nLinesRemove);
+                    nLinesRemove = monitor->addLineToInfor(nLinesRemove, curBlock);
 
                     if (nLinesRemove > 0) {
                         player->handleAddLine(nLinesRemove);

@@ -47,8 +47,7 @@ public:
 
     uint8_t putIntoMap();
     void draw(sf::RenderWindow *window);
-
-    char getTypeBlock();
+    
     CurrentBlock* getCurrentBlock() const;
 
     bool gameOver();

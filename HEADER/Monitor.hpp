@@ -34,6 +34,8 @@ public:
 
     void setNewSeed(int seed);
 
+    uint8_t addLineToInfor(int nLines, CurrentBlock* currentBlock);
+
     Map* getMap() const;
     Hold* getHold() const;
     LinkListBlock* getNext() const;

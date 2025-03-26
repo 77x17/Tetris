@@ -64,9 +64,7 @@ void MovementController::handleUp(Map* map) {
 void MovementController::handlePut() {
     int nLines = curBlock->putIntoMap();
     
-    (monitor->getInfor())->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    (monitor->getInfor())->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    (monitor->getInfor())->removeLine(nLines);
+    monitor->addLineToInfor(nLines, curBlock->getCurrentBlock());
 
     collision = false;
     curBlock->setter((monitor->getNext())->updateNext());

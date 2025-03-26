@@ -180,29 +180,6 @@ uint8_t CurrentBlockController::putIntoMap() {
     return block->putIntoMap(map);
 }
 
-char CurrentBlockController::getTypeBlock() {
-    switch ((block->block)->getShapeID()) {
-        case 1:
-            return 'I';
-        case 2:
-            return 'L';
-        case 3:
-            return 'J';
-        case 4:
-            return 'O';
-        case 5:
-            return 'Z';
-        case 6:
-            return 'S';
-        case 7:
-            return 'T';
-        default:
-            throw std::invalid_argument("Invalid getTypeBlock()");
-    }
-
-    return char();
-}
-
 bool CurrentBlockController::gameOver() {
     bool isGameOver = !block->isValid(map);
     if (isGameOver) {
@@ -216,5 +193,5 @@ void CurrentBlockController::compress(sf::Packet &packet) {
 }
 
 void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin() << getTypeBlock();
+    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin();
 }

@@ -51,28 +51,28 @@ void CurrentBlock::draw(sf::RenderWindow* window, int GRID_POSITION_Y, int GRID_
     block->draw(window, posY, posX, GRID_POSITION_Y, GRID_POSITION_X);
 }
 
-// char CurrentBlock::getTypeBlock() {
-//     switch (block->getShapeID()) {
-//         case 1:
-//             return 'I';
-//         case 2:
-//             return 'L';
-//         case 3:
-//             return 'J';
-//         case 4:
-//             return 'O';
-//         case 5:
-//             return 'Z';
-//         case 6:
-//             return 'S';
-//         case 7:
-//             return 'T';
-//         default:
-//             throw std::invalid_argument("Invalid getTypeBlock()");
-//     }
+char CurrentBlock::getTypeBlock() {
+    switch (block->getShapeID()) {
+        case 1:
+            return 'I';
+        case 2:
+            return 'L';
+        case 3:
+            return 'J';
+        case 4:
+            return 'O';
+        case 5:
+            return 'Z';
+        case 6:
+            return 'S';
+        case 7:
+            return 'T';
+        default:
+            throw std::invalid_argument("Invalid getTypeBlock()");
+    }
 
-//     return char();
-// }
+    return char();
+}
 
 // void CurrentBlock::compress(sf::Packet &packet) {
 //     packet << block->getStateID() << posY << posX << shadowPosY;
