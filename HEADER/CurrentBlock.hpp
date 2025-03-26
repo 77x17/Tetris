@@ -28,7 +28,8 @@ public:
     bool isEmpty();
     
     Block* setter(Block* p);
-    void setPosition(int posX, int posY, int shadowPosy);
+    void setState(int stateID, int posX, int posY, int sh);
+
     void freeAndSetter(Block* p);
 
     void swap(Hold* hold);

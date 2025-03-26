@@ -37,7 +37,7 @@ void CurrentBlockController::setter(Block* p) {
 }
 
 void CurrentBlockController::resetPosition() {
-    block->setPosition(WIDTH_MAP / 2 - BLOCK_EDGE / 2, 0, 0);
+    block->setState(2, WIDTH_MAP / 2 - BLOCK_EDGE / 2, 0, 0);
     updateShadow();
 }
 
@@ -209,4 +209,12 @@ bool CurrentBlockController::gameOver() {
         soundManager->play("topout");
     }
     return isGameOver;
+}
+
+void CurrentBlockController::compress(sf::Packet &packet) {
+    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
+}
+
+void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
+    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin() << getTypeBlock();
 }

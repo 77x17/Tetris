@@ -335,10 +335,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         
         player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, listener, seed);
         listener.listen(55000);
-        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
     }
     else {
-        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
         player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
         // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.100.230", 55001);
         // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.100.230", 55000);
@@ -370,8 +370,9 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
     backgroundMusic.play();
 
-    competitor->start(player);
 
+    competitor->start(player);
+    
     while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -380,15 +381,12 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             }
             player->processEvents(event);
         }
-
         if (competitor->isGameOver()) {
             player->setGameOver();
         }
-
         if (!player->isGameOver()) {
             player->sendCurBlock();
             player->autoDown();
-            
             window->clear();
             window->draw(backgroundSprite); // Draw background
             player->draw(window);

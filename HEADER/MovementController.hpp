@@ -13,7 +13,7 @@ class MovementController{
 private:
     sf::Clock clock;
     sf::Clock movingClock;
-
+protected:
     bool  collision;        // collision bottom (extra time to move and rotate)
 
     bool  moveLeftSignal;

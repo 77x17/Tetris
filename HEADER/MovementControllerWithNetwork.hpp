@@ -8,9 +8,9 @@ class Map;
 
 class MovementControllerWithNetwork: public MovementController{
 private:
-    sf::TcpSocket socket;
+    sf::TcpSocket* socket;
 public:
-    MovementControllerWithNetwork(Monitor* monitor, CurrentBlockController* controller);
+    MovementControllerWithNetwork(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket* socket);
     ~MovementControllerWithNetwork();
 
     void handleUp(Map*);

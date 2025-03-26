@@ -32,6 +32,8 @@ public:
     bool isGameOver();
     void setGameOver();
 
+    void setNewSeed(int seed);
+
     Map* getMap() const;
     Hold* getHold() const;
     LinkListBlock* getNext() const;

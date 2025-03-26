@@ -6,13 +6,19 @@
 #include "Player.hpp"
 
 class Infor;
+class MonitorForTwoPlayer;
+class MovementControllerWithNetwork;
 
-class PlayerWithNetwork: public Player {
+class PlayerWithNetwork: public Player{
 private:
-
+    sf::TcpSocket socket;
+    
 public:
     PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);
     PlayerWithNetwork(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
+    ~PlayerWithNetwork();
+
+    void initialize();
 
     void setGameOver();
 
@@ -21,9 +27,6 @@ public:
 
     void sendCurBlock();
 
-    void handlePut();
-    void handleHold();
-    void handleUp();
     void handleAddLine(uint8_t nLines);
 
     void ready(int& seed);

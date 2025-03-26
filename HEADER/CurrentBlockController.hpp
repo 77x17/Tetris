@@ -29,7 +29,7 @@ public:
     void setter(Block* p);
 
     bool isJustSpin();
-    
+
     void resetPosition();
 
     virtual bool moveDown();
@@ -52,6 +52,9 @@ public:
     CurrentBlock* getCurrentBlock() const;
 
     bool gameOver();
+
+    void compress(sf::Packet &packet);
+    void compressWithSpin(sf::Packet &packet);
 };
 
 #endif

@@ -8,20 +8,20 @@
 
 #include "Monitor.hpp"
 
-class Block;
+class CurrentBlock;
 class SoundManager;
 class PlayerWithNetwork;
 
-class Competitor : public Monitor {
+class Competitor{
 private:
+    Monitor* monitor;
     sf::TcpSocket socket;
+
     std::mutex mtx;
     
-    Block* curBlock;
-    uint8_t posX, posY, posYShadow;
+    CurrentBlock* curBlock;
     SoundManager *soundManager;
 
-    std::queue<sf::Event> pollEvent;
     std::mt19937 gen;
 public:
     // Competitor(int X_COORDINATE, int Y_COORDINATE);
@@ -30,6 +30,8 @@ public:
     ~Competitor();
     void start(PlayerWithNetwork* &player);
     void ready(int& seed);
+
+    bool isGameOver();
 
     void draw(sf::RenderWindow* window);
 };

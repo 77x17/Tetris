@@ -49,9 +49,9 @@ void Monitor::resetMonitor(uint32_t seed) {
     gameOver = false;
 }
 
-// void Monitor::setNewSeed(int seed) {
-    
-// }
+void Monitor::setNewSeed(int seed) {
+    next->reset(seed);
+}
 
 Map* Monitor::getMap() const {
     return map;

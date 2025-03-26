@@ -30,8 +30,8 @@ void CurrentBlock::freeAndSetter(Block* p) {
     delete block; block = p; spin = false;
 }
 
-void CurrentBlock::setPosition(int x, int y, int sy) {
-    posX = x; posY = y; shadowPosY = sy;
+void CurrentBlock::setState(int stateID, int x, int y, int sh) {
+    block->setStateID(stateID); posX = x; posY = y; shadowPosY = sh;
 }
 
 void CurrentBlock::swap(Hold* hold) {

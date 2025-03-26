@@ -12,12 +12,17 @@
 #include "CurrentBlockController.hpp"
 #include "MovementController.hpp"
 
-Player::Player(int X_COORDINATE, int Y_COORDINATE): volume(50.0f), collision(false){
+#include <iostream>
+
+Player::Player(int x, int y): volume(50.0f), X_COORDINATE(x), Y_COORDINATE(y){
+    soundManager = new SoundManager();
+    soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
+}
+
+void Player::initialize() {
     monitor = new MonitorForOnePlayer(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlockController(monitor->getMap());
-    soundManager = new SoundManager();
     movementController = new MovementController(monitor, curBlock);
-    soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
 }
 
 Player::~Player() {
@@ -39,6 +44,7 @@ bool Player::isGameOver() {
 }
 
 void Player::start() {
+    initialize();
     restart();
 }
 

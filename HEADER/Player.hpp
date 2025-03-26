@@ -13,27 +13,25 @@ class MovementController;
 
 class Player{
 private:
-    Monitor* monitor;
-
-    sf::Clock clock;
-    sf::Clock movingClock;
-
-    SoundManager *soundManager;
-    MovementController *movementController;
-
     float volume;
 
-    bool  collision;        // collision bottom (extra time to move and rotate)
-
 protected:
+    int X_COORDINATE;
+    int Y_COORDINATE;
+    Monitor* monitor;
+    SoundManager *soundManager;
+    MovementController *movementController;
     CurrentBlockController* curBlock;
 
 public:
     Player(int X_COORDINATE, int Y_COORDINATE);
-    ~Player();
+
+    virtual void initialize();
+
+    virtual ~Player();
     virtual void processEvents(const sf::Event &event);
     void autoDown();
-    
+
     void resetComponent();
     bool isGameOver();
 
