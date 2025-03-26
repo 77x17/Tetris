@@ -87,7 +87,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
                     if (nLinesRemove == 0) {
                         int seed; packet >> seed;
-                        (monitor->getMap())->add((monitor->getInfor())->getAndRemoveLineAdd(), seed);
+                        dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
                     }
 
                     nLinesRemove = monitor->addLineToInfor(nLinesRemove, curBlock);
@@ -103,7 +103,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 case RECVLINE: {
                     uint8_t nLines;
                     packet >> nLines;
-                    (monitor->getInfor())->addLine(nLines);
+                    dynamic_cast<MonitorForTwoPlayer*>(monitor)->inforReceiveLineFromCompetitor(nLines);
                 }
                 break;
 

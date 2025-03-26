@@ -17,6 +17,9 @@ public:
     MonitorForTwoPlayer(int X_COORDINATE, int Y_COORDINATE);
     void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
+
+    void inforReceiveLineFromCompetitor(int nLines);
+    void mapReceiveLineFromCompetitor(int seed);
 };
 
 #endif

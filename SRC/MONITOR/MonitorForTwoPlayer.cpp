@@ -58,3 +58,11 @@ void MonitorForTwoPlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     next->setPosition(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
     infor->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
 }
+
+void MonitorForTwoPlayer::inforReceiveLineFromCompetitor(int nLines) {
+    infor->addLine(nLines);
+}
+
+void MonitorForTwoPlayer::mapReceiveLineFromCompetitor(int seed) {
+    map->add(infor->getAndRemoveLineAdd(), seed);
+}

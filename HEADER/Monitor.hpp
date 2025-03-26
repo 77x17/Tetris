@@ -45,7 +45,6 @@ public:
 
     Map* getMap() const;
     LinkListBlock* getNext() const;
-    Infor* getInfor() const;
 };
 
 #endif

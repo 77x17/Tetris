@@ -86,5 +86,5 @@ void Player::autoDown() {
 
 void Player::draw(sf::RenderWindow* window) {
     monitor->draw(window, curBlock->getCurrentBlock());
-    (monitor->getInfor())->drawAudio(window, SoundManager::getVolume());
+    // (monitor->getInfor())->drawAudio(window, SoundManager::getVolume());
 }

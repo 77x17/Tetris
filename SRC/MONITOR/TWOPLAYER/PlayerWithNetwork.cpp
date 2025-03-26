@@ -70,7 +70,7 @@ void PlayerWithNetwork::restart(uint32_t seed) {
 }
 
 void PlayerWithNetwork::handleAddLine(uint8_t nLines) {
-    (monitor->getInfor())->addLine(nLines);
+    dynamic_cast<MonitorForTwoPlayer*>(monitor)->inforReceiveLineFromCompetitor(nLines);
     sf::Packet packet; packet << RECVLINE << nLines;
 
     if (socket.send(packet) != sf::Socket::Done)

@@ -78,7 +78,3 @@ void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
 LinkListBlock* Monitor::getNext() const {
     return next;
 }
-
-Infor* Monitor::getInfor() const {
-    return infor;
-}

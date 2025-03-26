@@ -13,7 +13,7 @@ public:
     MovementControllerWithNetwork(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket* socket);
     ~MovementControllerWithNetwork();
 
-    void handleUp(Map*);
+    void handleUp();
     void handlePut();
     void handleHold();
     

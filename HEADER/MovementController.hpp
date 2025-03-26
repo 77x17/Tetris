@@ -26,18 +26,18 @@ protected:
 
 public:
     MovementController(Monitor* monitor, CurrentBlockController* controller);
-    ~MovementController();
+    virtual ~MovementController();
 
     void resetComponent();
     
     void processEvents(const sf::Event &event);
     
-    void handleLeft(Map*);
-    void handleRight(Map*);
-    void handleDown(Map*);
+    void handleLeft();
+    void handleRight();
+    void handleDown();
     void handleHardDrop();
 
-    virtual void handleUp(Map*);
+    virtual void handleUp();
     virtual void handlePut();
     virtual void handleHold();
 

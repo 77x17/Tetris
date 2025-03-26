@@ -2,7 +2,7 @@
 
 #include "SFML/Network.hpp"
 #include "MessageCode.hpp"
-#include "Monitor.hpp"
+#include "MonitorForTwoPlayer.hpp"
 #include "Infor.hpp"
 #include "Map.hpp"
 #include "Hold.hpp"
@@ -30,7 +30,7 @@ void MovementControllerWithNetwork::handlePut() {
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
         packet << seed;
-        (monitor->getMap())->add((monitor->getInfor())->getAndRemoveLineAdd(), seed);
+        dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
     }
     if (socket->send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
@@ -51,8 +51,8 @@ void MovementControllerWithNetwork::setGameOver() {
     monitor->setGameOver();
 }
 
-void MovementControllerWithNetwork::handleUp(Map* map) {
-    MovementController::handleUp(map);
+void MovementControllerWithNetwork::handleUp() {
+    MovementController::handleUp();
     if (curBlock->isJustSpin()) {
         sf::Packet packet; packet << SPIN;
         if (socket->send(packet) != sf::Socket::Done)
