@@ -63,8 +63,16 @@ Map* Monitor::getMap() const {
     return map;
 }
 
-Hold* Monitor::getHold() const {
-    return hold;
+bool Monitor::canHold() { return hold->canHold(); }
+void Monitor::unlockHold() { hold->unlock(); }
+void Monitor::lockHold() { hold->lock(); }
+void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
+    lockHold();
+    curBlock->swap(hold);
+    if (curBlock->isEmpty()) {
+        curBlock->setter(next->updateNext());
+    }
+    curBlock->resetPosition(map);
 }
 
 LinkListBlock* Monitor::getNext() const {

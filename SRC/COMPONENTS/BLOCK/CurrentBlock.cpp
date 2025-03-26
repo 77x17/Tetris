@@ -74,6 +74,21 @@ char CurrentBlock::getTypeBlock() {
     return char();
 }
 
+void CurrentBlock::resetPosition(Map* map) {
+    posX = WIDTH_MAP / 2 - BLOCK_EDGE / 2; posY = 0;
+    updateShadow(map);
+}
+
+void CurrentBlock::updateShadow(Map* map) {
+
+    uint16_t shape = block->getShape();
+    shadowPosY = posY;
+    while (map->isValid(shape, shadowPosY + 1, posX)) {
+        shadowPosY++;
+    }
+}
+
+
 // void CurrentBlock::compress(sf::Packet &packet) {
 //     packet << block->getStateID() << posY << posX << shadowPosY;
 // }

@@ -15,7 +15,6 @@ class CurrentBlockController {
 private:
     SoundManager *soundManager;
 
-    void updateShadow();
     bool isValid(uint16_t shape);
 protected:
     CurrentBlock *block;
@@ -29,8 +28,6 @@ public:
     void setter(Block* p);
 
     bool isJustSpin();
-
-    void resetPosition();
 
     virtual bool moveDown();
     virtual bool fallDown();

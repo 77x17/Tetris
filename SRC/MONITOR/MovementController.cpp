@@ -68,8 +68,7 @@ void MovementController::handlePut() {
 
     collision = false;
     curBlock->setter((monitor->getNext())->updateNext());
-    curBlock->resetPosition();
-    (monitor->getHold())->unlock();
+    monitor->unlockHold();
     if (curBlock->gameOver())
         monitor->setGameOver();
 }
@@ -83,13 +82,13 @@ void MovementController::handleHardDrop() {
 }
 
 void MovementController::handleHold() {
-    if ((monitor->getHold())->canHold()) {
-        (monitor->getHold())->lock();
-        curBlock->swap((monitor->getHold()));
-        if (curBlock->isEmpty()) {
-            curBlock->setter((monitor->getNext())->updateNext());
-        }
-        curBlock->resetPosition();
+    if (monitor->canHold()) {
+        monitor->exchangeCurrentBlock(curBlock->getCurrentBlock());
+        // monitor->exchangeCurrentBlock(curBlock->getCurrentBlock());
+        // if (curBlock->isEmpty()) {
+        //     curBlock->setter((monitor->getNext())->updateNext());
+        // }
+        // curBlock->resetPosition();
 
         clock.restart();
     }

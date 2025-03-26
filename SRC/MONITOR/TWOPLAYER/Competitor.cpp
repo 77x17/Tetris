@@ -96,7 +96,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                         player->handleAddLine(nLinesRemove);
                     }
                     curBlock->setter((monitor->getNext())->updateNext());
-                    (monitor->getHold())->unlock();
+                    monitor->unlockHold();
                 }
                 break;
 
@@ -109,10 +109,10 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
 
                 case HOLD: {
                     mtx.lock();
-                    if ((monitor->getHold())->canHold()) {
-                        curBlock->swap(monitor->getHold());
+                    if (monitor->canHold()) {
+                        monitor->exchangeCurrentBlock(curBlock);
                     }
-                    (monitor->getHold())->lock();
+                    monitor->lockHold();
                     if (curBlock->isEmpty())
                         curBlock->setter((monitor->getNext())->updateNext());
                     mtx.unlock();

@@ -34,11 +34,7 @@ bool CurrentBlockController::isJustSpin() { return block->isJustSpin(); };
 
 void CurrentBlockController::setter(Block* p) {
     block->freeAndSetter(p);
-}
-
-void CurrentBlockController::resetPosition() {
-    block->setState(2, WIDTH_MAP / 2 - BLOCK_EDGE / 2, 0, 0);
-    updateShadow();
+    block->resetPosition(map);
 }
 
 bool CurrentBlockController::fallDown() {
@@ -48,17 +44,6 @@ bool CurrentBlockController::fallDown() {
     block->posY++;
 
     return true;
-}
-
-void CurrentBlockController::updateShadow() {
-    int8_t &shadow = block->shadowPosY;
-    int8_t &posX   = block->posX;
-
-    uint16_t shape = (block->block)->getShape();
-    shadow = block->posY;
-    while (map->isValid(shape, shadow + 1, posX)) {
-        shadow++;
-    }
 }
 
 bool CurrentBlockController::moveDown() {
@@ -72,7 +57,7 @@ bool CurrentBlockController::moveDown() {
 bool CurrentBlockController::moveLeft() {
     if (not map->isValid((block->block)->getShape(), block->posY, block->posX - 1)) 
         return false; 
-    block->posX--; updateShadow();
+    block->posX--; block->updateShadow(map);
     soundManager->play("move");
     return true;
 }
@@ -80,7 +65,7 @@ bool CurrentBlockController::moveLeft() {
 bool CurrentBlockController::moveRight() {
     if (not map->isValid((block->block)->getShape(), block->posY, block->posX + 1)) 
         return false; 
-    block->posX++; updateShadow();
+    block->posX++; block->updateShadow(map);
     soundManager->play("move");
     return true;
 }
@@ -145,7 +130,7 @@ bool CurrentBlockController::rotateLeft() {
 rotate_success:
     cur->rotateLeft();
 
-    updateShadow();
+    block->updateShadow(map);
 
     if (posY != 0 and not map->isValid(cur->getShape(), posY - 1, posX)) {
         block->setSpin();

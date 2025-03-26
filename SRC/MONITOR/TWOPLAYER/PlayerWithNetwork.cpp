@@ -66,8 +66,7 @@ void PlayerWithNetwork::restart(uint32_t seed) {
     monitor->resetMonitor(seed);
     movementController->resetComponent();
     curBlock->setter((monitor->getNext())->updateNext());
-    curBlock->resetPosition();
-    (monitor->getHold())->unlock();
+    monitor->unlockHold();
 }
 
 void PlayerWithNetwork::handleAddLine(uint8_t nLines) {

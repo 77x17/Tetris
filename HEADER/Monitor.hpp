@@ -36,8 +36,14 @@ public:
 
     uint8_t addLineToInfor(int nLines, CurrentBlock* currentBlock);
 
+    bool canHold();
+    void unlockHold();
+    void lockHold();
+    void exchangeCurrentBlock(CurrentBlock*);
+
+    // Block* getNextBlock();
+
     Map* getMap() const;
-    Hold* getHold() const;
     LinkListBlock* getNext() const;
     Infor* getInfor() const;
 };

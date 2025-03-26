@@ -39,8 +39,7 @@ void MovementControllerWithNetwork::handlePut() {
 
     collision = false;
     curBlock->setter((monitor->getNext())->updateNext());
-    curBlock->resetPosition();
-    (monitor->getHold())->unlock();
+    monitor->unlockHold();
     if (curBlock->gameOver())
         setGameOver();
 }

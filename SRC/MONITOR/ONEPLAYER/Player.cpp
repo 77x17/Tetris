@@ -35,8 +35,7 @@ Player::~Player() {
 void Player::resetComponent() {
     movementController->resetComponent();
     curBlock->setter((monitor->getNext())->updateNext());
-    curBlock->resetPosition();
-    (monitor->getHold())->unlock();
+    monitor->unlockHold();
 }
 
 bool Player::isGameOver() {

@@ -16,6 +16,9 @@ protected:
     int8_t shadowPosY;
 
     bool spin; // check piece spin
+
+    void updateShadow(Map*);
+
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
@@ -36,8 +39,10 @@ public:
     bool isValid(Map* map) const;
     uint8_t putIntoMap(Map* map);
     void draw(sf::RenderWindow* window, int GRID_POSITION_Y, int GRID_POSITION_X);
-
+    
     char getTypeBlock();
+
+    void resetPosition(Map*);
 
     // void compress(sf::Packet &packet);
     // void compressWithSpin(sf::Packet &packet);
