@@ -5,6 +5,7 @@
 #include "Common.hpp"
 
 #include <iostream>
+#include <windows.h>
 
 const int TITLE_PADDING  = 100;
 
@@ -87,7 +88,6 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
         else {
             float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
             overlay.setFillColor(sf::Color(60, 60, 60, alpha));
-         
         }
         window->draw(overlay);
 
@@ -119,15 +119,6 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
     window->draw(menuBackground);
 }
 
-void block_until_gained_focus(sf::RenderWindow *window) {
-    sf::Event event;
-    while (true) {
-        if (window->waitEvent(event) && event.type == sf::Event::GainedFocus) {
-            return;
-        }
-    }
-}
-
 STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
     soundManager->playMusic("menu");
 
@@ -145,25 +136,33 @@ STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
 
 backToMainMenu:
 
-    while (window->isOpen() and mainMenu->notSelected()) {
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            mainMenu->processEvents(window, event);
+    while (mainMenu->notSelected()) {
+        if (window->hasFocus()) {
+            sf::Event event;
+            while (window->pollEvent(event)) {
+                mainMenu->processEvents(window, event);
+            }
 
-            // if (event.type == sf::Event::LostFocus) {
-            //     block_until_gained_focus(window);
-            // }
+            mainMenu->update(window);
+
+            window->clear();
+
+            drawMenuBackground(window);
+
+            mainMenu->draw(window);
+
+            window->display();
         }
+        else {
+            ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
 
-        mainMenu->update(window);
+            sf::Event event;
+            while (window->pollEvent(event)) {
+                // nothing
+            }
 
-        window->clear();
-
-        drawMenuBackground(window);
-
-        mainMenu->draw(window);
-
-        window->display();
+            sf::sleep(sf::milliseconds(100));
+        }
     }
 
     STATUS_CODE sceneStatus = mainMenu->getSelectedItem();
