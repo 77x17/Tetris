@@ -16,6 +16,7 @@ Scene::Scene(sf::RenderWindow *window) {
     soundManager = new SoundManager();
     soundManager->loadSound("countdown", "ASSETS/sfx/countdown.mp3");
     soundManager->loadSound("selected" , "ASSETS/sfx/menu_hit.mp3");
+    soundManager->loadMusicSound("menu", "ASSETS/sfx/tetristheme.mp3");
 
     menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.png");
     menuBackground.setTexture(menuBackgroundTexture);
@@ -118,7 +119,18 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
     window->draw(menuBackground);
 }
 
+void block_until_gained_focus(sf::RenderWindow *window) {
+    sf::Event event;
+    while (true) {
+        if (window->waitEvent(event) && event.type == sf::Event::GainedFocus) {
+            return;
+        }
+    }
+}
+
 STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
+    soundManager->playMusic("menu");
+
     {
         window->clear();
 
@@ -137,6 +149,10 @@ backToMainMenu:
         sf::Event event;
         while (window->pollEvent(event)) {
             mainMenu->processEvents(window, event);
+
+            // if (event.type == sf::Event::LostFocus) {
+            //     block_until_gained_focus(window);
+            // }
         }
 
         mainMenu->update(window);
@@ -181,6 +197,8 @@ backToMainMenu:
     }
 
     drawChangeMenu(window, false);
+
+    soundManager->stopMusic("menu");
 
     return sceneStatus;
 }

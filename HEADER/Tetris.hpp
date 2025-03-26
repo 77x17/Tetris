@@ -28,7 +28,7 @@ public:
     Tetris();
     ~Tetris();
     void start();
-    void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite, sf::Music &backgroundMusic);
+    void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite);
     STATUS_CODE startGameVersusBot();
     STATUS_CODE startGameOnePlayer();
     void startGameTwoPlayer(bool isHost);
