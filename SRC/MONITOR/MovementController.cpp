@@ -85,12 +85,6 @@ void MovementController::handleHardDrop() {
 void MovementController::handleHold() {
     if (monitor->canHold()) {
         monitor->exchangeCurrentBlock(curBlock->getCurrentBlock());
-        // monitor->exchangeCurrentBlock(curBlock->getCurrentBlock());
-        // if (curBlock->isEmpty()) {
-        //     curBlock->setter((monitor->getNext())->updateNext());
-        // }
-        // curBlock->resetPosition();
-
         clock.restart();
     }
 }
