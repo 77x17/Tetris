@@ -9,7 +9,7 @@ constexpr float TIME_OUT = 2.0f;
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
 Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH):
-        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), nLinesAdd(0), garbageSent(0) {
+        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false), nLinesAdd(0), garbageSent(0) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -173,7 +173,8 @@ uint64_t Infor::getAndRemoveLineAdd() {
 
 void Infor::update(uint8_t lines, bool isSpin, char block) {
     if (isSpin) {
-        spin      = isSpin;
+        spin      = true;
+        spinDraw  = true;
         typeBlock = block;
 
         spinTimeout.restart();
@@ -418,8 +419,11 @@ void Infor::draw(sf::RenderWindow *window) {
         drawMessage(window, message);
     }
 
-    if (spin and spinTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
+    if (spinDraw and spinTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
         drawSpin(window);
+    }
+    else {
+        spinDraw = false;
     }
 
     if (comboTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
