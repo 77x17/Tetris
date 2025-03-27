@@ -106,7 +106,7 @@ KeyConfiguration::KeyConfiguration(std::string filename) {
     input.close();
 }
 
-EVENT KeyConfiguration::getEvent(sf::Keyboard::Key key) const {
+EVENT KeyConfiguration::getEvent(const sf::Keyboard::Key &key) const {
     auto iterator = keyBindings.find(key);
     if (iterator == keyBindings.end()) {
         return NOTHING;

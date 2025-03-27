@@ -12,6 +12,8 @@
 
 #include "CurrentBlockController.hpp"
 
+#include "KeyConfiguration.hpp"
+
 #include <iostream>
 
 constexpr float DROP_TIME           = 0.5f;
@@ -23,9 +25,13 @@ constexpr float MOVING_TIME         = 30.0f;
 
 MovementController::MovementController(Monitor* moni, CurrentBlockController* cur): collision(false), moveLeftSignal(false), 
                                                                                     moveRightSignal(false), moveDownSignal(false), 
-                                                                                    monitor(moni), curBlock(cur) {}
+                                                                                    monitor(moni), curBlock(cur) {
+    key = new KeyConfiguration("ASSETS/keyBindings.txt");
+}
 
-MovementController::~MovementController() {}
+MovementController::~MovementController() {
+    delete key;
+}
 
 void MovementController::resetComponent() {
     collision = false; moveLeftSignal = false; moveLeftSignal = false;
@@ -89,59 +95,67 @@ void MovementController::handleHold() {
     }
 }
 
-void MovementController::processEvents(const sf::Event &event) {
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Left and moveLeftSignal == false) {
-            moveLeftSignal  = true;
-            moveRightSignal = false;
+void MovementController::processEvents(const sf::Event &eventFromKeyboard) {
+    switch (key->getEvent(eventFromKeyboard.key.code)) {
+        case MOVE_LEFT: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (moveLeftSignal == false) {
+                    moveLeftSignal  = true; moveRightSignal = false;
+                    handleLeft();
+                    movingTime = DELAY_MOVING_TIME;
+                    movingClock.restart();
+                }
+            }
+            else {
+                moveLeftSignal = false;
+                movingTime = DELAY_MOVING_TIME;
+            }
+        } break;
 
-            handleLeft();
-            
-            movingTime = DELAY_MOVING_TIME;
+        case MOVE_RIGHT: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (moveRightSignal == false) {
+                    moveLeftSignal  = false; moveRightSignal = true;
+                    handleRight();
+                    movingTime = DELAY_MOVING_TIME;
+                    movingClock.restart();
+                }
+            }
+            else {
+                moveRightSignal = false;
+                movingTime = DELAY_MOVING_TIME;
+            }
+        } break;
+        
+        case MOVE_DOWN: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (moveDownSignal == false) {
+                    moveDownSignal = true;
+                    handleDown();
+                    movingClock.restart();
+                }
+            }
+            else {
+                moveDownSignal = false;
+            }
+        } break;
+        
+        case ROTATE_CLOCKWISE: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed)
+                handleUp();
+        } break;
 
-            movingClock.restart();
-        }
-        else if (event.key.code == sf::Keyboard::Right and moveRightSignal == false) {
-            moveLeftSignal  = false;
-            moveRightSignal = true;
+        case HARD_DROP: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed)
+                handleHardDrop();
+        } break;
 
-            handleRight();
-
-            movingTime = DELAY_MOVING_TIME;
-
-            movingClock.restart();
-        }
-        else if (event.key.code == sf::Keyboard::Down and moveDownSignal == false) {
-            moveDownSignal = true;
-
-            handleDown();
-
-            movingClock.restart();
-        } 
-        else if (event.key.code == sf::Keyboard::Up or event.key.code == sf::Keyboard::X) {
-            handleUp();
-        } 
-        else if (event.key.code == sf::Keyboard::Space) {
-            handleHardDrop();
-        } 
-        else if (event.key.code == sf::Keyboard::C) {
-            handleHold();
-        }
-    }   
-    else if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::Left) {
-            moveLeftSignal = false;
-            
-            movingTime = DELAY_MOVING_TIME;
-        }
-        else if (event.key.code == sf::Keyboard::Right) {
-            moveRightSignal = false;
-            
-            movingTime = DELAY_MOVING_TIME;
-        } 
-        else if (event.key.code == sf::Keyboard::Down) {
-            moveDownSignal = false;
-        }
+        case HOLD_PIECE: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed)
+                handleHold();
+        }break;
+        default:
+            break;
     }
 }
 

@@ -6,13 +6,13 @@
 
 class CurrentBlockController;
 class Monitor;
-class Map;
-class LinkListBlock;
+class KeyConfiguration;
 
 class MovementController{
 private:
     sf::Clock clock;
     sf::Clock movingClock;
+    KeyConfiguration* key;
 protected:
     bool  collision;        // collision bottom (extra time to move and rotate)
 

@@ -26,13 +26,11 @@ public:
     KeyConfiguration();
     KeyConfiguration(std::string filename);
 
-    EVENT getEvent(sf::Keyboard::Key key) const;
+    EVENT getEvent(const sf::Keyboard::Key &key) const;
+    
     std::pair<std::string, std::string> getKey(EVENT event) const;
-
     void removeKey(std::string key);
     void setKey(EVENT event, sf::Keyboard::Key key);
-
     std::string getKeyName(sf::Keyboard::Key key);
-
     void saveKey(std::string filename);
 };

@@ -73,6 +73,7 @@ void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
         curBlock->setter(next->updateNext());
     }
     curBlock->resetPosition(map);
+    infor->
 }
 
 LinkListBlock* Monitor::getNext() const {
