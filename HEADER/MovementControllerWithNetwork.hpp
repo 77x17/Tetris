@@ -13,7 +13,9 @@ public:
     MovementControllerWithNetwork(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket* socket);
     ~MovementControllerWithNetwork();
 
-    void handleUp();
+    void handleRotateLeft();
+    void handleRotateRight();
+    void handleRotate180();
     void handlePut();
     void handleHold();
     

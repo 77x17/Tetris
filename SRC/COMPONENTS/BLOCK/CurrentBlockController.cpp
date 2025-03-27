@@ -80,76 +80,80 @@ bool CurrentBlockController::collisionBottom() {
     return not map->isValid((block->block)->getShape(), block->posY+1, block->posX);
 }
 
-bool CurrentBlockController::rotateLeft() {
+bool CurrentBlockController::rotate(int8_t times) {
     Block*& cur  = block->block;
     int8_t &posY = block->posY;
     int8_t &posX = block->posX;
 
-    if (not isValid(cur->getRotateLeft())) {
+    if (not isValid(cur->getRotate(times))) {
         posY++;
-        if (isValid(cur->getRotateLeft())) goto rotate_success;
+        if (isValid(cur->getRotate(times))) goto rotate_success;
         posY--;
         
         posY--;
-        if (posY >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
+        if (posY >= 0 and isValid(cur->getRotate(times))) goto rotate_success;
         posY++;
 
         posX++;
-        if (isValid(cur->getRotateLeft())) goto rotate_success;
+        if (isValid(cur->getRotate(times))) goto rotate_success;
         posX--;
 
         posX--;
-        if (posX >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
+        if (posX >= 0 and isValid(cur->getRotate(times))) goto rotate_success;
         posX++;        
 
         if (cur->getShapeID() == 1) {
             posY += 2;
-            if (isValid(cur->getRotateLeft()))  goto rotate_success;
-            if (isValid(cur->getRotateRight())) goto rotate_success;
+            if (isValid(cur->getRotate(times)))  goto rotate_success;
+            if (isValid(cur->getRotate(3 - times))) goto rotate_success;
             posY -= 2;
 
             posY -= 2;
-            if (posY >= 0 and isValid(cur->getRotateLeft()))  goto rotate_success;
-            if (posY >= 0 and isValid(cur->getRotateRight())) goto rotate_success;
+            if (posY >= 0 and isValid(cur->getRotate(times)))  goto rotate_success;
+            if (posY >= 0 and isValid(cur->getRotate(3 - times))) goto rotate_success;
             posY += 2;
             
             posX += 2;
-            if (isValid(cur->getRotateLeft()))  goto rotate_success;
-            if (isValid(cur->getRotateRight())) goto rotate_success;
+            if (isValid(cur->getRotate(times)))  goto rotate_success;
+            if (isValid(cur->getRotate(3-times))) goto rotate_success;
             posX -= 2;
 
             posX -= 2;
-            if (posX >= 0 and isValid(cur->getRotateLeft()))  goto rotate_success;
-            if (posX >= 0 and isValid(cur->getRotateRight())) goto rotate_success;
+            if (posX >= 0 and isValid(cur->getRotate(times)))  goto rotate_success;
+            if (posX >= 0 and isValid(cur->getRotate(3 - times))) goto rotate_success;
             posX += 2;
         }
 
         return false;
     }
+    rotate_success:
+        cur->rotate(times);
+    
+        block->updateShadow(map);
+    
+        if (posY != 0 and not map->isValid(cur->getShape(), posY - 1, posX)) {
+            block->setSpin();
+            soundManager->play("spin");
+        }
+        else {
+            block->resetSpin();
+            soundManager->play("rotate");
+        }
+    return true;
+}
 
-rotate_success:
-    cur->rotateLeft();
-
-    block->updateShadow(map);
-
-    if (posY != 0 and not map->isValid(cur->getShape(), posY - 1, posX)) {
-        block->setSpin();
-        soundManager->play("spin");
-    }
-    else {
-        block->resetSpin();
-        soundManager->play("rotate");
-    }
+bool CurrentBlockController::rotateLeft() {
+    rotate(1);
     return true;
 }
 
 bool CurrentBlockController::rotateRight() {
-
+    rotate(3);
     return true;
 }
 
 bool CurrentBlockController::rotate180() {
-
+    rotate(2);
     return true;
 }
 

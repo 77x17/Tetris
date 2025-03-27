@@ -16,6 +16,9 @@ private:
     SoundManager *soundManager;
 
     bool isValid(uint16_t shape);
+
+    bool rotate(int8_t times);
+
 protected:
     CurrentBlock *block;
     Map* map; // share pointer don't delete!

@@ -37,7 +37,9 @@ public:
     void handleDown();
     void handleHardDrop();
 
-    virtual void handleUp();
+    virtual void handleRotateLeft();
+    virtual void handleRotateRight();
+    virtual void handleRotate180();
     virtual void handlePut();
     virtual void handleHold();
 

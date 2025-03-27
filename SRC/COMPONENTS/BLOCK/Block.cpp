@@ -89,11 +89,15 @@ void Block::drawBrownHold(sf::RenderWindow* window, int8_t y, int8_t x, int offs
     }
 }
 
-uint16_t Block::getRotateLeft() { return state[(stateID + 3) % 4]; }
-uint16_t Block::getRotateRight() { return state[(stateID + 1) % 4]; }
+uint16_t Block::getRotate(int8_t times) {
+    if (times <= 0 || times >= 4) throw std::runtime_error("Have some problem with rotate times!");
+    return state[(stateID + 4 - times) % 4]; 
+}
 
-void Block::rotateLeft() { stateID = (stateID + 3) % 4; }
-void Block::rotateRight() { stateID = (stateID + 1) % 4; }
+void Block::rotate(int8_t times) {
+    if (times <= 0 || times >= 4) throw std::runtime_error("Have some problem with rotate times!");
+    stateID = (stateID + 4 - times) % 4; 
+}
 
 uint16_t Block::getShape() { return state[stateID]; }
 uint8_t Block::getStateID() { return stateID; }

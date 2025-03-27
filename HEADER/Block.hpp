@@ -25,11 +25,8 @@ public:
     void    setStateID(int x);
 
     uint16_t getShape();
-    uint16_t getRotateLeft();
-    uint16_t getRotateRight();
-
-    void rotateLeft();
-    void rotateRight();
+    uint16_t getRotate(int8_t times);
+    void rotate(int8_t times);
 
     void resetState();
 };

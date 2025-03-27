@@ -60,13 +60,30 @@ void MovementController::handleDown() {
     }
 }
 
-void MovementController::handleUp() {
+void MovementController::handleRotateLeft() {
     if (curBlock->rotateLeft() and curBlock->collisionBottom() and collision == false) {
         collision = true;
 
         clock.restart();
     }
 }
+
+void MovementController::handleRotateRight() {
+    if (curBlock->rotateRight() and curBlock->collisionBottom() and collision == false) {
+        collision = true;
+
+        clock.restart();
+    }
+}
+
+void MovementController::handleRotate180() {
+    if (curBlock->rotate180() and curBlock->collisionBottom() and collision == false) {
+        collision = true;
+
+        clock.restart();
+    }
+}
+
 
 void MovementController::handlePut() {
     int nLines = curBlock->putIntoMap();
@@ -142,7 +159,17 @@ void MovementController::processEvents(const sf::Event &eventFromKeyboard) {
         
         case ROTATE_CLOCKWISE: {
             if (eventFromKeyboard.type == sf::Event::KeyPressed)
-                handleUp();
+                handleRotateLeft();
+        } break;
+
+        case ROTATE_COUNTERCLOCKWISE: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed)
+                handleRotateRight();
+        } break;
+
+        case ROTATE_180: {
+            if (eventFromKeyboard.type == sf::Event::KeyPressed)
+                handleRotate180();
         } break;
 
         case HARD_DROP: {

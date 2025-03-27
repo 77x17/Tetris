@@ -51,8 +51,26 @@ void MovementControllerWithNetwork::setGameOver() {
     monitor->setGameOver();
 }
 
-void MovementControllerWithNetwork::handleUp() {
-    MovementController::handleUp();
+void MovementControllerWithNetwork::handleRotateLeft() {
+    MovementController::handleRotateLeft();
+    if (curBlock->isJustSpin()) {
+        sf::Packet packet; packet << SPIN;
+        if (socket->send(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to send event!");
+    }
+}
+
+void MovementControllerWithNetwork::handleRotateRight() {
+    MovementController::handleRotateRight();
+    if (curBlock->isJustSpin()) {
+        sf::Packet packet; packet << SPIN;
+        if (socket->send(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to send event!");
+    }
+}
+
+void MovementControllerWithNetwork::handleRotate180() {
+    MovementController::handleRotate180();
     if (curBlock->isJustSpin()) {
         sf::Packet packet; packet << SPIN;
         if (socket->send(packet) != sf::Socket::Done)
