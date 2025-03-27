@@ -28,6 +28,7 @@ private:
     int  B2B;
     int  B2BMissing;
     bool spin;
+    bool spinDraw;
     char typeBlock;
 
     sf::Clock     timeout;

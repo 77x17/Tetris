@@ -1,6 +1,12 @@
 #include "SoundManager.hpp"
 
+#include "Common.hpp"
+
 SoundManager::SoundManager() {}
+
+SoundManager::SoundManager(int aX, int aY, int aW, int aH) : AUDIO_POSITION_X(aX), AUDIO_POSITION_Y(aY), AUDIO_WIDTH(aW), AUDIO_HEIGHT(aH) {
+    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF"); 
+}
 
 SoundManager::~SoundManager() {}
 
@@ -43,6 +49,28 @@ void SoundManager::unPause(const std::string& name) {
     }
 }
 
+void SoundManager::drawSfx(sf::RenderWindow *window) {
+    sf::Text text("AUDIO", font, BLOCK_SIZE - BLOCK_SIZE / 3);
+    text.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
+    window->draw(text);
+
+    sf::RectangleShape line;
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+
+    // Upper - lower line
+    line.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
+    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y - WIDTH_BORDER);
+    window->draw(line);
+    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y + AUDIO_HEIGHT * BLOCK_SIZE);
+    window->draw(line);
+
+    sf::RectangleShape volumeBar;
+    volumeBar.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE * (volume / 100.0f), AUDIO_HEIGHT * BLOCK_SIZE));  // Width proportional to volume
+    volumeBar.setFillColor(sf::Color::White);
+    volumeBar.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y);
+
+    window->draw(volumeBar);
+}
 
 void SoundManager::playMusic(const std::string& name) {
     musicSounds[name].setLoop(true);

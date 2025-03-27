@@ -2,9 +2,17 @@
 
 #include <unordered_map>
 #include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 class SoundManager {
 private:
+    sf::Font font;
+
+    int AUDIO_POSITION_X;
+    int AUDIO_POSITION_Y;
+    int AUDIO_WIDTH;
+    int AUDIO_HEIGHT;
+
     // SFX
     std::unordered_map<std::string, sf::SoundBuffer> buffers;
     std::unordered_map<std::string, sf::Sound> sounds;
@@ -15,8 +23,9 @@ private:
     static float volume;
     static float musicVolume;
 
-public:
+public:                         
     SoundManager();
+    SoundManager(int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
     ~SoundManager();
     void loadSound(const std::string &name, const std::string &filePath);
     
@@ -24,6 +33,8 @@ public:
     void play(const std::string &name);
     void pause(const std::string &name);
     void unPause(const std::string &name);
+
+    void drawSfx(sf::RenderWindow *window);
 
     static void  playMusic(const std::string &name);
     static void  pauseMusic(const std::string &name);
