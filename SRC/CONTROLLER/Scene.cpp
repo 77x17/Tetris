@@ -5,6 +5,7 @@
 #include "Common.hpp"
 
 #include <iostream>
+#include <windows.h>
 
 const int TITLE_PADDING  = 100;
 
@@ -16,6 +17,7 @@ Scene::Scene(sf::RenderWindow *window) {
     soundManager = new SoundManager();
     soundManager->loadSound("countdown", "ASSETS/sfx/countdown.mp3");
     soundManager->loadSound("selected" , "ASSETS/sfx/menu_hit.mp3");
+    soundManager->loadMusicSound("menu", "ASSETS/sfx/tetristheme.mp3");
 
     menuBackgroundTexture.loadFromFile("ASSETS/menuBackground.png");
     menuBackground.setTexture(menuBackgroundTexture);
@@ -56,6 +58,23 @@ Scene::~Scene() {
     delete gameOverMenu;
 }
 
+bool Scene::notFocus(sf::RenderWindow *window) {    
+    if (not window->hasFocus()) {
+        ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
+
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            // nothing
+        }
+
+        sf::sleep(sf::milliseconds(100));
+   
+        return true;
+    }
+
+    return false;
+}
+
 void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
     sf::Texture screenshot;
     sf::Sprite  background;
@@ -70,6 +89,8 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
 
     overlayTimeout.restart(); 
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
+        if (notFocus(window)) { continue; }
+
         sf::Event tempEvent;
         while (window->pollEvent(tempEvent)) {
             // Không làm gì cả -> Chỉ lấy ra để loại bỏ buffer
@@ -86,7 +107,6 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
         else {
             float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
             overlay.setFillColor(sf::Color(60, 60, 60, alpha));
-         
         }
         window->draw(overlay);
 
@@ -119,6 +139,8 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
 }
 
 STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
+    soundManager->playMusic("menu");
+
     {
         window->clear();
 
@@ -134,6 +156,12 @@ STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
 backToMainMenu:
 
     while (window->isOpen() and mainMenu->notSelected()) {
+        if (notFocus(window)) { 
+            soundManager->pauseMusic("menu");
+            continue; 
+        }
+        soundManager->unPauseMusic("menu");
+
         sf::Event event;
         while (window->pollEvent(event)) {
             mainMenu->processEvents(window, event);
@@ -182,11 +210,19 @@ backToMainMenu:
 
     drawChangeMenu(window, false);
 
+    soundManager->stopMusic("menu");
+
     return sceneStatus;
 }
 
 STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
     while (window->isOpen() and subMenu->notSelected()) {
+        if (notFocus(window)) { 
+            soundManager->pauseMusic("menu");
+            continue; 
+        }
+        soundManager->unPauseMusic("menu");
+        
         sf::Event event;
         while (window->pollEvent(event)) {
             subMenu->processEvents(window, event);
@@ -215,6 +251,8 @@ int Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isF
                             window->getSize().y / 2 - waitingText.getGlobalBounds().height / 2);
 
     while (window->isOpen() && !isFinish) {
+        if (notFocus(window)) { continue; }
+        
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -257,6 +295,8 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
 
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
+        if (notFocus(window)) { continue; }
+        
         sf::Event event;
         while (window->pollEvent(event)) {
             // Chờ để hủy Restart ngay lập tức
@@ -272,6 +312,8 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     }
 
     while (window->isOpen() and gameOverMenu->notSelected()) {
+        if (notFocus(window)) { continue; }
+        
         sf::Event event;
         while (window->pollEvent(event)) {
             gameOverMenu->processEvents(window, event);
@@ -304,9 +346,11 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     soundManager->play("selected");
 
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
+        if (notFocus(window)) { continue; }
+        
         sf::Event event;
         while (window->pollEvent(event)) {
-            // Chờ để hủy Restart ngay lập tức
+            // Chờ để hủy resume ngay lập tức
         }
 
         float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
@@ -319,6 +363,8 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     }
 
     while (window->isOpen() and pauseMenu->notSelected()) {
+        if (notFocus(window)) { continue; }
+        
         sf::Event event;
         while (window->pollEvent(event)) {
             pauseMenu->processEvents(window, event);
@@ -341,6 +387,8 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     if (result == STATUS_CODE::RESUME) {
         overlayTimeout.restart(); 
         while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
+            if (notFocus(window)) { continue; }
+        
             sf::Event tempEvent;
             while (window->pollEvent(tempEvent)) {
                 // Không làm gì cả -> Chỉ lấy ra để loại bỏ buffer
@@ -377,7 +425,15 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
     soundManager->play("countdown");
 
     int count = 3;
-    while (true) {
+    while (true) {  // count >= 0
+        if (notFocus(window)) { 
+            soundManager->pause("countdown");
+            
+            continue; 
+        }
+        
+        soundManager->unPause("countdown");
+        
         sf::Event event;
         while (window->pollEvent(event)) {
             // clear buffer

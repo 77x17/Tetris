@@ -13,22 +13,24 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Graphics.hpp>
 #include <thread>
-
+#include <windows.h>
 #include <iostream>
 
 const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 600;
 
-float SoundManager::volume = 50.0f;
-float SoundManager::musicVolume = 50.0f;
+float SoundManager::volume      = 50.0f;
+float SoundManager::musicVolume =  5.0f;
+std::unordered_map<std::string, sf::SoundBuffer> SoundManager::musicBuffers = std::unordered_map<std::string, sf::SoundBuffer>();
+std::unordered_map<std::string, sf::Sound>       SoundManager::musicSounds  = std::unordered_map<std::string, sf::Sound>();
 
 Tetris::Tetris() {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
+    window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
     // window = new sf::RenderWindow(desktop, "Tetris"); // Không viền
     // window->setPosition(sf::Vector2i(0, 0)); // Đặt vị trí góc trên cùng bên trái
 
-    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
+    // window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
@@ -36,6 +38,23 @@ Tetris::Tetris() {
 Tetris::~Tetris() {
     delete window;
     delete scene;
+}
+
+bool Tetris::notFocus(sf::RenderWindow *window) {
+    if (not window->hasFocus()) {
+        ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
+
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            // nothing
+        }
+
+        sf::sleep(sf::milliseconds(100));
+
+        return true;
+    }
+
+    return false;
 }
 
 void Tetris::start() {
@@ -75,7 +94,7 @@ void Tetris::start() {
     }
 }
 
-void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite, sf::Music &backgroundMusic) {
+void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite) {
     backgroundTexture.loadFromFile("ASSETS/background.png");
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setColor(sf::Color(255, 255, 255, 50));
@@ -95,16 +114,13 @@ void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgrou
     float posX = (windowSize.x - newWidth ) / 2;
     float posY = (windowSize.y - newHeight) / 2;
     backgroundSprite.setPosition(posX, posY);
-
-    backgroundMusic.openFromFile("ASSETS/sfx/_tetristheme.mp3");
-    backgroundMusic.setLoop(true);
 }
 
 STATUS_CODE Tetris::startGameOnePlayer() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
     sf::Music   backgroundMusic;
-    loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
+    loadPlayground(backgroundTexture, backgroundSprite);
     backgroundMusic.play();
 
 
@@ -143,6 +159,8 @@ restartGameOnePlayer:
     }
 
     while (not player->isGameOver()) {
+        if (notFocus(window)) { continue; }
+
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -210,9 +228,7 @@ quitStartGameOnePlayer:
 STATUS_CODE Tetris::startGameVersusBot() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
-    sf::Music   backgroundMusic;
-    loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
-    backgroundMusic.play();
+    loadPlayground(backgroundTexture, backgroundSprite);
 
 restartGameVersusBot:
     int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
@@ -257,6 +273,8 @@ restartGameVersusBot:
     }
 
     while (not player->isGameOver()) {
+        if (notFocus(window)) { continue; }
+
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -268,7 +286,7 @@ restartGameVersusBot:
                 if (event.key.code == sf::Keyboard::Escape) {
                     STATUS_CODE escapeOption = scene->drawPause(window);
 
-                    switch (escapeOption) {
+                    switch (escapeOption)    {
                         case STATUS_CODE::RESUME:
                             break;
                         case STATUS_CODE::RESTART:
@@ -312,8 +330,6 @@ restartGameVersusBot:
 
             screenStatus = scene->drawGameOver(window);
         }
-
-        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
 
 quitGameVersusBot:
@@ -372,10 +388,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
 
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
-    sf::Music   backgroundMusic;
-    loadPlayground(backgroundTexture, backgroundSprite, backgroundMusic);
-    backgroundMusic.play();
-
+    loadPlayground(backgroundTexture, backgroundSprite);
 
     competitor->start(player);
     
@@ -400,7 +413,6 @@ void Tetris::startGameTwoPlayer(bool isHost) {
             window->display();
         }
         else {
-            backgroundMusic.setVolume(SoundManager::getVolume() - 20);
             STATUS_CODE option = scene->drawGameOver(window);
             player->waitingComfirm();
 
