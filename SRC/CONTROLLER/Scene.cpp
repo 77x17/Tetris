@@ -60,14 +60,14 @@ Scene::~Scene() {
 
 bool Scene::notFocus(sf::RenderWindow *window) {    
     if (not window->hasFocus()) {
-        ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
+        // ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
 
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            // nothing
-        }
+        // sf::Event event;
+        // while (window->pollEvent(event)) {
+        //     // nothing
+        // }
 
-        sf::sleep(sf::milliseconds(100));
+        // sf::sleep(sf::milliseconds(100));
    
         return true;
     }
@@ -139,6 +139,7 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
 }
 
 STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
+    // return STATUS_CODE::QUIT;
     soundManager->playMusic("menu");
 
     {

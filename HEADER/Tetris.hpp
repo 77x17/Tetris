@@ -19,8 +19,6 @@ private:
     Scene            *scene;
     sf::RenderWindow *window;
 
-    sf::Font          font;
-
     std::atomic<bool> isFinish;
     void makeConnection(bool isHost, Competitor* &competitor, PlayerWithNetwork* &player);
 

@@ -32,24 +32,23 @@ Tetris::Tetris() {
 
     // window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);
-    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 }
 
 Tetris::~Tetris() {
-    delete window;
-    delete scene;
+    delete scene; scene = nullptr;
+    delete window; window = nullptr;
 }
 
 bool Tetris::notFocus(sf::RenderWindow *window) {
     if (not window->hasFocus()) {
-        ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
+        // ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
 
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            // nothing
-        }
+        // sf::Event event;
+        // while (window->pollEvent(event)) {
+        //     // nothing
+        // }
 
-        sf::sleep(sf::milliseconds(100));
+        // sf::sleep(sf::milliseconds(100));
 
         return true;
     }
@@ -150,19 +149,18 @@ restartGameOnePlayer:
         int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
         int GRID_POSITION_Y    = Y_COORDINATE;
 
-        scene->drawCountdown(window, 
-            (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
-            (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
-            -1,
-            -1
-        );
+        // scene->drawCountdown(window, 
+        //     (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
+        //     (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
+        //     -1,
+        //     -1
+        // );
     }
 
+    sf::Event event;
     while (not player->isGameOver()) {
-        if (notFocus(window)) { continue; }
-
-        sf::Event event;
         while (window->pollEvent(event)) {
+
             if (event.type == sf::Event::Closed) {
                 scene->drawChangeMenu(window, false);
 
@@ -196,12 +194,12 @@ restartGameOnePlayer:
             player->processEvents(event);
         }
 
+        player->autoDown();
+        
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
         window->display();
-
-        player->autoDown();
 
         if (player->isGameOver()) {
             window->clear();
@@ -360,10 +358,10 @@ void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwo
         competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
     }
     else {
-        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
-        // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.142.133", 55001);
-        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.142.133", 55000);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
+        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
+        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.142.133", 55001);
+        // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.142.133", 55000);
     }
     isFinish.store(true);
 }
@@ -393,6 +391,7 @@ void Tetris::startGameTwoPlayer(bool isHost) {
     competitor->start(player);
     
     while (window->isOpen()) {
+
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {

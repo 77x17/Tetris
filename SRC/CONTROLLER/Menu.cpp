@@ -33,11 +33,12 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 
     keyConfiguration = new KeyConfiguration("ASSETS/keyBindings.txt");
 
+    
     soundManager = new SoundManager();
     soundManager->loadSound("move"    , "ASSETS/sfx/menutap.mp3");
     soundManager->loadSound("selected", "ASSETS/sfx/menu_hit.mp3");
     soundManager->loadSound("scroll", "ASSETS/sfx/scroll.mp3");
-
+    
     menuSize  = menuItems.size();   
     menuTexts = new sf::Text[menuSize];
     subMenus.clear();
@@ -163,7 +164,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
         default: 
             throw std::invalid_argument("[Menu.cpp] cannot find MENU_CODE");
     }
-
+    
     switch (menuCode) {
         case MENU_CODE::MAIN: 
         case MENU_CODE::SINGLEPLAYER: 
@@ -543,9 +544,12 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 }
 
 Menu::~Menu() {
-    delete soundManager;
 
-    delete menuTexts;
+    delete keyConfiguration;
+    
+    delete soundManager;
+    
+    delete[] menuTexts;
 
     switch (menuCode) {
         case MENU_CODE::MAIN: {
@@ -558,21 +562,21 @@ Menu::~Menu() {
         case MENU_CODE::SINGLEPLAYER:
         case MENU_CODE::MULTIPLAYER: 
         case MENU_CODE::OPTION: {
-            delete menuBars;
+            delete[] menuBars;
 
-            delete originalPositionX;
-            delete currentBarPositionX;
-            delete targetBarPositionX;
+            delete[] originalPositionX;
+            delete[] currentBarPositionX;
+            delete[] targetBarPositionX;
 
-            delete gradient;
+            delete[] gradient;
 
             break;
         }
         case MENU_CODE::PAUSE:
         case MENU_CODE::GAMEOVER: {
-            delete menuBars;
+            delete[] menuBars;
 
-            delete gradient;
+            delete[] gradient;
 
             break;
         }
