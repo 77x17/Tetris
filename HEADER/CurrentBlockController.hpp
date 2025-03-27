@@ -39,6 +39,7 @@ public:
 
     virtual bool rotateLeft();
     virtual bool rotateRight();
+    virtual bool rotate180();
 
     virtual void swap(Hold* hold);
 

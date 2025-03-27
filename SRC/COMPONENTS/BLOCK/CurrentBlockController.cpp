@@ -81,7 +81,7 @@ bool CurrentBlockController::collisionBottom() {
 }
 
 bool CurrentBlockController::rotateLeft() {
-    Block*& cur = block->block;
+    Block*& cur  = block->block;
     int8_t &posY = block->posY;
     int8_t &posX = block->posX;
 
@@ -102,24 +102,24 @@ bool CurrentBlockController::rotateLeft() {
         if (posX >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
         posX++;        
 
-        if (cur->getShapeID() == 0) {
+        if (cur->getShapeID() == 1) {
             posY += 2;
-            if (isValid(cur->getRotateLeft())) goto rotate_success;
+            if (isValid(cur->getRotateLeft()))  goto rotate_success;
             if (isValid(cur->getRotateRight())) goto rotate_success;
             posY -= 2;
 
             posY -= 2;
-            if (posY >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
+            if (posY >= 0 and isValid(cur->getRotateLeft()))  goto rotate_success;
             if (posY >= 0 and isValid(cur->getRotateRight())) goto rotate_success;
             posY += 2;
             
             posX += 2;
-            if (isValid(cur->getRotateLeft())) goto rotate_success;
+            if (isValid(cur->getRotateLeft()))  goto rotate_success;
             if (isValid(cur->getRotateRight())) goto rotate_success;
             posX -= 2;
 
             posX -= 2;
-            if (posX >= 0 and isValid(cur->getRotateLeft())) goto rotate_success;
+            if (posX >= 0 and isValid(cur->getRotateLeft()))  goto rotate_success;
             if (posX >= 0 and isValid(cur->getRotateRight())) goto rotate_success;
             posX += 2;
         }
@@ -144,6 +144,11 @@ rotate_success:
 }
 
 bool CurrentBlockController::rotateRight() {
+
+    return true;
+}
+
+bool CurrentBlockController::rotate180() {
 
     return true;
 }

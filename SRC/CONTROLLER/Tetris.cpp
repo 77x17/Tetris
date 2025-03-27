@@ -286,7 +286,7 @@ restartGameVersusBot:
                 if (event.key.code == sf::Keyboard::Escape) {
                     STATUS_CODE escapeOption = scene->drawPause(window);
 
-                    switch (escapeOption) {
+                    switch (escapeOption)    {
                         case STATUS_CODE::RESUME:
                             break;
                         case STATUS_CODE::RESTART:
