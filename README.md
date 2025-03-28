@@ -5,6 +5,7 @@ todo list:
 HQH
 1. Viết lại 3 monitor 
 2. Cài delay khi gửi garbage
+3. Làm nạp code vào và chạy bot xem bot nào tối ưu hơn!.
 
 77x17
 3. Cài thêm time - lines.

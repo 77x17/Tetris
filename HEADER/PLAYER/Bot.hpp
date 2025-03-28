@@ -1,27 +1,37 @@
-#pragma once
+#ifndef BOT_HPP
+#define BOT_HPP
 
-#include "Player.hpp"
-#include <vector>
+#include <unistd.h>
+#include <SFML/Graphics.hpp>
 
-enum class MOVE {
+class MonitorForTwoPlayer;
+class MovementController;
+class CurrentBlockController;
+class PlayerWithBot;
 
-};
-
-class Bot : public Player {
+class Bot {
 private:
-    bool isThinking;
-    std::vector<MOVE> bestMoves;
-    int moveIndex;
-    sf::Clock decisionClock;
-
-    void analyzeMove();
-    void executeMove();
-    
+    int X_COORDINATE;
+    int Y_COORDINATE;
+    MonitorForTwoPlayer* monitor;
+    MovementController *movementController;
+    CurrentBlockController* curBlock;
 public:
-    Bot(int X_COORDINATE, int Y_COORDINATE);
+    Bot(int X_COORDINATE, int Y_COORDINATE, int seed);
     ~Bot();
     
+    void setGameOver();
+    bool isGameOver();
+
+    void start(PlayerWithBot*);
+
+    void resetComponent();
+
+    void handleAddLine(uint8_t nLines);
+
     void update(); // Cập nhật trạng thái bot theo thời gian
     void draw(sf::RenderWindow *window);
 
 };
+
+#endif

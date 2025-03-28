@@ -34,7 +34,6 @@ PlayerWithNetwork::PlayerWithNetwork(int x, int y, const char* ipv4, int port): 
 void PlayerWithNetwork::initialize() {
     monitor = new MonitorForTwoPlayer(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlockController(monitor->getMap());
-    soundManager = new SoundManager();
     movementController = new MovementControllerWithNetwork(monitor, curBlock, &socket);
 }
 
