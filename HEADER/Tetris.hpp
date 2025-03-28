@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include <atomic>
-
 class Player;
 class PlayerWithNetwork;
 class Competitor;
@@ -19,9 +17,6 @@ private:
     Scene            *scene;
     sf::RenderWindow *window;
 
-    std::atomic<bool> isFinish;
-    void makeConnection(bool isHost, Competitor* &competitor, PlayerWithNetwork* &player);
-
     bool notFocus(sf::RenderWindow *window);
     
 public:
@@ -31,7 +26,6 @@ public:
     void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite);
     STATUS_CODE startGameVersusBot();
     STATUS_CODE startGameOnePlayer();
-    void startGameTwoPlayer(bool isHost);
 };
 
 #endif

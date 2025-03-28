@@ -19,18 +19,18 @@
 const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 600;
 
-float SoundManager::volume      = 50.0f;
-float SoundManager::musicVolume =  5.0f;
+float SoundManager::volume      = 0.0f;
+float SoundManager::musicVolume =  0.0f;
 std::unordered_map<std::string, sf::SoundBuffer> SoundManager::musicBuffers = std::unordered_map<std::string, sf::SoundBuffer>();
 std::unordered_map<std::string, sf::Sound>       SoundManager::musicSounds  = std::unordered_map<std::string, sf::Sound>();
 
 Tetris::Tetris() {
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
+    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
     // window = new sf::RenderWindow(desktop, "Tetris"); // Không viền
     // window->setPosition(sf::Vector2i(0, 0)); // Đặt vị trí góc trên cùng bên trái
 
-    // window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);
 }
 
@@ -69,10 +69,10 @@ void Tetris::start() {
                 screenStatus = startGameVersusBot();
                 break;
             case STATUS_CODE::MULTIPLAYER_SERVER:
-                startGameTwoPlayer(true);   
+                // screenStatus = startGameTwoPlayer(true);   
                 break;
             case STATUS_CODE::MULTIPLAYER_CLIENT:
-                startGameTwoPlayer(false);
+                // screenStatus = startGameTwoPlayer(false);
                 break;
             case STATUS_CODE::QUIT:
                 window->close();
@@ -339,115 +339,4 @@ quitGameVersusBot:
     }
 
     return screenStatus;
-}
-
-void Tetris::makeConnection(bool isHost, Competitor* &competitor,PlayerWithNetwork* &player) {
-    int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
-    int PLAYER_Y_COORDINATE = 10;
-    int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
-    int COMPETITOR_Y_COORDINATE = 10;
-    
-    if (isHost) {
-        sf::TcpListener listener;
-        listener.listen(55001);
-        std::random_device rd;
-        int seed = rd();
-        
-        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, listener, seed);
-        listener.listen(55000);
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
-    }
-    else {
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
-        player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
-        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.0.142.133", 55001);
-        // player = new PlayerWithNetwork(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.0.142.133", 55000);
-    }
-    isFinish.store(true);
-}
-
-void Tetris::startGameTwoPlayer(bool isHost) {
-    PlayerWithNetwork* player = nullptr;
-    Competitor* competitor    = nullptr;
-    {
-        isFinish.store(false);
-        std::thread connectThread(&Tetris::makeConnection, this, isHost, 
-                                        std::ref(competitor), std::ref(player));
-    
-        int connectStatus = scene->waitingForConnection(window, isFinish);
-        if (connectStatus == -1) { // Error - exit
-            delete player;
-            delete competitor;
-            
-            return;
-        }
-        connectThread.join();
-    }
-
-    sf::Texture backgroundTexture;
-    sf::Sprite  backgroundSprite;
-    loadPlayground(backgroundTexture, backgroundSprite);
-
-    competitor->start(player);
-    
-    while (window->isOpen()) {
-
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window->close();
-            }
-            player->processEvents(event);
-        }
-        if (competitor->isGameOver()) {
-            player->setGameOver();
-        }
-        if (!player->isGameOver()) {
-            player->sendCurBlock();
-            player->autoDown();
-            window->clear();
-            window->draw(backgroundSprite); // Draw background
-            player->draw(window);
-            competitor->draw(window);
-            window->display();
-        }
-        else {
-            STATUS_CODE option = scene->drawGameOver(window);
-            player->waitingComfirm();
-
-            if (option == STATUS_CODE::RESTART) {
-                isFinish.store(false);
-                std::thread RestartGame([this](PlayerWithNetwork* player, Competitor* competitor, bool isHost) {
-                    int seed = 0;
-                    if (isHost) {
-                        std::random_device rd; seed = rd();
-                        player->ready(seed);
-                        competitor->ready(seed);
-                    }
-                    else {
-                        competitor->ready(seed);
-                        player->ready(seed);
-                    }
-                    isFinish.store(true);
-                }, player, competitor, isHost);
-                int connectStatus = scene->waitingForConnection(window, isFinish);
-                if (connectStatus == -1) { // Error - exit
-                    delete player;
-                    delete competitor; 
-                    return;
-                }
-                RestartGame.join();
-                competitor->start(player);
-            }
-            else if (option == STATUS_CODE::MENU) {     // Menu
-                window->close();
-            }
-            else if (option == STATUS_CODE::QUIT) {    // Quit
-                window->close();
-            }
-        }
-    }
-
-    delete player;
-    delete competitor;
 }

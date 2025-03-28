@@ -243,7 +243,7 @@ STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
     return subMenu->getSelectedItem();
 }
 
-int Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
+STATUS_CODE Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
     sf::Clock waitingClock;
     uint8_t count = 0;
     std::string waiting = "Waiting for another player"; 
@@ -259,7 +259,7 @@ int Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isF
             if (event.type == sf::Event::Closed) {
                 window->close();
                 
-                return -1;
+                return STATUS_CODE::QUIT;
             }
         }
 
@@ -282,7 +282,7 @@ int Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isF
         window->draw(waitingText);
         window->display();
     }
-    return 0;
+    return STATUS_CODE::RESUME;
 }
 
 STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
@@ -296,7 +296,7 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
 
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
-        if (notFocus(window)) { continue; }
+        // if (notFocus(window)) { continue; }
         
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -313,7 +313,7 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     }
 
     while (window->isOpen() and gameOverMenu->notSelected()) {
-        if (notFocus(window)) { continue; }
+        // if (notFocus(window)) { continue; }
         
         sf::Event event;
         while (window->pollEvent(event)) {

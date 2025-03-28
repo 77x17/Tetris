@@ -40,7 +40,7 @@ public:
     STATUS_CODE drawPause(sf::RenderWindow *window);
     STATUS_CODE drawGameOver(sf::RenderWindow *window);
     
-    int waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
+    STATUS_CODE waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
     
     void drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCenterY, int otherGridCenterX, int otherGridCenterY);
 };
