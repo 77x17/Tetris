@@ -83,7 +83,6 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     uint8_t state, y, x, shadowPosY, spin;
                     packet >> state >> y >> x >> shadowPosY >> spin;
                     curBlock->setState(state, x, y, shadowPosY);
-                    // int nLinesRemove = curBlock->putIntoMap(dynamic_cast<MonitorForTwoPlayer*>(monitor)->getMap());
                     int nLinesRemove = monitor->putIntoMap(curBlock);
                     if (nLinesRemove == 0) {
                         int seed; packet >> seed;

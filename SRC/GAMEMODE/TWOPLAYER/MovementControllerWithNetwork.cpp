@@ -23,7 +23,7 @@ void MovementControllerWithNetwork::handleHold() {
 }
 
 void MovementControllerWithNetwork::handlePut() {
-    int nLines = curBlock->putIntoMap();
+    int nLines = monitor->putIntoMap(curBlock->getCurrentBlock());
 
     sf::Packet packet; packet << PUT;
     curBlock->compressWithSpin(packet);

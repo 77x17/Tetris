@@ -86,8 +86,7 @@ void MovementController::handleRotate180() {
 
 
 void MovementController::handlePut() {
-    int nLines = curBlock->putIntoMap();
-    
+    int nLines = monitor->putIntoMap(curBlock->getCurrentBlock());
     monitor->removeNLines(nLines, curBlock->getCurrentBlock());
 
     collision = false;
