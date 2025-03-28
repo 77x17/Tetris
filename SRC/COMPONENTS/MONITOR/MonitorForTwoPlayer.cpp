@@ -59,6 +59,10 @@ void MonitorForTwoPlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     dynamic_cast<InforForNetwork*>(infor)->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
 }
 
+void MonitorForTwoPlayer::setNewSeed(int seed) {
+    next->reset(seed);
+}
+
 void MonitorForTwoPlayer::inforReceiveLineFromCompetitor(int nLines) {
     dynamic_cast<InforForNetwork*>(infor)->addLine(nLines);
 }

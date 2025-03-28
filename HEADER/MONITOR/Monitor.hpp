@@ -32,8 +32,6 @@ public:
     bool isGameOver();
     void setGameOver();
 
-    void setNewSeed(int seed);
-
     uint8_t removeNLines(int nLines, CurrentBlock* currentBlock);
 
     bool canHold();
@@ -42,7 +40,7 @@ public:
     void exchangeCurrentBlock(CurrentBlock*);
 
     Map* getMap() const;
-    
+
     int putIntoMap(CurrentBlock* curBlock);
     LinkListBlock* getNext() const;
 };

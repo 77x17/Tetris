@@ -11,6 +11,7 @@ class MovementControllerWithNetwork;
 
 class PlayerWithNetwork: public Player{
 private:
+    MonitorForTwoPlayer* monitor;
     sf::TcpSocket socket;
     
 public:

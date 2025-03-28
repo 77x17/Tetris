@@ -1,20 +1,20 @@
 #ifndef COMPETITOR_HPP
 #define COMPETITOR_HPP
 
+#include <SFML/Graphics.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <mutex>
 #include <queue>
 #include <random>
 
-#include "Monitor.hpp"
-
 class CurrentBlock;
 class SoundManager;
 class PlayerWithNetwork;
+class MonitorForTwoPlayer;
 
 class Competitor{
 private:
-    Monitor* monitor;
+    MonitorForTwoPlayer* monitor;
     sf::TcpSocket socket;
 
     std::mutex mtx;

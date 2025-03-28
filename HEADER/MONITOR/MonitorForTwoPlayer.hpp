@@ -18,6 +18,8 @@ public:
     void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
 
+    void setNewSeed(int seed);
+
     void inforReceiveLineFromCompetitor(int nLines);
     void mapReceiveLineFromCompetitor(int seed);
 };

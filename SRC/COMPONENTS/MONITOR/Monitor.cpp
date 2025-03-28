@@ -49,10 +49,6 @@ void Monitor::resetMonitor(uint32_t seed) {
     gameOver = false;
 }
 
-void Monitor::setNewSeed(int seed) {
-    next->reset(seed);
-}
-
 uint8_t Monitor::removeNLines(int nLines, CurrentBlock* curBlock) {
     infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
     infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
