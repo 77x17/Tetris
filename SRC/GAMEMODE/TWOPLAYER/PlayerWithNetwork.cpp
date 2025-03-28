@@ -61,7 +61,7 @@ void PlayerWithNetwork::start(uint32_t seed) {
 void PlayerWithNetwork::restart(uint32_t seed) {
     monitor->resetMonitor(seed);
     movementController->resetComponent();
-    curBlock->setter((monitor->getNext())->updateNext());
+    curBlock->setter(monitor->getNext());
     monitor->unlockHold();
 }
 

@@ -3,11 +3,11 @@
 
 #include <SFML/Graphics.hpp>
 
-class Infor;
 class Next;
 class LinkListBlock;
 class Map;
 class Hold;
+class Block;
 class CurrentBlock;
 
 class Monitor {
@@ -43,7 +43,7 @@ public:
     virtual Map* getMap() const = 0;
 
     virtual int putIntoMap(CurrentBlock* curBlock) = 0;
-    LinkListBlock* getNext() const;
+    Block* getNext() const;
 };
 
 #endif

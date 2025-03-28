@@ -90,7 +90,7 @@ void MovementController::handlePut() {
     monitor->removeNLines(nLines, curBlock->getCurrentBlock());
 
     collision = false;
-    curBlock->setter((monitor->getNext())->updateNext());
+    curBlock->setter(monitor->getNext());
     monitor->unlockHold();
     if (curBlock->gameOver())
         monitor->setGameOver();

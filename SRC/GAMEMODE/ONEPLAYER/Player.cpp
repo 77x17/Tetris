@@ -34,7 +34,7 @@ Player::~Player() {
 
 void Player::resetComponent() {
     movementController->resetComponent();
-    curBlock->setter((monitor->getNext())->updateNext());
+    curBlock->setter(monitor->getNext());
     monitor->unlockHold();
 }
 
