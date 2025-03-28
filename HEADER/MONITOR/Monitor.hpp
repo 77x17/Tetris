@@ -34,14 +34,12 @@ public:
 
     void setNewSeed(int seed);
 
-    uint8_t addLineToInfor(int nLines, CurrentBlock* currentBlock);
+    uint8_t removeNLines(int nLines, CurrentBlock* currentBlock);
 
     bool canHold();
     void unlockHold();
     void lockHold();
     void exchangeCurrentBlock(CurrentBlock*);
-
-    // Block* getNextBlock();
 
     Map* getMap() const;
     LinkListBlock* getNext() const;

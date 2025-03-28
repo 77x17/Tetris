@@ -35,7 +35,7 @@ void MovementControllerWithNetwork::handlePut() {
     if (socket->send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
 
-    monitor->addLineToInfor(nLines, curBlock->getCurrentBlock());
+    monitor->removeNLines(nLines, curBlock->getCurrentBlock());
 
     collision = false;
     curBlock->setter((monitor->getNext())->updateNext());

@@ -53,7 +53,7 @@ void Monitor::setNewSeed(int seed) {
     next->reset(seed);
 }
 
-uint8_t Monitor::addLineToInfor(int nLines, CurrentBlock* curBlock) {
+uint8_t Monitor::removeNLines(int nLines, CurrentBlock* curBlock) {
     infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
     infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
     return infor->removeLine(nLines);

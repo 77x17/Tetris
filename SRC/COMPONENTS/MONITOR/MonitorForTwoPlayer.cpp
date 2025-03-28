@@ -3,7 +3,7 @@
 #include "Common.hpp"
 #include "Hold.hpp"
 #include "MapForNetwork.hpp"
-#include "Infor.hpp"
+#include "InforForNetwork.hpp"
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 
@@ -19,7 +19,7 @@ void MonitorForTwoPlayer::CreateMonitor(int x, int y) {
     hold = new Hold();
     map  = new MapForNetwork();
     next = new LinkListBlock();
-    infor = new Infor();
+    infor = new InforForNetwork();
     setPosition(x, y);
 }
 
@@ -56,13 +56,13 @@ void MonitorForTwoPlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     hold->setPosition(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
     map->setPosition(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
     next->setPosition(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
-    infor->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
+    dynamic_cast<InforForNetwork*>(infor)->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
 }
 
 void MonitorForTwoPlayer::inforReceiveLineFromCompetitor(int nLines) {
-    infor->addLine(nLines);
+    dynamic_cast<InforForNetwork*>(infor)->addLine(nLines);
 }
 
 void MonitorForTwoPlayer::mapReceiveLineFromCompetitor(int seed) {
-    dynamic_cast<MapForNetwork*>(map)->add(infor->getAndRemoveLineAdd(), seed);
+    dynamic_cast<MapForNetwork*>(map)->add(dynamic_cast<InforForNetwork*>(infor)->getAndRemoveLineAdd(), seed);
 }

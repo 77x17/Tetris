@@ -5,11 +5,28 @@
 
 const int FONT_SIZE = 25;
 
-constexpr float TIME_OUT = 2.0f;
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH):
-        nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false), nLinesAdd(0), garbageSent(0) {
+// Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH):
+//         nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false), nLinesAdd(0), garbageSent(0) {
+//     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
+    
+//     soundManager = new SoundManager();
+//     soundManager->loadSound("clearB2B"  , "ASSETS/sfx/clearbtb.mp3");
+//     soundManager->loadSound("clearLine" , "ASSETS/sfx/clearline.mp3");
+//     soundManager->loadSound("clearQuad" , "ASSETS/sfx/clearquad.mp3");
+//     soundManager->loadSound("clearSpin" , "ASSETS/sfx/clearspin.mp3");
+//     soundManager->loadSound("combo1"    , "ASSETS/sfx/combo/combo_1.mp3");
+//     soundManager->loadSound("combo2"    , "ASSETS/sfx/combo/combo_2.mp3");
+//     soundManager->loadSound("combo3"    , "ASSETS/sfx/combo/combo_3.mp3");
+//     soundManager->loadSound("combo4"    , "ASSETS/sfx/combo/combo_4.mp3");
+//     soundManager->loadSound("combo5"    , "ASSETS/sfx/combo/combo_5.mp3");
+//     soundManager->loadSound("comboBreak", "ASSETS/sfx/combo/combobreak.mp3");
+
+//     setPosition(x, y, w, aX, aY, aW, aH, gX, gY, gW, gH);
+// }
+
+Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();
@@ -23,93 +40,18 @@ Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY
     soundManager->loadSound("combo4"    , "ASSETS/sfx/combo/combo_4.mp3");
     soundManager->loadSound("combo5"    , "ASSETS/sfx/combo/combo_5.mp3");
     soundManager->loadSound("comboBreak", "ASSETS/sfx/combo/combobreak.mp3");
-
-    setPosition(x, y, w, aX, aY, aW, aH, gX, gY, gW, gH);
 }
 
-Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), nLinesAdd(0), garbageSent(0) {
-    font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-    
-    soundManager = new SoundManager();
-    soundManager->loadSound("clearB2B"  , "ASSETS/sfx/clearbtb.mp3");
-    soundManager->loadSound("clearLine" , "ASSETS/sfx/clearline.mp3");
-    soundManager->loadSound("clearQuad" , "ASSETS/sfx/clearquad.mp3");
-    soundManager->loadSound("clearSpin" , "ASSETS/sfx/clearspin.mp3");
-    soundManager->loadSound("combo1"    , "ASSETS/sfx/combo/combo_1.mp3");
-    soundManager->loadSound("combo2"    , "ASSETS/sfx/combo/combo_2.mp3");
-    soundManager->loadSound("combo3"    , "ASSETS/sfx/combo/combo_3.mp3");
-    soundManager->loadSound("combo4"    , "ASSETS/sfx/combo/combo_4.mp3");
-    soundManager->loadSound("combo5"    , "ASSETS/sfx/combo/combo_5.mp3");
-    soundManager->loadSound("comboBreak", "ASSETS/sfx/combo/combobreak.mp3");
-}
-
-void Infor::setPosition(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH) {
+void Infor::setPosition(int x, int y, int w, int aX, int aY, int aW, int aH) {
     INFOR_POSITION_X = x; INFOR_POSITION_Y = y; INFOR_WIDTH = w; 
     AUDIO_POSITION_X = aX; AUDIO_POSITION_Y = aY; AUDIO_WIDTH = aW; AUDIO_HEIGHT = aH; 
-    GARBAGE_POSITION_X = gX; GARBAGE_POSITION_Y = gY; GARBAGE_WIDTH = gW; GARBAGE_HEIGHT = gH;
 }
 
 Infor::~Infor() {
     delete soundManager;
 }
 
-void Infor::reset() { nLine = 0; count = 0; B2B = 0; B2BMissing = 0; nLinesAdd = 0; }
-
-int Infor::getGarbage(int lines, bool spin, int B2B, int count) {
-    int result = 0;
-    if (spin) { 
-        result = lines * 2;
-    }
-    else {
-        if (lines < 4) { 
-            result += lines - 1;
-        }
-        else {
-            result += lines;
-        }
-    }
-
-    // B2B Calc
-    B2B--;
-    if (B2B <= 0) {
-        // nothing
-    }
-    else if (1 <= B2B and B2B <= 2) {
-        result += 1;
-    }
-    else if (3 <= B2B and B2B <= 7) {
-        result += 2;
-    }
-    else if (8 <= B2B and B2B <= 23) {
-        result += 3;
-    }
-    else if (24 <= B2B and B2B <= 66) {
-        result += 4;
-    }
-    else if (67 <= B2B) {
-        result += 5;
-    }
-
-    // combo
-    count--;
-    if (spin and lines >= 2) {
-        result += count;
-    }
-    else if (count <= 1) {
-        // nothing
-    }
-    else if (2 <= count and count <= 5) {
-        result += 1;
-    }
-    else if (6 <= count and count <= 15) {
-        result += 2;
-    }
-    else if (16 <= count and count <= 20) {
-        result += 3;
-    }
-
-    return result;
-}
+void Infor::reset() { nLine = 0; count = 0; B2B = 0; B2BMissing = 0;}
 
 // garbage sent
 uint8_t Infor::removeLine(uint8_t lines) {
@@ -117,59 +59,13 @@ uint8_t Infor::removeLine(uint8_t lines) {
         // nothing
         return 0;
     }
-
-    garbageSent = getGarbage(lines, spin, B2B, count);
-    if (garbageSent != 0) {
-        garbageSentTimeout.restart();
-    }
-
     nLine += lines;
-    int realAddLines = garbageSent;
-
-    // if (not spin and lines != 4) {
-    //     realAddLines += 1;
-    // }
-
-    mtx.lock();
-    uint8_t nLinesAddCurrent = __builtin_popcount(nLinesAdd);
-
-    nLinesAdd >>= realAddLines;
-    if (not spin and lines != 4)
-        nLinesAdd >>= 1;
-    if (getBit(nLinesAdd, 0) == 0) nLinesAdd >>= 1;
-
-    if (nLinesAddCurrent > realAddLines) realAddLines = 0;
-    else realAddLines -= nLinesAddCurrent;
-    
-    mtx.unlock();
-    return realAddLines;
-}
-#include <iostream>
-// garbage receive
-void Infor::addLine(uint8_t lines) {
-    if (lines <= 0) throw std::runtime_error("garbage push error");
-    // Only use infor in decleration and donot access outer infor.
-    // lines = getGarbage(lines, spin, B2B, count);
-
-    if (lines) {
-        mtx.lock();
-        nLinesAdd <<= (lines + 1);
-        nLinesAdd |= FULLMASK(lines);
-        mtx.unlock();
-    }
+    return nLine;
 }
 
 // void Infor::addLine(uint8_t lines, Infor* infor) {
 //     addLine(lines, infor->spin, infor->B2B, infor->count);
 // }
-
-uint64_t Infor::getAndRemoveLineAdd() {
-    mtx.lock();
-    uint64_t tmp = nLinesAdd;
-    nLinesAdd = 0;
-    mtx.unlock();
-    return tmp;
-}
 
 void Infor::update(uint8_t lines, bool isSpin, char block) {
     if (isSpin) {
@@ -376,44 +272,6 @@ void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
     window->draw(volumeBar);
 }
 
-void Infor::drawGarbage(sf::RenderWindow *window) {
-    mtx.lock();
-    uint64_t tmp = nLinesAdd;
-    mtx.unlock();
-
-    int nLines = __builtin_popcount(tmp);
-    sf::RectangleShape garbageBar;
-    garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLines * BLOCK_SIZE));
-    garbageBar.setFillColor(sf::Color(255, 0, 0, 100));
-    garbageBar.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
-
-    window->draw(garbageBar);
-
-    sf::RectangleShape line;
-    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), 2));
-    
-    nLines = 0;
-    while(tmp) {
-        if (!getBit(tmp, 0)) {
-            line.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
-            window->draw(line);
-        } else nLines++;
-        tmp >>= 1;
-    }
-}
-
-void Infor::drawGarbageSent(sf::RenderWindow *window) {
-    sf::Text text(std::to_string(garbageSent), font, 50);
-    text.setPosition(sf::Vector2f(GARBAGE_POSITION_X - text.getGlobalBounds().width - BLOCK_SIZE, 
-                                  GARBAGE_POSITION_Y - text.getGlobalBounds().height - BLOCK_SIZE));
-
-    float alpha = 255 * (1 - garbageSentTimeout.getElapsedTime().asSeconds() / TIME_OUT);
-    text.setFillColor(sf::Color(255, 255, 255, alpha));
-
-    window->draw(text);
-}
-
 void Infor::draw(sf::RenderWindow *window) {
     if (message != std::string() and timeout.getElapsedTime().asSeconds() < TIME_OUT) {
         drawMessage(window, message);
@@ -447,20 +305,4 @@ void Infor::draw(sf::RenderWindow *window) {
     if (B2B > 1) {
         drawB2B(window);
     }
-
-    drawGarbage(window);
-
-    if (garbageSentTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
-        if (garbageSent != 0) {
-            drawGarbageSent(window);
-        }
-    }
-    else {
-        garbageSent = 0;
-    }
-}
-
-// Guarantee inorder.
-void Infor::compress(sf::Packet &packet) {
-    packet << spin << B2B << count;
 }
