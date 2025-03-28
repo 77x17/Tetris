@@ -11,7 +11,7 @@
 class PlayerWithNetwork;
 class Competitor;
 
-class TetrisTowPlayer: public TetrisBaseMode {
+class TetrisTwoPlayer: public TetrisBaseMode {
 private:
     PlayerWithNetwork* player;
     Competitor* competitor;
@@ -22,8 +22,8 @@ private:
     void makeConnection();
 
 public:
-    TetrisTowPlayer(sf::RenderWindow*, Scene*, bool isHost);
-    ~TetrisTowPlayer();
+    TetrisTwoPlayer(sf::RenderWindow*, Scene*, bool isHost);
+    ~TetrisTwoPlayer();
     STATUS_CODE start();
 };
 

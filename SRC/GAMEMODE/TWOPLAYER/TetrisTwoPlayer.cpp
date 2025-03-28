@@ -1,5 +1,7 @@
 #include "TetrisTwoPlayer.hpp"
 
+#include <SFML/Network/TcpListener.hpp>
+#include <SFML/Network/TcpSocket.hpp>
 #include <thread>
 
 #include "Common.hpp"
@@ -8,17 +10,17 @@
 #include "Scene.hpp"
 #include "Menu.hpp"
 
-TetrisTowPlayer::TetrisTowPlayer(sf::RenderWindow* win, Scene* s, bool isHost):TetrisBaseMode(win, s), isHost(isHost) {
+TetrisTwoPlayer::TetrisTwoPlayer(sf::RenderWindow* win, Scene* s, bool isHost):TetrisBaseMode(win, s), isHost(isHost) {
     player = nullptr; competitor = nullptr;
 }
 
-TetrisTowPlayer::~TetrisTowPlayer() {
+TetrisTwoPlayer::~TetrisTwoPlayer() {
     delete player; player = nullptr; 
     delete competitor; competitor = nullptr;
 }
 
 
-void TetrisTowPlayer::makeConnection() {
+void TetrisTwoPlayer::makeConnection() {
     int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int PLAYER_Y_COORDINATE = 10;
     int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
@@ -43,16 +45,12 @@ void TetrisTowPlayer::makeConnection() {
     isFinish.store(true);
 }
 
-STATUS_CODE TetrisTowPlayer::start() {
-    PlayerWithNetwork* player = nullptr;
-    Competitor* competitor    = nullptr;
-
+STATUS_CODE TetrisTwoPlayer::start() {
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
 
     {
         isFinish.store(false);
-        std::thread connectThread(&TetrisTowPlayer::makeConnection, this, isHost, 
-                                        std::ref(competitor), std::ref(player));
+        std::thread connectThread(&TetrisTwoPlayer::makeConnection, this);
     
         screenStatus = scene->waitingForConnection(window, isFinish);
         // if (connectStatus == -1) { // Error - exit

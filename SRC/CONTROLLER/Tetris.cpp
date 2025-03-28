@@ -1,20 +1,13 @@
 #include "Tetris.hpp"
 
-#include "Player.hpp"
-#include "PlayerWithNetwork.hpp"
-#include "Competitor.hpp"
+#include "TetrisOnePlayer.hpp"
+#include "TetrisTwoPlayer.hpp"
 #include "SoundManager.hpp"
-#include "Common.hpp"
 #include "Menu.hpp"
 #include "Scene.hpp"
-#include "Bot.hpp"
 
-#include <SFML/Network/TcpListener.hpp>
-#include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Graphics.hpp>
-#include <thread>
 #include <windows.h>
-#include <iostream>
 
 const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 600;
@@ -39,40 +32,23 @@ Tetris::~Tetris() {
     delete window; window = nullptr;
 }
 
-bool Tetris::notFocus(sf::RenderWindow *window) {
-    if (not window->hasFocus()) {
-        // ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
-
-        // sf::Event event;
-        // while (window->pollEvent(event)) {
-        //     // nothing
-        // }
-
-        // sf::sleep(sf::milliseconds(100));
-
-        return true;
-    }
-
-    return false;
-}
-
 void Tetris::start() {
     while (window->isOpen()) {       
         STATUS_CODE gameType = scene->drawMenu(window);
         
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {
-            case STATUS_CODE::PRACTICE: 
-                screenStatus = startGameOnePlayer();
+            case STATUS_CODE::PRACTICE:
+                screenStatus = TetrisOnePlayer(window, scene).start();
                 break;
             case STATUS_CODE::VERSUSBOT:
-                screenStatus = startGameVersusBot();
+                // screenStatus = startGameVersusBot();
                 break;
             case STATUS_CODE::MULTIPLAYER_SERVER:
-                // screenStatus = startGameTwoPlayer(true);   
+                screenStatus = TetrisTwoPlayer(window, scene, true).start();
                 break;
             case STATUS_CODE::MULTIPLAYER_CLIENT:
-                // screenStatus = startGameTwoPlayer(false);
+                screenStatus = TetrisTwoPlayer(window, scene, false).start();
                 break;
             case STATUS_CODE::QUIT:
                 window->close();
@@ -93,136 +69,7 @@ void Tetris::start() {
     }
 }
 
-void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite) {
-    backgroundTexture.loadFromFile("ASSETS/background.png");
-    backgroundSprite.setTexture(backgroundTexture);
-    backgroundSprite.setColor(sf::Color(255, 255, 255, 50));
-
-    // Get window size & texture size
-    sf::Vector2u windowSize  = window->getSize();
-    sf::Vector2u textureSize = backgroundTexture.getSize();
-    // Calculate scale factors
-    float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
-    float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
-    float scale = std::max(scaleX, scaleY);
-    // Apply scale to fit window
-    backgroundSprite.setScale(scale, scale);
-    // Center the sprite
-    float newWidth  = textureSize.x * scale;
-    float newHeight = textureSize.y * scale;
-    float posX = (windowSize.x - newWidth ) / 2;
-    float posY = (windowSize.y - newHeight) / 2;
-    backgroundSprite.setPosition(posX, posY);
-}
-
-STATUS_CODE Tetris::startGameOnePlayer() {
-    sf::Texture backgroundTexture;
-    sf::Sprite  backgroundSprite;
-    sf::Music   backgroundMusic;
-    loadPlayground(backgroundTexture, backgroundSprite);
-    backgroundMusic.play();
-
-
-restartGameOnePlayer:
-    int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
-    int Y_COORDINATE = 10;
-    Player* player = new Player(X_COORDINATE, Y_COORDINATE);
-    player->start();
-
-    STATUS_CODE screenStatus = STATUS_CODE::QUIT;
-
-    // Fade in: change menu
-    {
-        window->clear();
-        window->draw(backgroundSprite); // Draw background
-        player->draw(window);
-        window->display();
-
-        scene->drawChangeMenu(window, true);
-    }
-
-    {
-        int HOLD_WIDTH         = 5;
-
-        int GRID_WIDTH         = 10;
-        int GRID_HEIGHT        = 24;
-        int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
-        int GRID_POSITION_Y    = Y_COORDINATE;
-
-        // scene->drawCountdown(window, 
-        //     (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
-        //     (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
-        //     -1,
-        //     -1
-        // );
-    }
-
-    sf::Event event;
-    while (not player->isGameOver()) {
-        while (window->pollEvent(event)) {
-
-            if (event.type == sf::Event::Closed) {
-                scene->drawChangeMenu(window, false);
-
-                goto quitStartGameOnePlayer;
-            }
-            else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape) {
-                    STATUS_CODE escapeOption = scene->drawPause(window);
-
-                    switch (escapeOption) {
-                        case STATUS_CODE::RESUME:
-                            break;
-                        case STATUS_CODE::RESTART:
-                            screenStatus = STATUS_CODE::RESTART;
-                            
-                            goto quitStartGameOnePlayer;
-                        case STATUS_CODE::MENU:
-                            screenStatus = STATUS_CODE::MENU;
-                            
-                            goto quitStartGameOnePlayer;
-                        case STATUS_CODE::QUIT:
-                            screenStatus = STATUS_CODE::QUIT;
-                            
-                            goto quitStartGameOnePlayer;
-                        default:
-                            throw std::runtime_error("[escapeOption] cannot find STATUS_CODE");
-                    }
-                }
-            }
-
-            player->processEvents(event);
-        }
-
-        player->autoDown();
-        
-        window->clear();
-        window->draw(backgroundSprite); // Draw background
-        player->draw(window);
-        window->display();
-
-        if (player->isGameOver()) {
-            window->clear();
-            window->draw(backgroundSprite); // Draw background
-            player->draw(window);
-            window->display();
-
-            screenStatus = scene->drawGameOver(window);
-        }
-
-        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
-    }
-
-quitStartGameOnePlayer:
-    delete player;
-
-    if (screenStatus == STATUS_CODE::RESTART) {
-        goto restartGameOnePlayer;
-    }
-
-    return screenStatus;
-}
-
+/* Tetris for bot;
 STATUS_CODE Tetris::startGameVersusBot() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
@@ -340,3 +187,4 @@ quitGameVersusBot:
 
     return screenStatus;
 }
+*/
