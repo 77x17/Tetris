@@ -2,7 +2,7 @@
 COMPILER = g++
 CFLAGS = -Wall -g -MMD -MP
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system 
-INCLUDES = -I"./HEADER"
+INCLUDES = -I"./HEADER" -I"./HEADER/BLOCK" -I"./HEADER/COMPONENT" -I"./HEADER/PLAYER" -I"./HEADER/MODEPLAY" -I"./HEADER/MONITOR" -I"./HEADER/MOVEMENTCONTROLLER" -I"./HEADER/CONTROLLER"
 
 SRC_DIR = ./SRC
 OBJ_DIR = ./BIN
