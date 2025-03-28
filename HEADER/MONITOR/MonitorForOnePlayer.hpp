@@ -17,6 +17,8 @@ public:
     MonitorForOnePlayer(int X_COORDINATE, int Y_COORDINATE);
     void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
+
+    void exchangeCurrentBlock(CurrentBlock*);
 };
 
 #endif

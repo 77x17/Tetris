@@ -63,6 +63,11 @@ void MonitorForTwoPlayer::setNewSeed(int seed) {
     next->reset(seed);
 }
 
+void MonitorForTwoPlayer::exchangeCurrentBlock(CurrentBlock* curBlock) {
+    Monitor::exchangeCurrentBlock(curBlock);
+    curBlock->resetPosition(map);
+}
+
 void MonitorForTwoPlayer::inforReceiveLineFromCompetitor(int nLines) {
     dynamic_cast<InforForNetwork*>(infor)->addLine(nLines);
 }

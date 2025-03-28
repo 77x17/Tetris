@@ -67,8 +67,7 @@ void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
     curBlock->swap(hold);
     if (curBlock->isEmpty()) {
         curBlock->setter(next->updateNext());
-    }
-    curBlock->resetPosition(map);
+    } // inheritate and curBocl will reset position from child class
 }
 
 LinkListBlock* Monitor::getNext() const {

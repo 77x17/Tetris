@@ -37,7 +37,7 @@ public:
     bool canHold();
     void unlockHold();
     void lockHold();
-    void exchangeCurrentBlock(CurrentBlock*);
+    virtual void exchangeCurrentBlock(CurrentBlock*);
 
     Map* getMap() const;
 

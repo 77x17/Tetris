@@ -19,6 +19,7 @@ public:
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
 
     void setNewSeed(int seed);
+    void exchangeCurrentBlock(CurrentBlock*);
 
     void inforReceiveLineFromCompetitor(int nLines);
     void mapReceiveLineFromCompetitor(int seed);
