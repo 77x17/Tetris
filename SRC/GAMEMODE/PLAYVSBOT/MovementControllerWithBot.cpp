@@ -1,10 +1,7 @@
 #include "MovementControllerWithBot.hpp"
 
+#include "Bot.hpp"
 #include "MonitorForTwoPlayer.hpp"
-#include "Infor.hpp"
-#include "Map.hpp"
-#include "Hold.hpp"
-#include "LinkListBlock.hpp"
 #include "CurrentBlockController.hpp"
 #include "CurrentBlockWithNetwork.hpp"
 
@@ -30,8 +27,12 @@ void MovementControllerWithBot::handlePut() {
     nLinesRemove = monitor->removeNLines(nLinesRemove, curBlock->getCurrentBlock());
 
     if (nLinesRemove > 0) {
-        dynamic_cast<MonitorForTwoPlayer*>(monitor)->inforReceiveLineFromCompetitor(nLinesRemove);
+        competitor->handleAddLine(nLinesRemove);
     }
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
+}
+
+void MovementControllerWithBot::setCompetitor(Bot* b) {
+    competitor = b;
 }

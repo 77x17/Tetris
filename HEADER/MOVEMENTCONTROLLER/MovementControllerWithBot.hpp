@@ -5,13 +5,16 @@
 #include "MovementController.hpp"
 
 class Map;
+class Bot;
 
 class MovementControllerWithBot: public MovementController{
 private:
+    Bot* competitor;    
 public:
     MovementControllerWithBot(Monitor*, CurrentBlockController*);
     ~MovementControllerWithBot();
     void handlePut();
+    void setCompetitor(Bot*);
 };
 
 

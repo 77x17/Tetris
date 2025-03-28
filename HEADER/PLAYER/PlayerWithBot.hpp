@@ -5,13 +5,17 @@
 
 #include "Player.hpp"
 
+class Bot;
+
 class PlayerWithBot: public Player{
 private:
     
 public:
     PlayerWithBot(int X_COORDINATE, int Y_COORDINATE, uint32_t seed);
     ~PlayerWithBot();
-
+    
+    void setCompetitor(Bot*);
+    
     void initialize();
     void setGameOver();
     void restart(uint32_t seed);

@@ -15,8 +15,9 @@ TetrisVsBot::TetrisVsBot(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s)
     int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int COMPETITOR_Y_COORDINATE = 10;
     int tmp = gen();
-    player = new PlayerWithBot(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, tmp);
     competitor = new Bot(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, tmp);
+    player = new PlayerWithBot(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, tmp);
+    player->setCompetitor(competitor);
 }
 
 TetrisVsBot::~TetrisVsBot() {
