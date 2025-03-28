@@ -61,7 +61,7 @@ void PlayerWithNetwork::start(uint32_t seed) {
 void PlayerWithNetwork::restart(uint32_t seed) {
     monitor->resetMonitor(seed);
     movementController->resetComponent();
-    curBlock->setter((monitor->getNext())->updateNext());
+    curBlock->setter(monitor->getNext());
     monitor->unlockHold();
 }
 
@@ -89,4 +89,13 @@ void PlayerWithNetwork::waitingComfirm() {
     if (messageCodeInt != GAMEOVER) 
         throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
     else std::cout << "COMFIRM SUCESSFULLY!\n";
+}
+
+bool PlayerWithNetwork::isGameOver() {
+    return monitor->isGameOver();
+}
+
+
+void PlayerWithNetwork::draw(sf::RenderWindow* window) {
+    monitor->draw(window, curBlock->getCurrentBlock());
 }

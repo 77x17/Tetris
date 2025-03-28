@@ -170,10 +170,6 @@ bool CurrentBlockController::isValid(uint16_t shape) {
     return map->isValid(shape, block->posY, block->posX);
 }
 
-uint8_t CurrentBlockController::putIntoMap() {
-    return block->putIntoMap(map);
-}
-
 bool CurrentBlockController::gameOver() {
     bool isGameOver = !block->isValid(map);
     if (isGameOver) {

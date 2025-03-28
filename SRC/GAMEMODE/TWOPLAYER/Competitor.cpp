@@ -59,7 +59,7 @@ void Competitor::draw(sf::RenderWindow* window) {
 }
 
 void Competitor::start(PlayerWithNetwork* &player) { // Player
-    curBlock->freeAndSetter((monitor->getNext())->updateNext());
+    curBlock->freeAndSetter(monitor->getNext());
     std::thread th([this](PlayerWithNetwork* &player){
         while (!monitor->isGameOver()) {
             sf::Packet packet;
@@ -83,7 +83,6 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     uint8_t state, y, x, shadowPosY, spin;
                     packet >> state >> y >> x >> shadowPosY >> spin;
                     curBlock->setState(state, x, y, shadowPosY);
-                    // int nLinesRemove = curBlock->putIntoMap(dynamic_cast<MonitorForTwoPlayer*>(monitor)->getMap());
                     int nLinesRemove = monitor->putIntoMap(curBlock);
                     if (nLinesRemove == 0) {
                         int seed; packet >> seed;
@@ -95,7 +94,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     if (nLinesRemove > 0) {
                         player->handleAddLine(nLinesRemove);
                     }
-                    curBlock->setter((monitor->getNext())->updateNext());
+                    curBlock->setter(monitor->getNext());
                     monitor->unlockHold();
                 }
                 break;
@@ -114,7 +113,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     }
                     monitor->lockHold();
                     if (curBlock->isEmpty())
-                        curBlock->setter((monitor->getNext())->updateNext());
+                        curBlock->setter(monitor->getNext());
                     mtx.unlock();
                 }
                 break;

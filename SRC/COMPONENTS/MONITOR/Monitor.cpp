@@ -2,8 +2,8 @@
 
 #include "Common.hpp"
 #include "Hold.hpp"
-#include "Map.hpp"
-#include "Infor.hpp"
+#include "LinkListBlock.hpp"
+#include "Block.hpp"
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
 #include "SoundManager.hpp"
@@ -55,6 +55,6 @@ void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
     } // inheritate and curBocl will reset position from child class
 }
 
-LinkListBlock* Monitor::getNext() const {
-    return next;
+Block* Monitor::getNext() const {
+    return next->updateNext();
 }

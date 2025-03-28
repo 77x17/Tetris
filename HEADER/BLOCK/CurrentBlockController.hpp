@@ -46,7 +46,6 @@ public:
 
     virtual void swap(Hold* hold);
 
-    uint8_t putIntoMap();
     void draw(sf::RenderWindow *window);
     
     CurrentBlock* getCurrentBlock() const;

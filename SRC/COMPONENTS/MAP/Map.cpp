@@ -123,8 +123,7 @@ uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {
 }
 
 bool Map::isValid(uint16_t shape, int Y, int X) {
-    if (X < -NUMOFFSET || X + BLOCK_EDGE > HEIGHT_MAP + NUMOFFSET) return false;
-
+    if (X < -NUMOFFSET || X + BLOCK_EDGE > WIDTH_MAP + NUMOFFSET) return false;
     for (int i = 0; i < BLOCK_EDGE; i++)
         if (((getMask(map[i + Y], X + NUMOFFSET) ^ getLine(shape, i)) & getMask(map[i + Y], X + NUMOFFSET)) != getMask(map[i + Y], X + NUMOFFSET))
             return false;

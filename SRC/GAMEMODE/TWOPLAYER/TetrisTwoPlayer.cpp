@@ -9,7 +9,7 @@
 #include "Competitor.hpp"
 #include "Scene.hpp"
 #include "Menu.hpp"
-
+#include <iostream>
 TetrisTwoPlayer::TetrisTwoPlayer(sf::RenderWindow* win, Scene* s, bool isHost):TetrisBaseMode(win, s), isHost(isHost) {
     player = nullptr; competitor = nullptr;
 }
@@ -65,10 +65,8 @@ STATUS_CODE TetrisTwoPlayer::start() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
     loadPlayground(backgroundTexture, backgroundSprite);
-
     competitor->start(player);
     while (window->isOpen()) {
-
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -125,5 +123,5 @@ STATUS_CODE TetrisTwoPlayer::start() {
         }
     }
 
-    return STATUS_CODE::MENU;
+    return screenStatus;
 }
