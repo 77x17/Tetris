@@ -52,7 +52,7 @@ void SoundManager::unPause(const std::string& name) {
 }
 
 void SoundManager::drawSfx(sf::RenderWindow *window) {
-    sf::Text text("AUDIO", font, BLOCK_SIZE - BLOCK_SIZE / 3);
+    sf::Text text("SFX", font, BLOCK_SIZE - BLOCK_SIZE / 3);
     text.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
     window->draw(text);
 

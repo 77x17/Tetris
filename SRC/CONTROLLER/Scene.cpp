@@ -209,7 +209,8 @@ backToMainMenu:
         goto backToMainMenu;
     }
 
-    drawChangeMenu(window, false);
+    // Skip
+    // drawChangeMenu(window, false);
 
     soundManager->stopMusic("menu");
 

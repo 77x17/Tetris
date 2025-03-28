@@ -36,6 +36,7 @@ public:
     bool isGameOver();
 
     void start();
+    void setTimer();
     void restart();
 
     void draw(sf::RenderWindow* window);

@@ -7,28 +7,9 @@ const int FONT_SIZE = 25;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-// Infor::Infor(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH):
-//         nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false), nLinesAdd(0), garbageSent(0) {
-//     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-    
-//     soundManager = new SoundManager();
-//     soundManager->loadSound("clearB2B"  , "ASSETS/sfx/clearbtb.mp3");
-//     soundManager->loadSound("clearLine" , "ASSETS/sfx/clearline.mp3");
-//     soundManager->loadSound("clearQuad" , "ASSETS/sfx/clearquad.mp3");
-//     soundManager->loadSound("clearSpin" , "ASSETS/sfx/clearspin.mp3");
-//     soundManager->loadSound("combo1"    , "ASSETS/sfx/combo/combo_1.mp3");
-//     soundManager->loadSound("combo2"    , "ASSETS/sfx/combo/combo_2.mp3");
-//     soundManager->loadSound("combo3"    , "ASSETS/sfx/combo/combo_3.mp3");
-//     soundManager->loadSound("combo4"    , "ASSETS/sfx/combo/combo_4.mp3");
-//     soundManager->loadSound("combo5"    , "ASSETS/sfx/combo/combo_5.mp3");
-//     soundManager->loadSound("comboBreak", "ASSETS/sfx/combo/combobreak.mp3");
-
-//     setPosition(x, y, w, aX, aY, aW, aH, gX, gY, gW, gH);
-// }
-
 Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
-    
+
     soundManager = new SoundManager();
     soundManager->loadSound("clearB2B"  , "ASSETS/sfx/clearbtb.mp3");
     soundManager->loadSound("clearLine" , "ASSETS/sfx/clearline.mp3");
@@ -42,9 +23,12 @@ Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw
     soundManager->loadSound("comboBreak", "ASSETS/sfx/combo/combobreak.mp3");
 }
 
-void Infor::setPosition(int x, int y, int w, int aX, int aY, int aW, int aH) {
+void Infor::setPosition(int x, int y, int w) {
     INFOR_POSITION_X = x; INFOR_POSITION_Y = y; INFOR_WIDTH = w; 
-    AUDIO_POSITION_X = aX; AUDIO_POSITION_Y = aY; AUDIO_WIDTH = aW; AUDIO_HEIGHT = aH; 
+}
+
+void Infor::setTimer() {
+    runningTime.restart();
 }
 
 Infor::~Infor() {
@@ -62,10 +46,6 @@ uint8_t Infor::removeLine(uint8_t lines) {
     nLine += lines;
     return nLine;
 }
-
-// void Infor::addLine(uint8_t lines, Infor* infor) {
-//     addLine(lines, infor->spin, infor->B2B, infor->count);
-// }
 
 void Infor::update(uint8_t lines, bool isSpin, char block) {
     if (isSpin) {
@@ -247,29 +227,6 @@ void Infor::drawSpin(sf::RenderWindow *window) {
     text.setFillColor(color);
 
     window->draw(text);
-}
-
-void Infor::drawAudio(sf::RenderWindow *window, const float &volume) {
-    sf::Text text("AUDIO", font, BLOCK_SIZE - BLOCK_SIZE / 3);
-    text.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
-    window->draw(text);
-
-    sf::RectangleShape line;
-    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-
-    // Upper - lower line
-    line.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
-    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y - WIDTH_BORDER);
-    window->draw(line);
-    line.setPosition(AUDIO_POSITION_X - WIDTH_BORDER, AUDIO_POSITION_Y + AUDIO_HEIGHT * BLOCK_SIZE);
-    window->draw(line);
-
-    sf::RectangleShape volumeBar;
-    volumeBar.setSize(sf::Vector2f(AUDIO_WIDTH * BLOCK_SIZE * (volume / 100.0f), AUDIO_HEIGHT * BLOCK_SIZE));  // Width proportional to volume
-    volumeBar.setFillColor(sf::Color::White);
-    volumeBar.setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y);
-
-    window->draw(volumeBar);
 }
 
 void Infor::draw(sf::RenderWindow *window) {

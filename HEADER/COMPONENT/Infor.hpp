@@ -13,11 +13,6 @@ private:
     int INFOR_POSITION_Y;
     int INFOR_WIDTH;
 
-    int AUDIO_POSITION_X;
-    int AUDIO_POSITION_Y;
-    int AUDIO_WIDTH;
-    int AUDIO_HEIGHT;
-    
     int GARBAGE_POSITION_X;
     int GARBAGE_POSITION_Y;
     int GARBAGE_WIDTH;
@@ -31,6 +26,8 @@ private:
     std::string   message;
     std::string   combo;
     SoundManager *soundManager;
+
+    sf::Clock     runningTime;
 
 protected:
 
@@ -49,8 +46,9 @@ protected:
 public:
     Infor();
 
-    void setPosition(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, 
-        int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
+    void setPosition(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH);
+
+    void setTimer();
 
     virtual ~Infor();
 
@@ -65,8 +63,8 @@ public:
     void drawB2B(sf::RenderWindow *window);
     void drawMissingB2B(sf::RenderWindow *window);
     void drawSpin(sf::RenderWindow *window);
-    void drawAudio(sf::RenderWindow *window, const float &volume);
-    
+    void drawTime(sf::RenderWindow *window);
+
     virtual void draw(sf::RenderWindow *window);
 };
 

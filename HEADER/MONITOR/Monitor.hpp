@@ -9,6 +9,7 @@ class LinkListBlock;
 class Map;
 class Hold;
 class CurrentBlock;
+class SoundManager;
 
 class Monitor {
 private:
@@ -20,6 +21,7 @@ private:
 protected:
     Hold             *hold;
     LinkListBlock    *next;
+    SoundManager     *soundManager;
 
 public:
     Monitor(int X_COORDINATE, int Y_COORDINATE);

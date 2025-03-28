@@ -19,7 +19,6 @@ void MonitorForOnePlayer::CreateMonitor(int x, int y) {
     infor        = new Infor();
     hold         = new Hold();
     next         = new LinkListBlock();
-    soundManager = new SoundManager();
 
     setPosition(x, y);
 }
@@ -52,7 +51,7 @@ void MonitorForOnePlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     hold        ->setPosition(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
     map         ->setPosition(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
     next        ->setPosition(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
-    infor       ->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT);
+    infor       ->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE);
     soundManager->setPosition(AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT);
 }
 
@@ -87,4 +86,8 @@ Map* MonitorForOnePlayer::getMap() const {
 
 int MonitorForOnePlayer::putIntoMap(CurrentBlock* curBlock) {
     return curBlock->putIntoMap(map);
+}
+
+void MonitorForOnePlayer::setTimer() {
+    infor->setTimer();
 }

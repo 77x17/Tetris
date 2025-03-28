@@ -5,8 +5,8 @@
 InforForNetwork::InforForNetwork():Infor(), nLinesAdd(0), garbageSent(0) {}
 InforForNetwork::~InforForNetwork() {}
 
-void InforForNetwork::setPosition(int x, int y, int w, int aX, int aY, int aW, int aH, int gX, int gY, int gW, int gH) {
-    Infor::setPosition(x, y, w, aX, aY, aW, aH);
+void InforForNetwork::setPosition(int x, int y, int w, int gX, int gY, int gW, int gH) {
+    Infor::setPosition(x, y, w);
     GARBAGE_POSITION_X = gX;
     GARBAGE_POSITION_Y = gY;
     GARBAGE_WIDTH = gW;

@@ -6,10 +6,13 @@
 #include "Infor.hpp"
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
+#include "SoundManager.hpp"
 
 #include <iostream>
 
 Monitor::Monitor(int x, int y) {
+    soundManager = new SoundManager();
+
     X_COORDINATE = x; Y_COORDINATE = y;
     gameOver = false;
 }
@@ -17,6 +20,7 @@ Monitor::Monitor(int x, int y) {
 Monitor::~Monitor() {
     delete hold;     hold     = nullptr;
     delete next;     next     = nullptr;
+    delete soundManager;
 }
 
 void Monitor::setGameOver() { gameOver = true; }
@@ -28,6 +32,8 @@ void Monitor::draw(sf::RenderWindow* window, CurrentBlock* block) const {
     next->drawOutline(window);
     hold->draw(window);
     next->draw(window);
+
+    soundManager->drawSfx(window);
 }
 
 void Monitor::resetMonitor(uint32_t seed) {
