@@ -19,8 +19,11 @@ int       B2B_PADDING = FONT_SIZE * 2;
 
 int    SPIN_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
 
+int   LINES_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+int     LINES_PADDING = FONT_SIZE * 7;
+
 int   TIMER_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int     TIMER_PADDING = FONT_SIZE * 5;
+int     TIMER_PADDING = FONT_SIZE * 9;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
@@ -273,6 +276,23 @@ void Infor::drawSpin(sf::RenderWindow *window) {
     window->draw(text);
 }
 
+void Infor::drawLines(sf::RenderWindow *window) {   
+    sf::Text title("LINES:", font, LINES_FONT_SIZE);
+    title.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - title.getGlobalBounds().width,
+        INFOR_POSITION_Y + LINES_PADDING
+    );
+    
+    sf::Text text(std::to_string(nLine), font, LINES_FONT_SIZE);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
+        INFOR_POSITION_Y + LINES_PADDING + FONT_SIZE
+    );
+
+    window->draw(title);
+    window->draw(text);
+}
+
 void Infor::drawTimer(sf::RenderWindow *window) {
     sf::Time elapsed = runningTime.getElapsedTime();
     int milliseconds = lastElapsed.asMilliseconds() + elapsed.asMilliseconds();
@@ -287,13 +307,20 @@ void Infor::drawTimer(sf::RenderWindow *window) {
     sprintf(buffer, "%01d:%02d:%03d", minutes, seconds, milliseconds);
 
     std::string formattedTime(buffer); // Tránh copy không cần thiết
-    
-    sf::Text text("TIME: " + formattedTime, font, TIMER_FONT_SIZE);
-    text.setPosition(
-        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
+
+    sf::Text title("TIME:", font, TIMER_FONT_SIZE);
+    title.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - title.getGlobalBounds().width,
         INFOR_POSITION_Y + TIMER_PADDING
     );
+    
+    sf::Text text(formattedTime, font, TIMER_FONT_SIZE);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
+        INFOR_POSITION_Y + TIMER_PADDING + FONT_SIZE
+    );
 
+    window->draw(title);
     window->draw(text);
 }
 
@@ -330,6 +357,8 @@ void Infor::draw(sf::RenderWindow *window) {
     if (B2B > 1) {
         drawB2B(window);
     }
-   
+    
+    drawLines(window);
+
     drawTimer(window);
 }

@@ -59,14 +59,15 @@ public:
 
     virtual uint8_t removeLine(uint8_t lines);
 
-    void update(uint8_t lines, bool spin, char typeBlock);
-    void playSound(uint8_t lines, bool spin, char typeBlock);
-    void drawMessage(sf::RenderWindow *window, const std::string text);
-    void drawCombo(sf::RenderWindow *window, const std::string text);
-    void drawB2B(sf::RenderWindow *window);
+    void update        (uint8_t lines, bool spin, char typeBlock);
+    void playSound     (uint8_t lines, bool spin, char typeBlock);
+    void drawMessage   (sf::RenderWindow *window, const std::string text);
+    void drawCombo     (sf::RenderWindow *window, const std::string text);
+    void drawB2B       (sf::RenderWindow *window);
     void drawMissingB2B(sf::RenderWindow *window);
-    void drawSpin(sf::RenderWindow *window);
-    void drawTimer(sf::RenderWindow *window);
+    void drawSpin      (sf::RenderWindow *window);
+    void drawLines     (sf::RenderWindow *window);
+    void drawTimer     (sf::RenderWindow *window);
 
     virtual void draw(sf::RenderWindow *window);
 };

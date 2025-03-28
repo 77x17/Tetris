@@ -9,4 +9,4 @@ HQH
 4. Fix spin garbage
 
 77x17
-5. Làm lại màn hình chờ
+- Làm lại màn hình chờ cho Waiting ...
