@@ -2,8 +2,7 @@ todo list:
 
 HQH
 1. Viết lại 3 monitor 
-2. Cài delay khi gửi garbage 
-3. Cài notFocus cho multiplayer
+2. Cài delay khi gửi garbage
 
 77x17
 1. Spin detect (bị mất effect đột ngột khi đặt khối mới), audio bar

@@ -2,7 +2,7 @@
 
 #include "Common.hpp"
 #include "Hold.hpp"
-#include "Map.hpp"
+#include "MapForNetwork.hpp"
 #include "Infor.hpp"
 #include "CurrentBlock.hpp"
 #include "LinkListBlock.hpp"
@@ -17,7 +17,7 @@ MonitorForTwoPlayer::MonitorForTwoPlayer(int x, int y):Monitor() {
 void MonitorForTwoPlayer::CreateMonitor(int x, int y) {
     X_COORDINATE = x, Y_COORDINATE = y;
     hold = new Hold();
-    map  = new Map();
+    map  = new MapForNetwork();
     next = new LinkListBlock();
     infor = new Infor();
     setPosition(x, y);
@@ -64,5 +64,5 @@ void MonitorForTwoPlayer::inforReceiveLineFromCompetitor(int nLines) {
 }
 
 void MonitorForTwoPlayer::mapReceiveLineFromCompetitor(int seed) {
-    map->add(infor->getAndRemoveLineAdd(), seed);
+    dynamic_cast<MapForNetwork*>(map)->add(infor->getAndRemoveLineAdd(), seed);
 }

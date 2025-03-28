@@ -16,23 +16,20 @@ private:
     int GRID_WIDTH;
     int GRID_HEIGHT;
 
-    uint64_t* map;
-
+    
     sf::Texture texture;
-
+    
     void remove(uint8_t pos);
 
+protected:
+    uint64_t* map;
     
 public:
     Map();
-    ~Map();
+    virtual ~Map();
     void setPosition(int GRID_POSITION_X, int GRID_POSITION_Y, int GRID_WIDTH, int GRID_HEIGHT);
     
     void reset();
-
-    bool addPosible(uint64_t nLiness);
-
-    void add(uint64_t nLines, int seed);
 
     void draw(sf::RenderWindow* window);
     void drawCurrentBlock(sf::RenderWindow* window, CurrentBlock *curBlock);
