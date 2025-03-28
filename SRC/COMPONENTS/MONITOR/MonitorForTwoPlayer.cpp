@@ -70,6 +70,7 @@ void MonitorForTwoPlayer::draw(sf::RenderWindow* window, CurrentBlock* block) co
     map ->drawOutline(window);
     map     ->draw(window);
     map->drawCurrentBlock(window, block);
+    Monitor::draw(window, block);
 }
 
 void MonitorForTwoPlayer::resetMonitor(uint32_t seed) {
