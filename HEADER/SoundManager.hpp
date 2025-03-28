@@ -25,8 +25,10 @@ private:
 
 public:                         
     SoundManager();
-    SoundManager(int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
     ~SoundManager();
+
+    void setPosition(int AUDIO_POSITION_X, int AUDIO_POSITION_Y, int AUDIO_WIDTH, int AUDIO_HEIGHT);
+
     void loadSound(const std::string &name, const std::string &filePath);
     
     static void loadMusicSound(const std::string &name, const std::string &filePath);

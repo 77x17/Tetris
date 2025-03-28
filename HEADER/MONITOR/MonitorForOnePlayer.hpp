@@ -6,11 +6,13 @@
 class Map;
 class Infor;
 class CurrentBlock;
+class SoundManager;
 
 class MonitorForOnePlayer: public Monitor {
 private:
-    Map     *map;
-    Infor   *infor;
+    Map          *map;
+    Infor        *infor;
+    SoundManager *soundManager;
 public:
     MonitorForOnePlayer(int X_COORDINATE, int Y_COORDINATE);
     void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);

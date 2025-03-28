@@ -26,8 +26,8 @@ bool Monitor::isGameOver() { return gameOver; }
 void Monitor::draw(sf::RenderWindow* window, CurrentBlock* block) const {
     hold->drawOutline(window);
     next->drawOutline(window);
-    hold    ->draw(window);
-    next    ->draw(window);
+    hold->draw(window);
+    next->draw(window);
 }
 
 void Monitor::resetMonitor(uint32_t seed) {

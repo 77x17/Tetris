@@ -26,7 +26,7 @@ const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE
 //     setPosition(x, y, w, aX, aY, aW, aH, gX, gY, gW, gH);
 // }
 
-Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false) {
+Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
     
     soundManager = new SoundManager();

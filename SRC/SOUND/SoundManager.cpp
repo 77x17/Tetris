@@ -2,10 +2,12 @@
 
 #include "Common.hpp"
 
-SoundManager::SoundManager() {}
-
-SoundManager::SoundManager(int aX, int aY, int aW, int aH) : AUDIO_POSITION_X(aX), AUDIO_POSITION_Y(aY), AUDIO_WIDTH(aW), AUDIO_HEIGHT(aH) {
+SoundManager::SoundManager() {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF"); 
+}
+
+void SoundManager::setPosition(int aX, int aY, int aW, int aH) {
+    AUDIO_POSITION_X = aX, AUDIO_POSITION_Y = aY, AUDIO_WIDTH = aW, AUDIO_HEIGHT = aH;
 }
 
 SoundManager::~SoundManager() {}
