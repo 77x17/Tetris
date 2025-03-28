@@ -9,17 +9,15 @@
 
 #include <iostream>
 
-MonitorForOnePlayer::MonitorForOnePlayer(int x, int y):Monitor() {
-    X_COORDINATE = x; Y_COORDINATE = y;
+MonitorForOnePlayer::MonitorForOnePlayer(int x, int y):Monitor(x, y) {
     CreateMonitor(x, y);
 }
 
 void MonitorForOnePlayer::CreateMonitor(int x, int y) {
-    X_COORDINATE = x, Y_COORDINATE = y;
-    hold = new Hold();
     map  = new Map();
-    next = new LinkListBlock();
     infor = new Infor();
+    hold = new Hold();
+    next = new LinkListBlock();
     setPosition(x, y);
 }
 
@@ -57,4 +55,30 @@ void MonitorForOnePlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
 void MonitorForOnePlayer::exchangeCurrentBlock(CurrentBlock* curBlock) {
     Monitor::exchangeCurrentBlock(curBlock);
     curBlock->resetPosition(map);
+}
+
+void MonitorForOnePlayer::draw(sf::RenderWindow* window, CurrentBlock* block) const {
+    map ->drawOutline(window);
+    map     ->draw(window);
+    map->drawCurrentBlock(window, block);
+}
+
+void MonitorForOnePlayer::resetMonitor(uint32_t seed) {
+    Monitor::resetMonitor(seed);
+    map  ->reset();
+    infor->reset();
+}
+
+uint8_t MonitorForOnePlayer::removeNLines(int nLines, CurrentBlock* curBlock) {
+    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+    return infor->removeLine(nLines);
+}
+
+Map* MonitorForOnePlayer::getMap() const {
+    return map;
+}
+
+int MonitorForOnePlayer::putIntoMap(CurrentBlock* curBlock) {
+    return curBlock->putIntoMap(map);
 }

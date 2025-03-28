@@ -5,24 +5,32 @@
 
 class Hold;
 class LinkListBlock;
-class Map;
-class Infor;
+class MapForNetwork;
+class InforForNetwork;
 class CurrentBlock;
 
 class MonitorForTwoPlayer: public Monitor {
 private:
-    int X_COORDINATE;
-    int Y_COORDINATE;
+    MapForNetwork     *map;
+    InforForNetwork   *infor;
 public:
     MonitorForTwoPlayer(int X_COORDINATE, int Y_COORDINATE);
     void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
+
+    void draw(sf::RenderWindow* window, CurrentBlock* currentBlock) const;
+    void resetMonitor(uint32_t seed);
+
+    uint8_t removeNLines(int nLines, CurrentBlock* currentBlock);
 
     void setNewSeed(int seed);
     void exchangeCurrentBlock(CurrentBlock*);
 
     void inforReceiveLineFromCompetitor(int nLines);
     void mapReceiveLineFromCompetitor(int seed);
+
+    Map* getMap() const;
+    int putIntoMap(CurrentBlock* curBlock);
 };
 
 #endif

@@ -9,19 +9,14 @@
 
 #include <iostream>
 
-Monitor::Monitor() { 
+Monitor::Monitor(int x, int y) {
+    X_COORDINATE = x; Y_COORDINATE = y;
     gameOver = false;
-    hold     = nullptr;
-    next     = nullptr;
-    map      = nullptr;
-    infor    = nullptr;
 }
 
 Monitor::~Monitor() {
     delete hold;     hold     = nullptr;
     delete next;     next     = nullptr;
-    delete map;      map      = nullptr;
-    delete infor;    infor    = nullptr;
 }
 
 void Monitor::setGameOver() { gameOver = true; }
@@ -29,34 +24,18 @@ void Monitor::setGameOver() { gameOver = true; }
 bool Monitor::isGameOver() { return gameOver; }
 
 void Monitor::draw(sf::RenderWindow* window, CurrentBlock* block) const {
-    map ->drawOutline(window);
     hold->drawOutline(window);
     next->drawOutline(window);
-
     hold    ->draw(window);
     next    ->draw(window);
-    map     ->draw(window);
-    infor   ->draw(window);
-
-    map->drawCurrentBlock(window, block);
 }
 
 void Monitor::resetMonitor(uint32_t seed) {
     hold ->reset();
-    map  ->reset();
+    // map  ->reset();
     next ->reset(seed);
-    infor->reset();
+    // infor->reset();
     gameOver = false;
-}
-
-uint8_t Monitor::removeNLines(int nLines, CurrentBlock* curBlock) {
-    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    return infor->removeLine(nLines);
-}
-
-Map* Monitor::getMap() const {
-    return map;
 }
 
 bool Monitor::canHold() { return hold->canHold(); }
@@ -72,8 +51,4 @@ void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
 
 LinkListBlock* Monitor::getNext() const {
     return next;
-}
-
-int Monitor::putIntoMap(CurrentBlock* curBlock) {
-    return curBlock->putIntoMap(map);
 }

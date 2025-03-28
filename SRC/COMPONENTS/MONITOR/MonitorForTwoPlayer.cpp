@@ -9,13 +9,11 @@
 
 #include <iostream>
 
-MonitorForTwoPlayer::MonitorForTwoPlayer(int x, int y):Monitor() {
-    X_COORDINATE = x; Y_COORDINATE = y;
+MonitorForTwoPlayer::MonitorForTwoPlayer(int x, int y):Monitor(x, y) {
     CreateMonitor(x, y);
 }
 
 void MonitorForTwoPlayer::CreateMonitor(int x, int y) {
-    X_COORDINATE = x, Y_COORDINATE = y;
     hold = new Hold();
     map  = new MapForNetwork();
     next = new LinkListBlock();
@@ -56,7 +54,7 @@ void MonitorForTwoPlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     hold->setPosition(HOLD_POSITION_X, HOLD_POSITION_Y, HOLD_WIDTH, HOLD_HEIGHT);
     map->setPosition(GRID_POSITION_X, GRID_POSITION_Y, GRID_WIDTH, GRID_HEIGHT);
     next->setPosition(NEXT_POSITION_X, NEXT_POSITION_Y, NEXT_WIDTH, NEXT_HEIGHT);
-    dynamic_cast<InforForNetwork*>(infor)->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
+    infor->setPosition(INFOR_POSITION_X, INFOR_POSITION_Y, INFOR_WIDTH * BLOCK_SIZE, AUDIO_POSITION_X, AUDIO_POSITION_Y, AUDIO_WIDTH, AUDIO_HEIGHT, GARBAGE_POSITION_X, GARBAGE_POSITION_Y, GARBAGE_WIDTH, GARBAGE_HEIGHT);
 }
 
 void MonitorForTwoPlayer::setNewSeed(int seed) {
@@ -68,10 +66,36 @@ void MonitorForTwoPlayer::exchangeCurrentBlock(CurrentBlock* curBlock) {
     curBlock->resetPosition(map);
 }
 
+void MonitorForTwoPlayer::draw(sf::RenderWindow* window, CurrentBlock* block) const {
+    map ->drawOutline(window);
+    map     ->draw(window);
+    map->drawCurrentBlock(window, block);
+}
+
+void MonitorForTwoPlayer::resetMonitor(uint32_t seed) {
+    Monitor::resetMonitor(seed);
+    map  ->reset();
+    infor->reset();
+}
+
+uint8_t MonitorForTwoPlayer::removeNLines(int nLines, CurrentBlock* curBlock) {
+    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+    return infor->removeLine(nLines);
+}
+
 void MonitorForTwoPlayer::inforReceiveLineFromCompetitor(int nLines) {
-    dynamic_cast<InforForNetwork*>(infor)->addLine(nLines);
+    infor->addLine(nLines);
 }
 
 void MonitorForTwoPlayer::mapReceiveLineFromCompetitor(int seed) {
-    dynamic_cast<MapForNetwork*>(map)->add(dynamic_cast<InforForNetwork*>(infor)->getAndRemoveLineAdd(), seed);
+    map->add(infor->getAndRemoveLineAdd(), seed);
+}
+
+Map* MonitorForTwoPlayer::getMap() const {
+    return map;
+}
+
+int MonitorForTwoPlayer::putIntoMap(CurrentBlock* curBlock) {
+    return curBlock->putIntoMap(map);
 }
