@@ -19,15 +19,18 @@ int       B2B_PADDING = FONT_SIZE * 2;
 
 int    SPIN_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
 
+int     PPS_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+int       PPS_PADDING = FONT_SIZE * 7;
+
 int   LINES_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int     LINES_PADDING = FONT_SIZE * 7;
+int     LINES_PADDING = FONT_SIZE * 9;
 
 int   TIMER_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int     TIMER_PADDING = FONT_SIZE * 9;
+int     TIMER_PADDING = FONT_SIZE * 11;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(): nLine(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false) {
+Infor::Infor(): startTimer(false), nLine(0), piece(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 
     soundManager = new SoundManager();
@@ -48,6 +51,7 @@ void Infor::setPosition(int x, int y, int w) {
 }
 
 void Infor::setTimer() {
+    startTimer = true;
     runningTime.restart();
     lastElapsed = sf::Time::Zero;
 }
@@ -64,7 +68,7 @@ Infor::~Infor() {
     delete soundManager;
 }
 
-void Infor::reset() { nLine = 0; count = 0; B2B = 0; B2BMissing = 0;}
+void Infor::reset() { startTimer = false, nLine = 0; piece = 0, count = 0; B2B = 0; B2BMissing = 0; }
 
 // garbage sent
 uint8_t Infor::removeLine(uint8_t lines) {
@@ -77,6 +81,8 @@ uint8_t Infor::removeLine(uint8_t lines) {
 }
 
 void Infor::update(uint8_t lines, bool isSpin, char block) {
+    piece++;
+
     if (isSpin) {
         spin      = true;
         spinDraw  = true;
@@ -276,6 +282,30 @@ void Infor::drawSpin(sf::RenderWindow *window) {
     window->draw(text);
 }
 
+void Infor::drawPPS(sf::RenderWindow *window) {  
+    sf::Text title("PPS:", font, PPS_FONT_SIZE);
+    title.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - title.getGlobalBounds().width,
+        INFOR_POSITION_Y + PPS_PADDING
+    );
+    
+    int milliseconds = lastElapsed.asMilliseconds() + runningTime.getElapsedTime().asMilliseconds();
+
+    float pps = piece * 1000.0 / milliseconds;
+
+    char ppsStr[10]; // Đủ để chứa giá trị float và null-terminator
+    sprintf(ppsStr, "%.2f", pps);
+
+    sf::Text text(ppsStr, font, LINES_FONT_SIZE);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
+        INFOR_POSITION_Y + PPS_PADDING + FONT_SIZE
+    );
+
+    window->draw(title);
+    window->draw(text);
+}
+
 void Infor::drawLines(sf::RenderWindow *window) {   
     sf::Text title("LINES:", font, LINES_FONT_SIZE);
     title.setPosition(
@@ -294,8 +324,7 @@ void Infor::drawLines(sf::RenderWindow *window) {
 }
 
 void Infor::drawTimer(sf::RenderWindow *window) {
-    sf::Time elapsed = runningTime.getElapsedTime();
-    int milliseconds = lastElapsed.asMilliseconds() + elapsed.asMilliseconds();
+    int milliseconds = lastElapsed.asMilliseconds() + runningTime.getElapsedTime().asMilliseconds();
 
     int seconds = milliseconds / 1000;
     int minutes = seconds      / 60;
@@ -314,7 +343,7 @@ void Infor::drawTimer(sf::RenderWindow *window) {
         INFOR_POSITION_Y + TIMER_PADDING
     );
     
-    sf::Text text(formattedTime, font, TIMER_FONT_SIZE);
+    sf::Text text((startTimer) ? formattedTime : "0:00:000", font, TIMER_FONT_SIZE);
     text.setPosition(
         INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
         INFOR_POSITION_Y + TIMER_PADDING + FONT_SIZE
@@ -358,6 +387,8 @@ void Infor::draw(sf::RenderWindow *window) {
         drawB2B(window);
     }
     
+    drawPPS(window);
+
     drawLines(window);
 
     drawTimer(window);

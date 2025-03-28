@@ -12,7 +12,7 @@
 const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 600;
 
-float SoundManager::volume      = 0.0f;
+float SoundManager::volume      = 50.0f;
 float SoundManager::musicVolume =  0.0f;
 std::unordered_map<std::string, sf::SoundBuffer> SoundManager::musicBuffers = std::unordered_map<std::string, sf::SoundBuffer>();
 std::unordered_map<std::string, sf::Sound>       SoundManager::musicSounds  = std::unordered_map<std::string, sf::Sound>();

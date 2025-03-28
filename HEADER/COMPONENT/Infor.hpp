@@ -29,12 +29,14 @@ private:
 
     sf::Clock     runningTime;
     sf::Time      lastElapsed;
+    bool          startTimer;
 
 protected:
 
     static constexpr float TIME_OUT = 2.0f;
 
     int  nLine;
+    int  piece;
     int  count;
     int  B2B;
     int  B2BMissing;
@@ -66,6 +68,7 @@ public:
     void drawB2B       (sf::RenderWindow *window);
     void drawMissingB2B(sf::RenderWindow *window);
     void drawSpin      (sf::RenderWindow *window);
+    void drawPPS       (sf::RenderWindow *window);
     void drawLines     (sf::RenderWindow *window);
     void drawTimer     (sf::RenderWindow *window);
 

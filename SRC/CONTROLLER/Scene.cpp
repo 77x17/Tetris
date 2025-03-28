@@ -210,7 +210,7 @@ backToMainMenu:
     }
 
     // Skip
-    // drawChangeMenu(window, false);
+    drawChangeMenu(window, false);
 
     soundManager->stopMusic("menu");
 
