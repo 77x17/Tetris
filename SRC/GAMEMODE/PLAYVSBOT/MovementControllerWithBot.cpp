@@ -12,13 +12,6 @@ MovementControllerWithBot::~MovementControllerWithBot(){}
 
 void MovementControllerWithBot::handlePut() {
     int nLinesRemove = monitor->putIntoMap(curBlock->getCurrentBlock());
-
-    collision = false;
-    curBlock->setter(monitor->getNext());
-    monitor->unlockHold();
-    if (curBlock->gameOver())
-        monitor->setGameOver();
-
     if (nLinesRemove == 0) {
         std::random_device rd; std::mt19937 gen(rd());
         dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(gen());
@@ -29,8 +22,12 @@ void MovementControllerWithBot::handlePut() {
     if (nLinesRemove > 0) {
         competitor->handleAddLine(nLinesRemove);
     }
+
+    collision = false;
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
+    if (curBlock->gameOver())
+        monitor->setGameOver();
 }
 
 void MovementControllerWithBot::setCompetitor(Bot* b) {
