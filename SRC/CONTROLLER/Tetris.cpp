@@ -20,8 +20,6 @@ std::unordered_map<std::string, sf::Sound>       SoundManager::musicSounds  = st
 Tetris::Tetris() {
     // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
-    // window = new sf::RenderWindow(desktop, "Tetris"); // Không viền
-    // window->setPosition(sf::Vector2i(0, 0)); // Đặt vị trí góc trên cùng bên trái
 
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
     scene  = new Scene(window);

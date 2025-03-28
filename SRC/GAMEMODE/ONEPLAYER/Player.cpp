@@ -56,6 +56,14 @@ void Player::setTimer() {
     dynamic_cast<MonitorForOnePlayer *>(monitor)->setTimer();
 }
 
+void Player::pauseTimer() {
+    dynamic_cast<MonitorForOnePlayer *>(monitor)->pauseTimer();
+}
+
+void Player::unPauseTimer() {
+    dynamic_cast<MonitorForOnePlayer *>(monitor)->unPauseTimer();
+}
+
 void Player::restart() {
     std::random_device rd;
     monitor->resetMonitor(rd());

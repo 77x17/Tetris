@@ -37,6 +37,8 @@ public:
 
     void start();
     void setTimer();
+    void pauseTimer();
+    void unPauseTimer();
     void restart();
 
     virtual void draw(sf::RenderWindow* window);

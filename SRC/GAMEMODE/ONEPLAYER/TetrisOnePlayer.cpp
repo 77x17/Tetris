@@ -58,7 +58,7 @@ restartGameOnePlayer:
     //     );
     // }
 
-    // player->startTimer();
+    player->setTimer();
 
     sf::Event event;
     while (not player->isGameOver()) {
@@ -71,10 +71,14 @@ restartGameOnePlayer:
             }
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) {
+                    player->pauseTimer();
+
                     STATUS_CODE escapeOption = scene->drawPause(window);
 
                     switch (escapeOption) {
                         case STATUS_CODE::RESUME:
+                            player->unPauseTimer();
+                            
                             break;
                         case STATUS_CODE::RESTART:
                             screenStatus = STATUS_CODE::RESTART;

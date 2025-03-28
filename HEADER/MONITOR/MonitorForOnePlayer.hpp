@@ -27,6 +27,8 @@ public:
     int putIntoMap(CurrentBlock* curBlock);
 
     void setTimer();
+    void pauseTimer();
+    void unPauseTimer();
 };
 
 #endif

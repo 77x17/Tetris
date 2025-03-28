@@ -28,6 +28,7 @@ private:
     SoundManager *soundManager;
 
     sf::Clock     runningTime;
+    sf::Time      lastElapsed;
 
 protected:
 
@@ -49,6 +50,8 @@ public:
     void setPosition(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH);
 
     void setTimer();
+    void pauseTimer();
+    void unPauseTimer();
 
     virtual ~Infor();
 
@@ -63,7 +66,7 @@ public:
     void drawB2B(sf::RenderWindow *window);
     void drawMissingB2B(sf::RenderWindow *window);
     void drawSpin(sf::RenderWindow *window);
-    void drawTime(sf::RenderWindow *window);
+    void drawTimer(sf::RenderWindow *window);
 
     virtual void draw(sf::RenderWindow *window);
 };

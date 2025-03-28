@@ -91,3 +91,11 @@ int MonitorForOnePlayer::putIntoMap(CurrentBlock* curBlock) {
 void MonitorForOnePlayer::setTimer() {
     infor->setTimer();
 }
+
+void MonitorForOnePlayer::pauseTimer() {
+    infor->pauseTimer();
+}
+
+void MonitorForOnePlayer::unPauseTimer() {
+    infor->unPauseTimer();
+}

@@ -4,10 +4,23 @@
 #include "Common.hpp"
 
 #include <iostream>
-#include <iomanip>
-#include <sstream>
+#include <cstdio>
 
-const int FONT_SIZE = 25;
+const int FONT_SIZE = BLOCK_SIZE;
+int MESSAGE_FONT_SIZE = FONT_SIZE;
+int   MESSAGE_PADDING = FONT_SIZE;
+
+int   COMBO_FONT_SIZE = FONT_SIZE * 2;
+int     COMBO_PADDING = FONT_SIZE * 3;
+int   N_COMBO_PADDING = FONT_SIZE * 2 + FONT_SIZE / 2;
+
+int     B2B_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+int       B2B_PADDING = FONT_SIZE * 2;
+
+int    SPIN_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+
+int   TIMER_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+int     TIMER_PADDING = FONT_SIZE * 5;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
@@ -32,6 +45,15 @@ void Infor::setPosition(int x, int y, int w) {
 }
 
 void Infor::setTimer() {
+    runningTime.restart();
+    lastElapsed = sf::Time::Zero;
+}
+
+void Infor::pauseTimer() {
+    lastElapsed += runningTime.getElapsedTime();
+}
+
+void Infor::unPauseTimer() {
     runningTime.restart();
 }
 
@@ -131,8 +153,11 @@ void Infor::playSound(uint8_t lines, bool isSpin, char block) {
 }
 
 void Infor::drawMessage(sf::RenderWindow *window, const std::string string) {
-    sf::Text text(string, font, FONT_SIZE);
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE);
+    sf::Text text(string, font, MESSAGE_FONT_SIZE);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, 
+        INFOR_POSITION_Y + MESSAGE_PADDING
+    );
     
     float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, 255, 255, alpha));
@@ -141,11 +166,17 @@ void Infor::drawMessage(sf::RenderWindow *window, const std::string string) {
 }
 
 void Infor::drawCombo(sf::RenderWindow *window, const std::string string) {
-    sf::Text text("COMBO", font, FONT_SIZE);
-    sf::Text number(string, font, FONT_SIZE * 2);
+    sf::Text text("COMBO", font, MESSAGE_FONT_SIZE);
+    sf::Text number(string, font, COMBO_FONT_SIZE);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 3);
-    number.setPosition(text.getPosition().x - number.getGlobalBounds().width - 15, INFOR_POSITION_Y + FONT_SIZE * 2 + FONT_SIZE / 2);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, 
+        INFOR_POSITION_Y + COMBO_PADDING
+    );
+    number.setPosition(
+        text.getPosition().x - number.getGlobalBounds().width - 15, 
+        INFOR_POSITION_Y + N_COMBO_PADDING
+    );
     
     float alpha = 255 * (1 - comboTimeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, 255, 255, alpha));
@@ -156,9 +187,12 @@ void Infor::drawCombo(sf::RenderWindow *window, const std::string string) {
 }
 
 void Infor::drawB2B(sf::RenderWindow *window) {
-    sf::Text text("B2B x" + std::to_string(B2B - 1), font, FONT_SIZE - FONT_SIZE / 4);
+    sf::Text text("B2B x" + std::to_string(B2B - 1), font, B2B_FONT_SIZE);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 2);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, 
+        INFOR_POSITION_Y + B2B_PADDING
+    );
     
     float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, (alpha > 175 ? 255 : 215), 0, std::max(alpha, 175.0f)));
@@ -167,9 +201,12 @@ void Infor::drawB2B(sf::RenderWindow *window) {
 }
 
 void Infor::drawMissingB2B(sf::RenderWindow *window) {
-    sf::Text text("B2B x" + std::to_string(B2BMissing - 1), font, FONT_SIZE - FONT_SIZE / 4);
+    sf::Text text("B2B x" + std::to_string(B2BMissing - 1), font, B2B_FONT_SIZE);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y + FONT_SIZE * 2);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, 
+        INFOR_POSITION_Y + B2B_PADDING
+    );
     
     sf::Color color;
     float phase = B2BMissingTimeout.getElapsedTime().asSeconds() / TIME_OUT;
@@ -199,9 +236,12 @@ void Infor::drawMissingB2B(sf::RenderWindow *window) {
 
 void Infor::drawSpin(sf::RenderWindow *window) {
     std::string type = std::string() + typeBlock;
-    sf::Text text(type + " - SPIN", font, FONT_SIZE - FONT_SIZE / 4);
+    sf::Text text(type + " - SPIN", font, SPIN_FONT_SIZE);
 
-    text.setPosition(INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, INFOR_POSITION_Y);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width, 
+        INFOR_POSITION_Y
+    );
     
     float alpha = 255 * (1 - spinTimeout.getElapsedTime().asSeconds() / TIME_OUT);
     sf::Color color;
@@ -229,6 +269,30 @@ void Infor::drawSpin(sf::RenderWindow *window) {
             break;
     }
     text.setFillColor(color);
+
+    window->draw(text);
+}
+
+void Infor::drawTimer(sf::RenderWindow *window) {
+    sf::Time elapsed = runningTime.getElapsedTime();
+    int milliseconds = lastElapsed.asMilliseconds() + elapsed.asMilliseconds();
+
+    int seconds = milliseconds / 1000;
+    int minutes = seconds      / 60;
+
+    seconds      %= 60;
+    milliseconds %= 1000;
+
+    char buffer[9];  // Đủ lớn để chứa "M:SS:SSS"
+    sprintf(buffer, "%01d:%02d:%03d", minutes, seconds, milliseconds);
+
+    std::string formattedTime(buffer); // Tránh copy không cần thiết
+    
+    sf::Text text("TIME: " + formattedTime, font, TIMER_FONT_SIZE);
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
+        INFOR_POSITION_Y + TIMER_PADDING
+    );
 
     window->draw(text);
 }
@@ -267,19 +331,5 @@ void Infor::draw(sf::RenderWindow *window) {
         drawB2B(window);
     }
    
-    sf::Time elapsed = runningTime.getElapsedTime();
-    int milliseconds = elapsed.asMilliseconds();
-
-    int seconds = milliseconds / 1000;
-    int minutes = seconds / 60;
-
-    seconds %= 60;
-    milliseconds %= 1000;
-
-    std::ostringstream oss;
-    oss << std::setw(2) << std::setfill('0') << minutes << ":"
-        << std::setw(2) << std::setfill('0') << seconds << ":"
-        << std::setw(3) << std::setfill('0') << milliseconds;
-    
-    std::string formattedTime = oss.str();
+    drawTimer(window);
 }
