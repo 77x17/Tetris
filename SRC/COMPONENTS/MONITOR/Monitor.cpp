@@ -78,3 +78,7 @@ void Monitor::exchangeCurrentBlock(CurrentBlock* curBlock) {
 LinkListBlock* Monitor::getNext() const {
     return next;
 }
+
+int Monitor::putIntoMap(CurrentBlock* curBlock) {
+    return curBlock->putIntoMap(map);
+}

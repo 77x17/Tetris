@@ -42,6 +42,8 @@ public:
     void exchangeCurrentBlock(CurrentBlock*);
 
     Map* getMap() const;
+    
+    int putIntoMap(CurrentBlock* curBlock);
     LinkListBlock* getNext() const;
 };
 

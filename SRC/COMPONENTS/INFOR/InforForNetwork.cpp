@@ -90,10 +90,6 @@ uint8_t InforForNetwork::removeLine(uint8_t lines) {
     nLine += lines;
     int realAddLines = garbageSent;
 
-    // if (not spin and lines != 4) {
-    //     realAddLines += 1;
-    // }
-
     mtx.lock();
     uint8_t nLinesAddCurrent = __builtin_popcount(nLinesAdd);
 
@@ -111,15 +107,10 @@ uint8_t InforForNetwork::removeLine(uint8_t lines) {
 
 void InforForNetwork::addLine(uint8_t lines) {
     if (lines <= 0) throw std::runtime_error("garbage push error");
-    // Only use infor in decleration and donot access outer infor.
-    // lines = getGarbage(lines, spin, B2B, count);
-
-    if (lines) {
-        mtx.lock();
-        nLinesAdd <<= (lines + 1);
-        nLinesAdd |= FULLMASK(lines);
-        mtx.unlock();
-    }
+    mtx.lock();
+    nLinesAdd <<= (lines + 1);
+    nLinesAdd |= FULLMASK(lines);
+    mtx.unlock();
 }
 
 uint64_t InforForNetwork::getAndRemoveLineAdd() {
