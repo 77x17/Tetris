@@ -2,13 +2,11 @@
 
 #include "CurrentBlockController.hpp"
 #include "LinkListBlock.hpp"
-#include "Infor.hpp"
 #include "Map.hpp"
 #include "MonitorForTwoPlayer.hpp"
 #include "MovementControllerWithNetwork.hpp"
 #include "MessageCode.hpp"
 #include "SoundManager.hpp"
-#include "Hold.hpp"
 
 #include <iostream>
 #include <random>
@@ -18,7 +16,7 @@ PlayerWithNetwork::PlayerWithNetwork(int x, int y, sf::TcpListener &listener, ui
     listener.accept(socket);
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
     socket.send(&seed, sizeof(seed));
-    initialize(); monitor->setNewSeed(seed);
+    initialize(); dynamic_cast<MonitorForTwoPlayer*>(monitor)->setNewSeed(seed);
     start(seed);
 }
 
@@ -28,7 +26,7 @@ PlayerWithNetwork::PlayerWithNetwork(int x, int y, const char* ipv4, int port): 
     if (socket.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
         throw std::runtime_error("Failed to receive seed!");
     }
-    initialize(); monitor->setNewSeed(seed);
+    initialize(); dynamic_cast<MonitorForTwoPlayer*>(monitor)->setNewSeed(seed);
     start(seed);
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
 }
@@ -89,13 +87,4 @@ void PlayerWithNetwork::waitingComfirm() {
     if (messageCodeInt != GAMEOVER) 
         throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
     else std::cout << "COMFIRM SUCESSFULLY!\n";
-}
-
-bool PlayerWithNetwork::isGameOver() {
-    return monitor->isGameOver();
-}
-
-
-void PlayerWithNetwork::draw(sf::RenderWindow* window) {
-    monitor->draw(window, curBlock->getCurrentBlock());
 }

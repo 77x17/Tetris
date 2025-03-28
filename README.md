@@ -5,7 +5,6 @@ todo list:
 HQH
 1. Viết lại 3 monitor 
 2. Cài delay khi gửi garbage
-3. Fix I shape
 
 77x17
 3. Cài thêm time - lines.

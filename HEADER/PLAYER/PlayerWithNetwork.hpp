@@ -11,7 +11,6 @@ class MovementControllerWithNetwork;
 
 class PlayerWithNetwork: public Player{
 private:
-    MonitorForTwoPlayer* monitor;
     sf::TcpSocket socket;
     
 public:
@@ -22,9 +21,6 @@ public:
     void initialize();
 
     void setGameOver();
-    bool isGameOver();
-
-    void draw(sf::RenderWindow* window);
 
     void start(uint32_t seed);
     void restart(uint32_t seed);
