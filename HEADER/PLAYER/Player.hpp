@@ -33,12 +33,12 @@ public:
     void autoDown();
 
     void resetComponent();
-    bool isGameOver();
+    virtual bool isGameOver();
 
     void start();
     void restart();
 
-    void draw(sf::RenderWindow* window);
+    virtual void draw(sf::RenderWindow* window);
 };
 
 #endif

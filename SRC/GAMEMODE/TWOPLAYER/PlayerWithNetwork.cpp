@@ -90,3 +90,12 @@ void PlayerWithNetwork::waitingComfirm() {
         throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
     else std::cout << "COMFIRM SUCESSFULLY!\n";
 }
+
+bool PlayerWithNetwork::isGameOver() {
+    return monitor->isGameOver();
+}
+
+
+void PlayerWithNetwork::draw(sf::RenderWindow* window) {
+    monitor->draw(window, curBlock->getCurrentBlock());
+}
