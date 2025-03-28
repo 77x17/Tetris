@@ -3,6 +3,10 @@
 #include "SoundManager.hpp"
 #include "Common.hpp"
 
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+
 const int FONT_SIZE = 25;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
@@ -262,4 +266,20 @@ void Infor::draw(sf::RenderWindow *window) {
     if (B2B > 1) {
         drawB2B(window);
     }
+   
+    sf::Time elapsed = runningTime.getElapsedTime();
+    int milliseconds = elapsed.asMilliseconds();
+
+    int seconds = milliseconds / 1000;
+    int minutes = seconds / 60;
+
+    seconds %= 60;
+    milliseconds %= 1000;
+
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << minutes << ":"
+        << std::setw(2) << std::setfill('0') << seconds << ":"
+        << std::setw(3) << std::setfill('0') << milliseconds;
+    
+    std::string formattedTime = oss.str();
 }
