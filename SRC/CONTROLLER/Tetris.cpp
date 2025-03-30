@@ -34,38 +34,56 @@ Tetris::~Tetris() {
 }
 
 void Tetris::start() {
-    while (window->isOpen()) {       
-        STATUS_CODE gameType = scene->drawMenu(window);
-        
+    MENU_CODE menuCode = MENU_CODE::MAIN;
+    while (window->isOpen()) {
+        STATUS_CODE gameType = scene->drawMenu(window, menuCode);
+
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {
             case STATUS_CODE::PRACTICE:
                 screenStatus = TetrisOnePlayer(window, scene).start();
+
+                if (screenStatus == STATUS_CODE::MENU) {
+                    menuCode = MENU_CODE::SINGLEPLAYER;
+                }
+
                 break;
             case STATUS_CODE::VERSUSBOT:
                 screenStatus = TetrisVsBot(window, scene).start();
+                
+                if (screenStatus == STATUS_CODE::MENU) {
+                    menuCode = MENU_CODE::SINGLEPLAYER;
+                }
+
                 break;
             case STATUS_CODE::MULTIPLAYER_SERVER:
                 screenStatus = TetrisTwoPlayer(window, scene, true).start();
+
+                if (screenStatus == STATUS_CODE::MENU) {
+                    menuCode = MENU_CODE::MULTIPLAYER;
+                }
+
                 break;
             case STATUS_CODE::MULTIPLAYER_CLIENT:
                 screenStatus = TetrisTwoPlayer(window, scene, false).start();
+
+                if (screenStatus == STATUS_CODE::MENU) {
+                    menuCode = MENU_CODE::MULTIPLAYER;
+                }
+
                 break;
-            case STATUS_CODE::QUIT:
+            case STATUS_CODE::QUIT: {
                 window->close();
+
                 break;
-            default:
+            }
+            default: {
                 throw std::runtime_error("[Tetris.cpp] - start(): STATUS_CODE error");
+            }
         }
         
-        switch (screenStatus) {
-            case STATUS_CODE::MENU:
-                break;
-            case STATUS_CODE::QUIT:
-                window->close();
-                break;
-            default:
-                throw std::runtime_error("[Tetris.cpp] - start(): STATUS_CODE error");
+        if (screenStatus == STATUS_CODE::QUIT) {
+            window->close();
         }
     }
 }

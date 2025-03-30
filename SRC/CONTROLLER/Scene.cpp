@@ -156,11 +156,11 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
     window->draw(menuBackground);
 }
 
-STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
+STATUS_CODE Scene::drawMenu(sf::RenderWindow *window, MENU_CODE menuCode) {
     // return STATUS_CODE::QUIT;
     soundManager->playMusic("menu");
 
-    {
+    {   // fade in
         window->clear();
 
         drawMenuBackground(window);
@@ -172,8 +172,24 @@ STATUS_CODE Scene::drawMenu(sf::RenderWindow *window) {
         drawChangeMenu(window, true);
     }
 
-backToMainMenu:
+    STATUS_CODE sceneStatus;
 
+    switch (menuCode) {
+        case MENU_CODE::MAIN: {
+            goto backToMainMenu;
+        }
+        case MENU_CODE::SINGLEPLAYER: {
+            goto backToSingleplayer;
+        }
+        case MENU_CODE::MULTIPLAYER: {
+            goto backToMultiplayer;
+        }
+        default: {
+            throw std::invalid_argument("[Scene.cpp] - drawMenu(): MENU_CODE error");
+        }
+    }
+
+backToMainMenu:
     while (window->isOpen() and mainMenu->notSelected()) {
         if (notFocus(window)) { 
             soundManager->pauseMusic("menu");
@@ -197,10 +213,11 @@ backToMainMenu:
         window->display();
     }
 
-    STATUS_CODE sceneStatus = mainMenu->getSelectedItem();
+    sceneStatus = mainMenu->getSelectedItem();
 
     switch (sceneStatus) {
         case STATUS_CODE::SINGLEPLAYER: {
+backToSingleplayer:
             sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::SINGLEPLAYER));
 
             if (sceneStatus == STATUS_CODE::BACK) {
@@ -210,6 +227,7 @@ backToMainMenu:
             break;
         }
         case STATUS_CODE::MULTIPLAYER: {
+backToMultiplayer:
             sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::MULTIPLAYER));
 
             if (sceneStatus == STATUS_CODE::BACK) {

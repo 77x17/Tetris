@@ -4,6 +4,7 @@
 #include <atomic>
 
 enum class STATUS_CODE;
+enum class MENU_CODE;
 
 class SoundManager;
 class Menu;
@@ -36,7 +37,7 @@ public:
 
     void drawMenuBackground(sf::RenderWindow *window);
 
-    STATUS_CODE drawMenu(sf::RenderWindow *window);
+    STATUS_CODE drawMenu(sf::RenderWindow *window, MENU_CODE menuCode);
     STATUS_CODE drawSubMenu(sf::RenderWindow *window, Menu *subMenu);
     STATUS_CODE drawOption(sf::RenderWindow *window);
     

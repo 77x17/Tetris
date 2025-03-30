@@ -47,21 +47,9 @@ class Menu {
 private:
     sf::Font            font;
     
-    KeyConfiguration   *keyConfiguration;
-
     sf::Clock           selectedTimeout;
 
     SoundManager       *soundManager;
-
-    bool                optionSelected;
-    bool                audioSelected;
-    int                 optionSelectedIndex;
-    int                 optionSelectedItem;
-    std::string         optionKeyStrings[2];
-    sf::Text            optionKeyTexts[2];
-
-    bool                optionWaitForKey;
-    bool                optionWaitForReleaseKey;
 
     bool                selected;
     int                 selectedItem;
