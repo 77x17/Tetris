@@ -111,9 +111,6 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     if (monitor->canHold()) {
                         monitor->exchangeCurrentBlock(curBlock);
                     }
-                    monitor->lockHold();
-                    if (curBlock->isEmpty())
-                        curBlock->setter(monitor->getNext());
                     mtx.unlock();
                 }
                 break;
