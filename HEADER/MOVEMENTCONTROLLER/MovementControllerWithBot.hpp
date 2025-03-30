@@ -4,17 +4,17 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include "MovementController.hpp"
 
-class Map;
-class Bot;
+class Monitor;
+class CurrentBlockController;
 
 class MovementControllerWithBot: public MovementController{
 private:
-    Bot* competitor;    
+    Monitor* competitor;    
 public:
     MovementControllerWithBot(Monitor*, CurrentBlockController*);
     ~MovementControllerWithBot();
     void handlePut();
-    void setCompetitor(Bot*);
+    void setCompetitor(Monitor* monitor);
 };
 
 

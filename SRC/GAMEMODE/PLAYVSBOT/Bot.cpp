@@ -2,7 +2,7 @@
 
 #include "CurrentBlock.hpp"
 #include "CurrentBlockController.hpp"
-#include "MovementController.hpp"
+#include "MovementControllerWithBot.hpp"
 #include "MonitorForTwoPlayer.hpp"
 #include "PlayerWithBot.hpp"
 
@@ -12,7 +12,7 @@
 Bot::Bot(int x, int y): X_COORDINATE(x), Y_COORDINATE(y) {
     monitor = new MonitorForTwoPlayer(x, y);
     curBlock = new CurrentBlockController(monitor->getMap());
-    movementController = new MovementController(monitor, curBlock);
+    movementController = new MovementControllerWithBot(monitor, curBlock);
 }
 
 Bot::~Bot() {
@@ -24,7 +24,17 @@ Bot::~Bot() {
 void Bot::setGameOver() { monitor->setGameOver(); }
 bool Bot::isGameOver() { return monitor->isGameOver(); }
 
+void Bot::addEvent() {
+    sf::Event fakeEvent;
+    fakeEvent.type = sf::Event::KeyPressed;
+    fakeEvent.key.code = sf::Keyboard::Left;
+    mtx.lock();
+    event.push(fakeEvent);
+    mtx.unlock();
+}
+
 void Bot::start(uint32_t seed, PlayerWithBot* player) {
+    player->setCompetitor(monitor);
     monitor->resetMonitor(seed);
     movementController->resetComponent();
     curBlock->setter(monitor->getNext());
@@ -32,18 +42,7 @@ void Bot::start(uint32_t seed, PlayerWithBot* player) {
 
     std::thread thinking([this](PlayerWithBot* &player) {
         while (!monitor->isGameOver()) {
-            sf::Event fakeEvent;
-            fakeEvent.type = sf::Event::KeyPressed;
-            fakeEvent.key.code = sf::Keyboard::Left;
-            if ((rand() % 5) == 0) {
-                fakeEvent.type = sf::Event::KeyReleased;
-                mtx.lock(); event.push(fakeEvent); mtx.unlock();
-                fakeEvent.type = sf::Event::KeyPressed;
-                fakeEvent.key.code = sf::Keyboard::Space;
-            }
-            mtx.lock();
-            event.push(fakeEvent);
-            mtx.unlock();
+            addEvent();
             sleep(1);
         }
     }, std::ref(player));
@@ -66,4 +65,8 @@ void Bot::update() {
     }
     mtx.unlock();
     movementController->autoDown();
+}
+
+void Bot::setCompetitor(Monitor* mon) {
+    dynamic_cast<MovementControllerWithBot*>(movementController)->setCompetitor(mon);
 }

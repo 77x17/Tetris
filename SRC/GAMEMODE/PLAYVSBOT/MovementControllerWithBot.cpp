@@ -20,7 +20,7 @@ void MovementControllerWithBot::handlePut() {
     nLinesRemove = monitor->removeNLines(nLinesRemove, curBlock->getCurrentBlock());
 
     if (nLinesRemove > 0) {
-        competitor->handleAddLine(nLinesRemove);
+        dynamic_cast<MonitorForTwoPlayer*>(competitor)->inforReceiveLineFromCompetitor(nLinesRemove);
     }
 
     collision = false;
@@ -30,6 +30,6 @@ void MovementControllerWithBot::handlePut() {
         monitor->setGameOver();
 }
 
-void MovementControllerWithBot::setCompetitor(Bot* b) {
-    competitor = b;
+void MovementControllerWithBot::setCompetitor(Monitor* monitor) {
+    competitor = monitor;
 }

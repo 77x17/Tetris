@@ -6,8 +6,9 @@
 #include <queue>
 #include <SFML/Graphics.hpp>
 
+class Monitor;
 class MonitorForTwoPlayer;
-class MovementController;
+class MovementControllerWithBot;
 class CurrentBlockController;
 class PlayerWithBot;
 
@@ -16,7 +17,7 @@ private:
     int X_COORDINATE;
     int Y_COORDINATE;
     MonitorForTwoPlayer* monitor;
-    MovementController *movementController;
+    MovementControllerWithBot *movementController;
     CurrentBlockController* curBlock;
 
     std::mutex mtx;
@@ -25,9 +26,13 @@ private:
 public:
     Bot(int X_COORDINATE, int Y_COORDINATE);
     ~Bot();
-    
+
     void setGameOver();
     bool isGameOver();
+
+    void setCompetitor(Monitor*);
+    
+    void addEvent();
 
     void start(uint32_t seed, PlayerWithBot*);
 

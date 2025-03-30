@@ -14,12 +14,11 @@ public:
     PlayerWithBot(int X_COORDINATE, int Y_COORDINATE);
     ~PlayerWithBot();
     
-    void setCompetitor(Bot*);
+    void setCompetitor(Monitor*);
     
     void initialize();
     void setGameOver();
-    void start(uint32_t seed);
-    void handleAddLine(uint8_t nLines);
+    void start(uint32_t seed, Bot* b);
 };
 
 #endif

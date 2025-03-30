@@ -14,7 +14,6 @@ TetrisVsBot::TetrisVsBot(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s)
     int COMPETITOR_Y_COORDINATE = 10;
     competitor = new Bot(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE);
     player = new PlayerWithBot(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);
-    player->setCompetitor(competitor);
     std::random_device rd;
     gen = std::mt19937(rd());
 }
@@ -32,7 +31,7 @@ STATUS_CODE TetrisVsBot::start() {
     loadPlayground(backgroundTexture, backgroundSprite);
 
     int tmp = gen();
-    player->start(tmp);
+    player->start(tmp, competitor);
     competitor->start(tmp, player);
 
     while (window->isOpen()) {
@@ -60,7 +59,7 @@ STATUS_CODE TetrisVsBot::start() {
             STATUS_CODE option = scene->drawGameOver(window);
             if (option == STATUS_CODE::RESTART) {
                 int tmp = gen();
-                player->start(tmp);
+                player->start(tmp, competitor);
                 competitor->start(tmp, player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu

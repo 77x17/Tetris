@@ -21,8 +21,8 @@ void PlayerWithBot::initialize() {
 
 PlayerWithBot::~PlayerWithBot() {}
 
-void PlayerWithBot::setCompetitor(Bot* b) { 
-    dynamic_cast<MovementControllerWithBot*>(movementController)->setCompetitor(b);
+void PlayerWithBot::setCompetitor(Monitor* mon) {
+    dynamic_cast<MovementControllerWithBot*>(movementController)->setCompetitor(mon);
 }
 
 void PlayerWithBot::setGameOver() {
@@ -30,13 +30,11 @@ void PlayerWithBot::setGameOver() {
     // dynamic_cast<MovementControllerWithBot*>(movementController)->setGameOver();
 }
 
-void PlayerWithBot::start(uint32_t seed) {
+void PlayerWithBot::start(uint32_t seed, Bot* b) {
+    b->setCompetitor(monitor); // set monitor for other monitor;
+
     monitor->resetMonitor(seed);
     movementController->resetComponent();
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
-}
-
-void PlayerWithBot::handleAddLine(uint8_t nLines) {
-    dynamic_cast<MonitorForTwoPlayer*>(monitor)->inforReceiveLineFromCompetitor(nLines);
 }
