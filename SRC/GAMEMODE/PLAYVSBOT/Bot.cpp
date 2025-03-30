@@ -3,14 +3,14 @@
 #include "CurrentBlock.hpp"
 #include "CurrentBlockController.hpp"
 #include "MovementControllerWithBot.hpp"
-#include "MonitorForTwoPlayer.hpp"
+#include "MonitorForBot.hpp"
 #include "PlayerWithBot.hpp"
 
 #include <thread>
 #include <iostream>
 
 Bot::Bot(int x, int y): X_COORDINATE(x), Y_COORDINATE(y) {
-    monitor = new MonitorForTwoPlayer(x, y);
+    monitor = new MonitorForBot(x, y);
     curBlock = new CurrentBlockController(monitor->getMap());
     movementController = new MovementControllerWithBot(monitor, curBlock);
 }

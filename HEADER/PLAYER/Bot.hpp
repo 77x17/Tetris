@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 class Monitor;
-class MonitorForTwoPlayer;
+class MonitorForBot;
 class MovementControllerWithBot;
 class CurrentBlockController;
 class PlayerWithBot;
@@ -16,7 +16,7 @@ class Bot {
 private:
     int X_COORDINATE;
     int Y_COORDINATE;
-    MonitorForTwoPlayer* monitor;
+    MonitorForBot* monitor;
     MovementControllerWithBot *movementController;
     CurrentBlockController* curBlock;
 
@@ -31,7 +31,7 @@ public:
     bool isGameOver();
 
     void setCompetitor(Monitor*);
-    
+
     void addEvent();
 
     void start(uint32_t seed, PlayerWithBot*);
