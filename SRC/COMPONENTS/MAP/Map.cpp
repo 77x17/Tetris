@@ -129,3 +129,5 @@ bool Map::isValid(uint16_t shape, int Y, int X) {
             return false;
     return true;
 }
+
+bool Map::isAllClear() { return map[HEIGHT_MAP - 1] == EMPTYLINE; }

@@ -37,6 +37,7 @@ public:
 
     uint8_t putBlockIntoMap(Block* block, int Y, int X);
     bool isValid(uint16_t shape, int Y, int X);
+    bool isAllClear();
 };
 
 #endif
