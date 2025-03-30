@@ -7,8 +7,8 @@
 #include "SoundManager.hpp"
 
 TetrisOnePlayer::TetrisOnePlayer(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s) {
-    int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
-    int Y_COORDINATE = 10;
+    X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
+    Y_COORDINATE = 10;
     player = new Player(X_COORDINATE, Y_COORDINATE);;
 }
 

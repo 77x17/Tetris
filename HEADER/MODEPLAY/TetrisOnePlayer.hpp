@@ -10,6 +10,8 @@ class Player;
 
 class TetrisOnePlayer: public TetrisBaseMode {
 private:
+    int X_COORDINATE;
+    int Y_COORDINATE;
     Player* player;
 
 public:
