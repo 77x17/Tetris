@@ -105,22 +105,22 @@ bool CurrentBlockController::rotate(int8_t times) {
         if (cur->getShapeID() == 1) {
             posY += 2;
             if (isValid(cur->getRotate(times)))  goto rotate_success;
-            if (isValid(cur->getRotate(3 - times))) goto rotate_success;
+            // if (isValid(cur->getRotate(3 - times))) goto rotate_success;
             posY -= 2;
 
             posY -= 2;
             if (posY >= 0 and isValid(cur->getRotate(times)))  goto rotate_success;
-            if (posY >= 0 and isValid(cur->getRotate(3 - times))) goto rotate_success;
+            // if (posY >= 0 and isValid(cur->getRotate(3 - times))) goto rotate_success;
             posY += 2;
             
             posX += 2;
             if (isValid(cur->getRotate(times)))  goto rotate_success;
-            if (isValid(cur->getRotate(3-times))) goto rotate_success;
+            // if (isValid(cur->getRotate(3-times))) goto rotate_success;
             posX -= 2;
 
             posX -= 2;
             if (posX >= 0 and isValid(cur->getRotate(times)))  goto rotate_success;
-            if (posX >= 0 and isValid(cur->getRotate(3 - times))) goto rotate_success;
+            // if (posX >= 0 and isValid(cur->getRotate(3 - times))) goto rotate_success;
             posX += 2;
         }
 
