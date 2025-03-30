@@ -74,9 +74,9 @@ void MonitorForOnePlayer::resetMonitor(uint32_t seed) {
     infor->reset();
 }
 
-uint8_t MonitorForOnePlayer::removeNLines(int nLines, CurrentBlock* curBlock) {
-    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
-    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock());
+uint8_t MonitorForOnePlayer::removeNLines(int nLines, CurrentBlock* curBlock, bool isAllClear) {
+    infor->update(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock(), isAllClear);
+    infor->playSound(nLines, curBlock->isJustSpin(), curBlock->getTypeBlock(), isAllClear);
     return infor->removeLine(nLines);
 }
 

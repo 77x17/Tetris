@@ -89,7 +89,8 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                         dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
                     }
 
-                    nLinesRemove = monitor->removeNLines(nLinesRemove, curBlock);
+                    // AllClearBUG ở đây
+                    nLinesRemove = monitor->removeNLines(nLinesRemove, curBlock, false);
 
                     if (nLinesRemove > 0) {
                         player->handleAddLine(nLinesRemove);

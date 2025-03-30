@@ -151,7 +151,7 @@ void InforForNetwork::drawGarbage(sf::RenderWindow *window) {
 void InforForNetwork::drawGarbageSent(sf::RenderWindow *window) {
     sf::Text text(std::to_string(garbageSent), font, 50);
     text.setPosition(sf::Vector2f(GARBAGE_POSITION_X - text.getGlobalBounds().width - BLOCK_SIZE, 
-                                  GARBAGE_POSITION_Y - text.getGlobalBounds().height - BLOCK_SIZE));
+                                  GARBAGE_POSITION_Y - text.getGlobalBounds().height - BLOCK_SIZE / 2));
 
     float alpha = 255 * (1 - garbageSentTimeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, 255, 255, alpha));

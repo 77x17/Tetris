@@ -23,6 +23,7 @@ private:
     sf::Clock     B2BMissingTimeout;
     sf::Clock     spinTimeout;
     sf::Clock     garbageSentTimeout;
+    sf::Clock     allClearTimeout;
     std::string   message;
     std::string   combo;
     SoundManager *soundManager;
@@ -30,6 +31,8 @@ private:
     sf::Clock     runningTime;
     sf::Time      lastElapsed;
     bool          startTimer;
+
+    bool          isAllClear;
 
 protected:
 
@@ -61,8 +64,8 @@ public:
 
     virtual uint8_t removeLine(uint8_t lines);
 
-    void update        (uint8_t lines, bool spin, char typeBlock);
-    void playSound     (uint8_t lines, bool spin, char typeBlock);
+    void update        (uint8_t lines, bool spin, char typeBlock, bool isAllClear);
+    void playSound     (uint8_t lines, bool spin, char typeBlock, bool isAllClear);
     void drawMessage   (sf::RenderWindow *window, const std::string text);
     void drawCombo     (sf::RenderWindow *window, const std::string text);
     void drawB2B       (sf::RenderWindow *window);
@@ -71,6 +74,7 @@ public:
     void drawPPS       (sf::RenderWindow *window);
     void drawLines     (sf::RenderWindow *window);
     void drawTimer     (sf::RenderWindow *window);
+    void drawAllClear  (sf::RenderWindow *window);
 
     virtual void draw(sf::RenderWindow *window);
 };

@@ -36,8 +36,8 @@ Tetris::~Tetris() {
 void Tetris::start() {
     MENU_CODE menuCode = MENU_CODE::MAIN;
     while (window->isOpen()) {
-        // STATUS_CODE gameType = scene->drawMenu(window, menuCode);
-        STATUS_CODE gameType = STATUS_CODE::VERSUSBOT;
+        STATUS_CODE gameType = scene->drawMenu(window, menuCode);
+        // STATUS_CODE gameType = STATUS_CODE::PRACTICE;
 
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {

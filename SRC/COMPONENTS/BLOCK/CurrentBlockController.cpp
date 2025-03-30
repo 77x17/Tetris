@@ -185,3 +185,7 @@ void CurrentBlockController::compress(sf::Packet &packet) {
 void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
     packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin();
 }
+
+bool CurrentBlockController::isAllClear() {
+    return map->isAllClear();
+}

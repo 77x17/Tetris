@@ -32,7 +32,7 @@ public:
     virtual void resetMonitor(uint32_t seed);
     virtual void draw(sf::RenderWindow* window, CurrentBlock* currentBlock) const;
 
-    virtual uint8_t removeNLines(int nLines, CurrentBlock* currentBlock) = 0;
+    virtual uint8_t removeNLines(int nLines, CurrentBlock* currentBlock, bool isAllClear) = 0;
     
     bool isGameOver();
     void setGameOver();

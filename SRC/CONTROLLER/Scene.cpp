@@ -548,7 +548,7 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
         }
 
         float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
-        float scaleFactor = 1.0f + 1.0f * timeout.getElapsedTime().asSeconds();;  // Tăng scale
+        float scaleFactor = 1.0f + 1.0f * timeout.getElapsedTime().asSeconds();  // Tăng scale
 
         sf::Text countdown(count ? std::to_string(count) : "GO!", font, 40);
 

@@ -6,7 +6,8 @@
 #include <iostream>
 #include <cstdio>
 
-const int FONT_SIZE = BLOCK_SIZE;
+const int   FONT_SIZE = BLOCK_SIZE;
+
 int MESSAGE_FONT_SIZE = FONT_SIZE;
 int   MESSAGE_PADDING = FONT_SIZE;
 
@@ -30,7 +31,7 @@ int     TIMER_PADDING = FONT_SIZE * 11;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
-Infor::Infor(): startTimer(false), nLine(0), piece(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false) {
+Infor::Infor(): startTimer(false), isAllClear(false), nLine(0), piece(0), count(0), B2B(0), B2BMissing(0), spin(false), spinDraw(false) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
 
     soundManager = new SoundManager();
@@ -38,6 +39,7 @@ Infor::Infor(): startTimer(false), nLine(0), piece(0), count(0), B2B(0), B2BMiss
     soundManager->loadSound("clearLine" , "ASSETS/sfx/clearline.mp3");
     soundManager->loadSound("clearQuad" , "ASSETS/sfx/clearquad.mp3");
     soundManager->loadSound("clearSpin" , "ASSETS/sfx/clearspin.mp3");
+    soundManager->loadSound("allClear"  , "ASSETS/sfx/allclear.mp3");
     soundManager->loadSound("combo1"    , "ASSETS/sfx/combo/combo_1.mp3");
     soundManager->loadSound("combo2"    , "ASSETS/sfx/combo/combo_2.mp3");
     soundManager->loadSound("combo3"    , "ASSETS/sfx/combo/combo_3.mp3");
@@ -80,7 +82,7 @@ uint8_t Infor::removeLine(uint8_t lines) {
     return nLine;
 }
 
-void Infor::update(uint8_t lines, bool isSpin, char block) {
+void Infor::update(uint8_t lines, bool isSpin, char block, bool allClear) {
     piece++;
 
     if (isSpin) {
@@ -127,9 +129,15 @@ void Infor::update(uint8_t lines, bool isSpin, char block) {
             B2B = 0;
         }
     }
+
+    if (allClear) {
+        isAllClear = true;
+
+        allClearTimeout.restart();
+    }
 }
 
-void Infor::playSound(uint8_t lines, bool isSpin, char block) {
+void Infor::playSound(uint8_t lines, bool isSpin, char block, bool allClear) {
     if (lines == 0) {
         if (count > 2) {
             soundManager->play("comboBreak");
@@ -158,6 +166,10 @@ void Infor::playSound(uint8_t lines, bool isSpin, char block) {
         else {
             soundManager->play("clearLine");
         }
+    }
+
+    if (allClear) {
+        soundManager->play("allClear");
     }
 }
 
@@ -353,6 +365,24 @@ void Infor::drawTimer(sf::RenderWindow *window) {
     window->draw(text);
 }
 
+
+void Infor::drawAllClear(sf::RenderWindow *window) {
+    sf::Text text("ALL CLEAR", font, MESSAGE_FONT_SIZE * 1.5);
+
+    float alpha = 255 * (1 - allClearTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+    float scaleFactor = 1.0f + 0.5f * allClearTimeout.getElapsedTime().asSeconds();  // Tăng scale
+    
+    text.setFillColor(sf::Color(255, 255, 0, alpha));
+    text.setScale(scaleFactor, scaleFactor);
+    
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH + 7 * BLOCK_SIZE - text.getGlobalBounds().width / 2, 
+        INFOR_POSITION_Y + 3 * BLOCK_SIZE - text.getGlobalBounds().height / 2
+    );
+
+    window->draw(text);
+}
+
 void Infor::draw(sf::RenderWindow *window) {
     if (message != std::string() and timeout.getElapsedTime().asSeconds() < TIME_OUT) {
         drawMessage(window, message);
@@ -392,4 +422,12 @@ void Infor::draw(sf::RenderWindow *window) {
     drawLines(window);
 
     drawTimer(window);
+
+    if (isAllClear and allClearTimeout.getElapsedTime().asSeconds() < TIME_OUT) {
+        drawAllClear(window);
+    }
+    else {
+        isAllClear = false;
+        allClearTimeout.restart();
+    }
 }

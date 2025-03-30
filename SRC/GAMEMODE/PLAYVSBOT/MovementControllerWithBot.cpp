@@ -17,7 +17,7 @@ void MovementControllerWithBot::handlePut() {
         dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(gen());
     }
 
-    nLinesRemove = monitor->removeNLines(nLinesRemove, curBlock->getCurrentBlock());
+    nLinesRemove = monitor->removeNLines(nLinesRemove, curBlock->getCurrentBlock(), curBlock->isAllClear());
 
     if (nLinesRemove > 0) {
         dynamic_cast<MonitorForTwoPlayer*>(competitor)->inforReceiveLineFromCompetitor(nLinesRemove);

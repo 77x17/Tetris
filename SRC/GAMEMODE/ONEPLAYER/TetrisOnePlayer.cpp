@@ -37,22 +37,22 @@ restartGameOnePlayer:
         scene->drawChangeMenu(window, true);
     }
     
-    // Countdown
-    {
-        int HOLD_WIDTH         = 5;
+    // Countdown: Skip
+    // {
+    //     int HOLD_WIDTH         = 5;
         
-        int GRID_WIDTH         = 10;
-        int GRID_HEIGHT        = 24;
-        int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
-        int GRID_POSITION_Y    = Y_COORDINATE;
+    //     int GRID_WIDTH         = 10;
+    //     int GRID_HEIGHT        = 24;
+    //     int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
+    //     int GRID_POSITION_Y    = Y_COORDINATE;
         
-        scene->drawCountdown(window, 
-            (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
-            (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
-            -1,
-            -1
-        );
-    }
+    //     scene->drawCountdown(window, 
+    //         (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
+    //         (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
+    //         -1,
+    //         -1
+    //     );
+    // }
 
     player->setTimer();
 

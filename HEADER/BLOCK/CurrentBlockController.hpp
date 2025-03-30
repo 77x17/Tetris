@@ -54,6 +54,8 @@ public:
 
     void compress(sf::Packet &packet);
     void compressWithSpin(sf::Packet &packet);
+
+    bool isAllClear();
 };
 
 #endif

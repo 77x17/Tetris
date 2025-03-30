@@ -80,7 +80,7 @@ void MovementController::handleRotate180() {
 
 void MovementController::handlePut() {
     int nLines = monitor->putIntoMap(curBlock->getCurrentBlock());
-    monitor->removeNLines(nLines, curBlock->getCurrentBlock());
+    monitor->removeNLines(nLines, curBlock->getCurrentBlock(), curBlock->isAllClear());
 
     collision = false;
     curBlock->setter(monitor->getNext());
@@ -191,6 +191,11 @@ void MovementController::autoDown() {
         
         if (moveDownSignal) {
             handleDown();
+
+            if (not curBlock->collisionBottom()) {
+                clock.restart();
+            }
+            
             movingTime = MOVING_TIME;
         }
         
