@@ -47,11 +47,6 @@ void Player::start() {
     restart();
 }
 
-// void Player::start(int seed) {
-//     next->setSeed(seed);
-//     resetComponent();
-// }
-
 void Player::setTimer() {
     dynamic_cast<MonitorForOnePlayer *>(monitor)->setTimer();
 }

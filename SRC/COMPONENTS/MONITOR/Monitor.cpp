@@ -38,9 +38,7 @@ void Monitor::draw(sf::RenderWindow* window, CurrentBlock* block) const {
 
 void Monitor::resetMonitor(uint32_t seed) {
     hold ->reset();
-    // map  ->reset();
     next ->reset(seed);
-    // infor->reset();
     gameOver = false;
 }
 

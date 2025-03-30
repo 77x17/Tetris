@@ -15,7 +15,9 @@ private:
     InforForNetwork   *infor;
 public:
     MonitorForTwoPlayer(int X_COORDINATE, int Y_COORDINATE);
-    void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    virtual ~MonitorForTwoPlayer();
+    virtual void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
 
     void draw(sf::RenderWindow* window, CurrentBlock* currentBlock) const;

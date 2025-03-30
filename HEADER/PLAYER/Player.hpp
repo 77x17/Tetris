@@ -33,7 +33,7 @@ public:
     void autoDown();
 
     void resetComponent();
-    virtual bool isGameOver();
+    bool isGameOver();
 
     void start();
     void setTimer();

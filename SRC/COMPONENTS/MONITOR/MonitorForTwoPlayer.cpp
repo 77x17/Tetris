@@ -23,6 +23,11 @@ void MonitorForTwoPlayer::CreateMonitor(int x, int y) {
     setPosition(x, y);
 }
 
+MonitorForTwoPlayer::~MonitorForTwoPlayer() {
+    delete map;
+    delete infor;
+}
+
 void MonitorForTwoPlayer::setPosition(int X_COORDINATE, int Y_COORDINATE) {
     int HOLD_WIDTH         = 5;
     int HOLD_HEIGHT        = 3;

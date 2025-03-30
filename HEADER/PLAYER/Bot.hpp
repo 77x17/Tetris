@@ -1,27 +1,46 @@
-#pragma once
+#ifndef BOT_HPP
+#define BOT_HPP
 
-#include "Player.hpp"
-#include <vector>
+#include <unistd.h>
+#include <mutex>
+#include <queue>
+#include <SFML/Graphics.hpp>
 
-enum class MOVE {
+class Monitor;
+class MonitorForBot;
+class MovementControllerWithBot;
+class CurrentBlockController;
+class PlayerWithBot;
 
-};
-
-class Bot : public Player {
+class Bot {
 private:
-    bool isThinking;
-    std::vector<MOVE> bestMoves;
-    int moveIndex;
-    sf::Clock decisionClock;
+    int X_COORDINATE;
+    int Y_COORDINATE;
+    MonitorForBot* monitor;
+    MovementControllerWithBot *movementController;
+    CurrentBlockController* curBlock;
 
-    void analyzeMove();
-    void executeMove();
-    
+    std::mutex mtx;
+    std::queue<sf::Event> event;
+
 public:
     Bot(int X_COORDINATE, int Y_COORDINATE);
     ~Bot();
-    
+
+    void setGameOver();
+    bool isGameOver();
+
+    void setCompetitor(Monitor*);
+
+    void addEvent();
+
+    void start(uint32_t seed, PlayerWithBot*);
+
+    void handleAddLine(uint8_t nLines);
+
     void update(); // Cập nhật trạng thái bot theo thời gian
     void draw(sf::RenderWindow *window);
 
 };
+
+#endif

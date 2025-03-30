@@ -10,6 +10,14 @@ class KeyConfiguration;
 
 class MovementController{
 private:
+    static constexpr float DROP_TIME           = 0.5f;
+    static constexpr float COLLISION_DROP_TIME = 2.5f;
+
+    static constexpr float DELAY_MOVING_TIME   = 175.0f;
+    static constexpr float MOVING_TIME         = 30.0f;
+    
+    float movingTime;
+
     sf::Clock clock;
     sf::Clock movingClock;
     KeyConfiguration* key;

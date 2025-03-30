@@ -16,17 +16,9 @@
 
 #include <iostream>
 
-constexpr float DROP_TIME           = 0.5f;
-constexpr float COLLISION_DROP_TIME = 2.5f;
-
-constexpr float DELAY_MOVING_TIME   = 175.0f;
-constexpr float MOVING_TIME         = 30.0f;
-          float movingTime          = DELAY_MOVING_TIME;
-
-MovementController::MovementController(Monitor* moni, CurrentBlockController* cur): collision(false), moveLeftSignal(false), 
-                                                                                    moveRightSignal(false), moveDownSignal(false), 
-                                                                                    monitor(moni), curBlock(cur) {
+MovementController::MovementController(Monitor* moni, CurrentBlockController* cur): monitor(moni), curBlock(cur) {
     key = new KeyConfiguration("ASSETS/keyBindings.txt");
+    resetComponent();
 }
 
 MovementController::~MovementController() {
@@ -34,8 +26,9 @@ MovementController::~MovementController() {
 }
 
 void MovementController::resetComponent() {
-    collision = false; moveLeftSignal = false; moveLeftSignal = false;
+    collision = false; moveLeftSignal = false;
     moveRightSignal = false; moveDownSignal = false;
+    movingTime = DELAY_MOVING_TIME;
 }
 
 void MovementController::handleLeft() {

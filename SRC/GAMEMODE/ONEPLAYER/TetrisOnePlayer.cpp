@@ -7,7 +7,9 @@
 #include "SoundManager.hpp"
 
 TetrisOnePlayer::TetrisOnePlayer(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s) {
-    player = nullptr;
+    int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
+    int Y_COORDINATE = 10;
+    player = new Player(X_COORDINATE, Y_COORDINATE);;
 }
 
 TetrisOnePlayer::~TetrisOnePlayer() {
@@ -20,9 +22,6 @@ STATUS_CODE TetrisOnePlayer::start() {
     loadPlayground(backgroundTexture, backgroundSprite);
 
 restartGameOnePlayer:
-    int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
-    int Y_COORDINATE = 10;
-    Player* player = new Player(X_COORDINATE, Y_COORDINATE);
     player->start();
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
@@ -116,8 +115,6 @@ restartGameOnePlayer:
     }
 
 quitStartGameOnePlayer:
-    delete player;
-
     if (screenStatus == STATUS_CODE::RESTART) {
         goto restartGameOnePlayer;
     }
