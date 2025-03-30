@@ -17,15 +17,13 @@ private:
     MovementController *movementController;
     CurrentBlockController* curBlock;
 public:
-    Bot(int X_COORDINATE, int Y_COORDINATE, int seed);
+    Bot(int X_COORDINATE, int Y_COORDINATE);
     ~Bot();
     
     void setGameOver();
     bool isGameOver();
 
-    void start(PlayerWithBot*);
-
-    void resetComponent();
+    void start(uint32_t seed, PlayerWithBot*);
 
     void handleAddLine(uint8_t nLines);
 

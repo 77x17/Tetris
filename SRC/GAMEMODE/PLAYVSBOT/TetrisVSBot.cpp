@@ -8,16 +8,15 @@
 #include <iostream>
 
 TetrisVsBot::TetrisVsBot(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s) {
-    std::random_device rd;
-    gen = std::mt19937(rd());
     int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int PLAYER_Y_COORDINATE = 10;
     int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
     int COMPETITOR_Y_COORDINATE = 10;
-    int tmp = gen();
-    competitor = new Bot(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, tmp);
-    player = new PlayerWithBot(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, tmp);
+    competitor = new Bot(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE);
+    player = new PlayerWithBot(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);
     player->setCompetitor(competitor);
+    std::random_device rd;
+    gen = std::mt19937(rd());
 }
 
 TetrisVsBot::~TetrisVsBot() {
@@ -32,7 +31,9 @@ STATUS_CODE TetrisVsBot::start() {
     sf::Sprite  backgroundSprite;
     loadPlayground(backgroundTexture, backgroundSprite);
 
-    competitor->start(player);
+    int tmp = gen();
+    player->start(tmp);
+    competitor->start(tmp, player);
 
     while (window->isOpen()) {
         sf::Event event;
@@ -58,8 +59,9 @@ STATUS_CODE TetrisVsBot::start() {
         else {
             STATUS_CODE option = scene->drawGameOver(window);
             if (option == STATUS_CODE::RESTART) {
-                competitor->resetComponent();
-                competitor->start(player);
+                int tmp = gen();
+                player->start(tmp);
+                competitor->start(tmp, player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu
                 window->close();

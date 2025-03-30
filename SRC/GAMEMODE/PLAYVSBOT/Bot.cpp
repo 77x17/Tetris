@@ -9,11 +9,10 @@
 #include <thread>
 #include <iostream>
 
-Bot::Bot(int x, int y, int seed): X_COORDINATE(x), Y_COORDINATE(y) {
+Bot::Bot(int x, int y): X_COORDINATE(x), Y_COORDINATE(y) {
     monitor = new MonitorForTwoPlayer(x, y);
     curBlock = new CurrentBlockController(monitor->getMap());
     movementController = new MovementController(monitor, curBlock);
-    monitor->resetMonitor(seed);
 }
 
 Bot::~Bot() {
@@ -25,8 +24,12 @@ Bot::~Bot() {
 void Bot::setGameOver() { monitor->setGameOver(); }
 bool Bot::isGameOver() { return monitor->isGameOver(); }
 
-void Bot::start(PlayerWithBot* player) {
-    resetComponent();
+void Bot::start(uint32_t seed, PlayerWithBot* player) {
+    monitor->resetMonitor(seed);
+    movementController->resetComponent();
+    curBlock->setter(monitor->getNext());
+    monitor->unlockHold();
+
     std::thread thinking([this](PlayerWithBot* &player) {
         while (!monitor->isGameOver()) {
             std::cout << "THINKING!\n";
@@ -34,12 +37,6 @@ void Bot::start(PlayerWithBot* player) {
         }
     }, std::ref(player));
     thinking.detach();
-}
-
-void Bot::resetComponent() {
-    movementController->resetComponent();
-    curBlock->setter(monitor->getNext());
-    monitor->unlockHold();
 }
 
 void Bot::draw(sf::RenderWindow *window) {

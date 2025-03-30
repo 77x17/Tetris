@@ -9,10 +9,8 @@
 #include <random>
 #include <SFML/Network.hpp>
 
-PlayerWithBot::PlayerWithBot(int x, int y, uint32_t seed): Player(x, y) {
+PlayerWithBot::PlayerWithBot(int x, int y): Player(x, y) {
     initialize();
-    dynamic_cast<MonitorForTwoPlayer*>(monitor)->setNewSeed(seed);
-    restart(seed);
 }
 
 void PlayerWithBot::initialize() {
@@ -32,7 +30,7 @@ void PlayerWithBot::setGameOver() {
     // dynamic_cast<MovementControllerWithBot*>(movementController)->setGameOver();
 }
 
-void PlayerWithBot::restart(uint32_t seed) {
+void PlayerWithBot::start(uint32_t seed) {
     monitor->resetMonitor(seed);
     movementController->resetComponent();
     curBlock->setter(monitor->getNext());

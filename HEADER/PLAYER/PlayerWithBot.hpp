@@ -11,14 +11,14 @@ class PlayerWithBot: public Player{
 private:
     
 public:
-    PlayerWithBot(int X_COORDINATE, int Y_COORDINATE, uint32_t seed);
+    PlayerWithBot(int X_COORDINATE, int Y_COORDINATE);
     ~PlayerWithBot();
     
     void setCompetitor(Bot*);
     
     void initialize();
     void setGameOver();
-    void restart(uint32_t seed);
+    void start(uint32_t seed);
     void handleAddLine(uint8_t nLines);
 };
 
