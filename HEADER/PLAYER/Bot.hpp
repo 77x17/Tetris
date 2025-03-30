@@ -2,6 +2,8 @@
 #define BOT_HPP
 
 #include <unistd.h>
+#include <mutex>
+#include <queue>
 #include <SFML/Graphics.hpp>
 
 class MonitorForTwoPlayer;
@@ -16,6 +18,10 @@ private:
     MonitorForTwoPlayer* monitor;
     MovementController *movementController;
     CurrentBlockController* curBlock;
+
+    std::mutex mtx;
+    std::queue<sf::Event> event;
+
 public:
     Bot(int X_COORDINATE, int Y_COORDINATE);
     ~Bot();

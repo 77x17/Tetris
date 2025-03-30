@@ -32,8 +32,19 @@ void Bot::start(uint32_t seed, PlayerWithBot* player) {
 
     std::thread thinking([this](PlayerWithBot* &player) {
         while (!monitor->isGameOver()) {
-            std::cout << "THINKING!\n";
-            sleep(2);
+            sf::Event fakeEvent;
+            fakeEvent.type = sf::Event::KeyPressed;
+            fakeEvent.key.code = sf::Keyboard::Left;
+            if ((rand() % 5) == 0) {
+                fakeEvent.type = sf::Event::KeyReleased;
+                mtx.lock(); event.push(fakeEvent); mtx.unlock();
+                fakeEvent.type = sf::Event::KeyPressed;
+                fakeEvent.key.code = sf::Keyboard::Space;
+            }
+            mtx.lock();
+            event.push(fakeEvent);
+            mtx.unlock();
+            sleep(1);
         }
     }, std::ref(player));
     thinking.detach();
@@ -48,5 +59,11 @@ void Bot::handleAddLine(uint8_t nLines) {
 }
 
 void Bot::update() {
+    mtx.lock();
+    while (!event.empty()) {
+        movementController->processEvents(event.front());
+        event.pop();
+    }
+    mtx.unlock();
     movementController->autoDown();
 }
