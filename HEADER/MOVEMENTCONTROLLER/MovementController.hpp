@@ -10,7 +10,8 @@ class KeyConfiguration;
 
 class MovementController{
 private:
-    static constexpr float DROP_TIME           = 0.5f;
+    int lines;
+    float DROP_TIME;
     static constexpr float COLLISION_DROP_TIME = 2.5f;
 
     static constexpr float DELAY_MOVING_TIME   = 175.0f;
@@ -52,6 +53,8 @@ public:
     virtual void handleHold();
 
     void autoDown();
+
+    void speedUp();
 };
 
 #endif

@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-MovementController::MovementController(Monitor* moni, CurrentBlockController* cur): monitor(moni), curBlock(cur) {
+MovementController::MovementController(Monitor* moni, CurrentBlockController* cur) : lines(0), DROP_TIME(0.5f), monitor(moni), curBlock(cur) {
     key = new KeyConfiguration("ASSETS/keyBindings.txt");
     resetComponent();
 }
@@ -80,7 +80,15 @@ void MovementController::handleRotate180() {
 
 void MovementController::handlePut() {
     int nLines = monitor->putIntoMap(curBlock->getCurrentBlock());
-    monitor->removeNLines(nLines, curBlock->getCurrentBlock(), curBlock->isAllClear());
+    monitor->removeNLines(nLines, curBlock->getCurrentBlock(), curBlock->isAllClear()); 
+    
+    lines += nLines;
+
+    if (lines >= 10) {
+        lines -= 10;
+
+        speedUp();
+    }
 
     collision = false;
     curBlock->setter(monitor->getNext());
@@ -213,4 +221,9 @@ void MovementController::autoDown() {
         
         clock.restart();
     }
+}
+
+void MovementController::speedUp() {
+    DROP_TIME -= 0.5 / 20;
+    std::cout << DROP_TIME << '\n';
 }
