@@ -7,6 +7,7 @@ enum class STATUS_CODE;
 
 class SoundManager;
 class Menu;
+class Option;
 
 class Scene {
 private:
@@ -21,6 +22,7 @@ private:
     sf::Clock     overlayTimeout;
 
     Menu         *mainMenu;
+    Option       *option;
     Menu         *pauseMenu;
     Menu         *gameOverMenu;
 
@@ -36,6 +38,7 @@ public:
 
     STATUS_CODE drawMenu(sf::RenderWindow *window);
     STATUS_CODE drawSubMenu(sf::RenderWindow *window, Menu *subMenu);
+    STATUS_CODE drawOption(sf::RenderWindow *window);
     
     STATUS_CODE drawPause(sf::RenderWindow *window);
     STATUS_CODE drawGameOver(sf::RenderWindow *window);

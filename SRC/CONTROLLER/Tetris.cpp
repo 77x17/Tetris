@@ -22,6 +22,8 @@ Tetris::Tetris() {
     // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
 
     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
+    window->setFramerateLimit(60);
+
     scene  = new Scene(window);
 }
 

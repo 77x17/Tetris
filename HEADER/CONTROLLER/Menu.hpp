@@ -7,6 +7,9 @@ enum class STATUS_CODE {
     SINGLEPLAYER,
     MULTIPLAYER,
     OPTION,
+
+    CONTROLS_AUDIO,
+    CONFIG,
          
     PRACTICE,
     VERSUSBOT,

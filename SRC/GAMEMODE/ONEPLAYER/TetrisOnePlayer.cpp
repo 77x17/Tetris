@@ -17,10 +17,7 @@ TetrisOnePlayer::~TetrisOnePlayer() {
 STATUS_CODE TetrisOnePlayer::start() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
-    sf::Music   backgroundMusic;
     loadPlayground(backgroundTexture, backgroundSprite);
-    backgroundMusic.play();
-
 
 restartGameOnePlayer:
     int X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
@@ -116,8 +113,6 @@ restartGameOnePlayer:
 
             screenStatus = scene->drawGameOver(window);
         }
-
-        backgroundMusic.setVolume(SoundManager::getVolume() - 20);
     }
 
 quitStartGameOnePlayer:

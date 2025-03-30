@@ -1,6 +1,7 @@
 #include "Scene.hpp"
 
 #include "Menu.hpp"
+#include "Option.hpp"
 #include "SoundManager.hpp"
 #include "Common.hpp"
 
@@ -10,6 +11,7 @@
 const int TITLE_PADDING  = 100;
 
 constexpr float TIME_OUT = 1.0f;
+constexpr float BACKGROUND_SPEED = 2.0f;
 
 Scene::Scene(sf::RenderWindow *window) {
     font.loadFromFile("ASSETS/fonts/ARLRDBD.TTF");
@@ -35,6 +37,22 @@ Scene::Scene(sf::RenderWindow *window) {
         "OPTION",
         "QUIT"
     }, MENU_CODE::MAIN);
+
+    option = new Option(window, {
+        "CONTROLS",
+        "MOVE LEFT               ",
+        "MOVE RIGHT              ",
+        "MOVE DOWN               ",
+        "HARD DROP               ",
+        "ROTATE CLOCKWISE        ",
+        "ROTATE COUNTERCLOCKWISE ",
+        "ROTATE 180 DEGREES      ",
+        "HOLD                    ",
+        "SFX",
+        "MUSIC",
+        "AUDIO",
+        "BACK"
+    });
 
     pauseMenu = new Menu(window, {
         "RESUME",
@@ -118,7 +136,7 @@ void Scene::drawMenuBackground(sf::RenderWindow *window) {
     if (menuBackgroundClock.getElapsedTime().asMilliseconds() > 16) { // ~60 FPS
         menuBackgroundClock.restart();
         
-        menuBackgroundX += 1.0f;
+        menuBackgroundX += BACKGROUND_SPEED;
     }
     
     // Nếu ảnh nền đi hết màn hình bên phải, đưa nó về bên trái
@@ -185,15 +203,51 @@ backToMainMenu:
         case STATUS_CODE::SINGLEPLAYER: {
             sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::SINGLEPLAYER));
 
+            if (sceneStatus == STATUS_CODE::BACK) {
+                goto backToMainMenu;
+            }        
+
             break;
         }
         case STATUS_CODE::MULTIPLAYER: {
             sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::MULTIPLAYER));
 
+            if (sceneStatus == STATUS_CODE::BACK) {
+                goto backToMainMenu;
+            }
+
             break;
         }
         case STATUS_CODE::OPTION: {
+backToOption:
             sceneStatus = drawSubMenu(window, mainMenu->getSubMenu(MENU_CODE::OPTION));
+
+            switch (sceneStatus) {
+                case STATUS_CODE::CONTROLS_AUDIO: {
+                    sceneStatus = drawOption(window);
+
+                    if (sceneStatus == STATUS_CODE::BACK) {
+                        goto backToOption;
+                    }
+
+                    break;
+                }
+                case STATUS_CODE::CONFIG: {
+                    sceneStatus = STATUS_CODE::BACK;
+                    
+                    if (sceneStatus == STATUS_CODE::BACK) {
+                        goto backToOption;
+                    }
+
+                    break;
+                }
+                case STATUS_CODE::BACK: {
+                    goto backToMainMenu;
+                }
+                default: {
+                    throw std::invalid_argument("[Scene.cpp] - drawMenu() - OPTION: STATUS_CODE error");
+                }
+            } 
 
             break;
         }
@@ -201,12 +255,9 @@ backToMainMenu:
             // quit - do nothing
             break;
         }
-        default:
+        default: {
             throw std::invalid_argument("[Scene.cpp] - drawMenu(): STATUS_CODE error");
-    }
-
-    if (sceneStatus == STATUS_CODE::BACK) {
-        goto backToMainMenu;
+        }
     }
 
     // Skip
@@ -242,6 +293,33 @@ STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
     }
 
     return subMenu->getSelectedItem();
+}
+
+STATUS_CODE Scene::drawOption(sf::RenderWindow *window) {
+    while (window->isOpen() and option->notSelected()) {
+        if (notFocus(window)) { 
+            soundManager->pauseMusic("menu");
+            continue; 
+        }
+        soundManager->unPauseMusic("menu");
+        
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            option->processEvents(window, event);
+        }
+
+        option->update(window);
+
+        window->clear();
+
+        drawMenuBackground(window);
+
+        option->draw(window);
+
+        window->display();
+    }
+
+    return option->getSelectedItem();
 }
 
 STATUS_CODE Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
