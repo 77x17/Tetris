@@ -12,8 +12,7 @@ class MovementController{
 private:
     int lines;
     float DROP_TIME;
-    static constexpr float COLLISION_TIME      = 0.5f;
-    static constexpr float COLLISION_DROP_TIME = 2.5f;
+    static constexpr float COLLISION_TIME      = 0.75f;
 
     static constexpr float DELAY_MOVING_TIME   = 175.0f;
     static constexpr float MOVING_TIME         = 30.0f;

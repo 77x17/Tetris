@@ -219,7 +219,6 @@ void MovementController::autoDown() {
             clock.restart();
         }
         else {
-            // if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : COLLISION_TIME)) {
             if (clock.getElapsedTime().asSeconds() >= COLLISION_TIME) {
                 handlePut();
 
@@ -230,6 +229,5 @@ void MovementController::autoDown() {
 }
 
 void MovementController::speedUp() {
-    DROP_TIME -= 0.5 / 5;
-    std::cout << DROP_TIME << '\n';
+    DROP_TIME /= 1.5;
 }
