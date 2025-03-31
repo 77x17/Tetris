@@ -1,6 +1,7 @@
 #include "Tetris.hpp"
 
-#include "TetrisOnePlayer.hpp"
+#include "TetrisPractice.hpp"
+#include "TetrisSurvival.hpp"
 #include "TetrisTwoPlayer.hpp"
 #include "TetrisVsBot.hpp"
 #include "SoundManager.hpp"
@@ -28,9 +29,9 @@ std::unordered_map<std::string, sf::SoundBuffer> SoundManager::musicBuffers = st
 std::unordered_map<std::string, sf::Sound>       SoundManager::musicSounds  = std::unordered_map<std::string, sf::Sound>();
 
 Tetris::Tetris() {
-    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-    window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
-    // window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
+    // sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    // window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
+    window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
     scene  = new Scene(window);
 
     window->setFramerateLimit(60);
@@ -45,43 +46,43 @@ void Tetris::start() {
     MENU_CODE menuCode = MENU_CODE::MAIN;
     bool run = false;
     bool isFullscreen = true;
-
+    
     while (true) {
-        // while (not run) {
-        //     sf::Event event;
-        //     while (window->pollEvent(event)) {
-        //         if (event.type == sf::Event::KeyPressed) {
-        //             if (event.key.code == sf::Keyboard::F11) {
-        //                 delete window;
-        //                 delete scene;
+        while (not run) {
+            sf::Event event;
+            while (window->pollEvent(event)) {
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::F11) {
+                        delete window;
+                        delete scene;
                         
-        //                 if (isFullscreen) {
-        //                     window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris");
-        //                     scene  = new Scene(window);
+                        if (isFullscreen) {
+                            window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tetris", sf::Style::Close);
+                            scene  = new Scene(window);
     
-        //                     Common::BLOCK_SIZE = 20;
+                            Common::BLOCK_SIZE = 20;
                             
-        //                     isFullscreen = false;
-        //                 }
-        //                 else {
-        //                     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-        //                     window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
-        //                     scene  = new Scene(window);
+                            isFullscreen = false;
+                        }
+                        else {
+                            sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+                            window = new sf::RenderWindow(desktop, "Tetris", sf::Style::None); // Không viền
+                            scene  = new Scene(window);
                             
-        //                     Common::BLOCK_SIZE = 25;
+                            Common::BLOCK_SIZE = 25;
     
-        //                     isFullscreen = true;
-        //                 }
+                            isFullscreen = true;
+                        }
     
-        //                 window->setFramerateLimit(60);
-        //             }
-        //             else if (event.key.code == sf::Keyboard::Escape) {
-        //                 run = true;
-        //             }
-        //         }
-        //     }
-        // }
-        // run = false;
+                        window->setFramerateLimit(60);
+                    }
+                    else if (event.key.code == sf::Keyboard::Escape) {
+                        run = true;
+                    }
+                }
+            }
+        }
+        run = false;
 
         std::cout << Common::BLOCK_SIZE << '\n';
 
@@ -90,15 +91,25 @@ void Tetris::start() {
 
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {
-            case STATUS_CODE::PRACTICE:
-                screenStatus = TetrisOnePlayer(window, scene).start();
+            case STATUS_CODE::PRACTICE: {
+                screenStatus = TetrisPractice(window, scene).start();
 
                 if (screenStatus == STATUS_CODE::MENU) {
                     menuCode = MENU_CODE::SINGLEPLAYER;
                 }
 
                 break;
-            case STATUS_CODE::VERSUSBOT:
+            }
+            case STATUS_CODE::SURVIVAL: {
+                screenStatus = TetrisSurvival(window, scene).start();
+
+                if (screenStatus == STATUS_CODE::MENU) {
+                    menuCode = MENU_CODE::SINGLEPLAYER;
+                }
+
+                break;
+            }
+            case STATUS_CODE::VERSUSBOT: {
                 screenStatus = TetrisVsBot(window, scene).start();
                 
                 if (screenStatus == STATUS_CODE::MENU) {
@@ -106,7 +117,8 @@ void Tetris::start() {
                 }
 
                 break;
-            case STATUS_CODE::MULTIPLAYER_SERVER:
+            }
+            case STATUS_CODE::MULTIPLAYER_SERVER: {
                 screenStatus = TetrisTwoPlayer(window, scene, true).start();
 
                 if (screenStatus == STATUS_CODE::MENU) {
@@ -114,7 +126,8 @@ void Tetris::start() {
                 }
 
                 break;
-            case STATUS_CODE::MULTIPLAYER_CLIENT:
+            }
+            case STATUS_CODE::MULTIPLAYER_CLIENT: {
                 screenStatus = TetrisTwoPlayer(window, scene, false).start();
 
                 if (screenStatus == STATUS_CODE::MENU) {
@@ -122,6 +135,7 @@ void Tetris::start() {
                 }
 
                 break;
+            }
             case STATUS_CODE::QUIT: {
                 window->close();
 

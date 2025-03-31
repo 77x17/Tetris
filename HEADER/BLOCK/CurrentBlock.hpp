@@ -17,8 +17,6 @@ protected:
 
     bool spin; // check piece spin
 
-    void updateShadow(Map*);
-
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
@@ -28,6 +26,8 @@ public:
     void setSpin();
     void resetSpin();
     
+    void updateShadow(Map*);
+
     bool isEmpty();
     
     Block* setter(Block* p);

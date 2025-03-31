@@ -22,8 +22,9 @@ protected:
     SoundManager *soundManager;
     MovementController *movementController;
     CurrentBlockController* curBlock;
-
+    
 public:
+
     Player(int X_COORDINATE, int Y_COORDINATE);
 
     virtual void initialize();

@@ -46,6 +46,10 @@ public:
 
     virtual int putIntoMap(CurrentBlock* curBlock) = 0;
     Block* getNext() const;
+
+    virtual void setTimer() = 0;
+    virtual void pauseTimer() = 0;
+    virtual void unPauseTimer() = 0;
 };
 
 #endif

@@ -23,12 +23,12 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 
     // footer
     {
-        footerVersion = sf::Text("Version 1.0", font, 15);
+        footerVersion = sf::Text("Version 1.0", font, Common::BLOCK_SIZE * 0.75);
         footerVersion.setPosition(
             10, 
             window->getSize().y - footerVersion.getGlobalBounds().height - 10
         );
-        footerOwner   = sf::Text("By: HQH - 77x17", font, 15);
+        footerOwner   = sf::Text("By: HQH - 77x17", font, Common::BLOCK_SIZE * 0.75);
         footerOwner  .setPosition(
             window->getSize().x - footerOwner.getGlobalBounds().width - 10, 
             window->getSize().y - footerVersion.getGlobalBounds().height - 10
@@ -44,7 +44,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
     // Set title
     switch (menuCode) {
         case MENU_CODE::MAIN: {
-            menuTitle = sf::Text("MENU", font, 40);
+            menuTitle = sf::Text("MENU", font, Common::BLOCK_SIZE * 2);
             menuTitle.setPosition(10, 0);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, menuTitle.getGlobalBounds().height * 2));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -55,6 +55,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             subMenus = {
                 new Menu(window, {
                     "PRACTICE",
+                    "SURVIVAL",
                     "VERSUS BOT",
                     "BACK"
                 }, MENU_CODE::SINGLEPLAYER),
@@ -75,7 +76,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             break;
         }
         case MENU_CODE::SINGLEPLAYER: {
-            menuTitle = sf::Text("SINGLEPLAYER", font, 40);
+            menuTitle = sf::Text("SINGLEPLAYER", font, Common::BLOCK_SIZE * 2);
             menuTitle.setPosition(10, 0);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, menuTitle.getGlobalBounds().height * 2));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -86,7 +87,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             break;
         }
         case MENU_CODE::MULTIPLAYER: {
-            menuTitle = sf::Text("MULTIPLAYER", font, 40);
+            menuTitle = sf::Text("MULTIPLAYER", font, Common::BLOCK_SIZE * 2);
             menuTitle.setPosition(10, 0);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, menuTitle.getGlobalBounds().height * 2));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -97,7 +98,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             break;
         }
         case MENU_CODE::OPTION: {
-            menuTitle = sf::Text("OPTION", font, 40);
+            menuTitle = sf::Text("OPTION", font, Common::BLOCK_SIZE * 2);
             menuTitle.setPosition(10, 0);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, 2 * menuTitle.getGlobalBounds().height));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -108,7 +109,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             break;
         }
         case MENU_CODE::PAUSE: {
-            menuTitle = sf::Text("PAUSE", font, 50);
+            menuTitle = sf::Text("PAUSE", font, Common::BLOCK_SIZE * 2.5);
             menuTitle.setPosition(window->getSize().x / 2 - menuTitle.getGlobalBounds().width / 2, OPTION_PADDING);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, 2 * menuTitle.getGlobalBounds().height));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -119,7 +120,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             break;
         }
         case MENU_CODE::GAMEOVER: {
-            menuTitle = sf::Text("GAME OVER", font, 50);
+            menuTitle = sf::Text("GAME OVER", font, Common::BLOCK_SIZE * 2.5);
             menuTitle.setPosition(window->getSize().x / 2 - menuTitle.getGlobalBounds().width / 2, OPTION_PADDING);
             menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, 2 * menuTitle.getGlobalBounds().height));
             menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
@@ -146,7 +147,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             
             for (int i = 0; i < menuSize; i++) {
                 {   // Text
-                    menuTexts[i] = sf::Text(menuItems[i], font, 40);
+                    menuTexts[i] = sf::Text(menuItems[i], font, Common::BLOCK_SIZE * 2);
                     menuTexts[i].setFillColor(TEXT_COLOR);
                     menuTexts[i].setPosition(sf::Vector2f(
                         window->getSize().x, 
@@ -202,7 +203,7 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 
             for (int i = 0; i < menuSize; i++) {
                 {   // Text
-                    menuTexts[i] = sf::Text(menuItems[i], font, 30);
+                    menuTexts[i] = sf::Text(menuItems[i], font, Common::BLOCK_SIZE * 1.5);
                     menuTexts[i].setFillColor(TEXT_COLOR);
                     menuTexts[i].setPosition(sf::Vector2f(
                         window->getSize().x / 2 - menuTexts[i].getGlobalBounds().width / 2, 
@@ -359,8 +360,9 @@ STATUS_CODE Menu::getSelectedItem() {
         case MENU_CODE::SINGLEPLAYER: {
             switch (cloneSelectedItem) {
                 case 0:  return STATUS_CODE::PRACTICE;
-                case 1:  return STATUS_CODE::VERSUSBOT;
-                case 2:  return STATUS_CODE::BACK;
+                case 1:  return STATUS_CODE::SURVIVAL;
+                case 2:  return STATUS_CODE::VERSUSBOT;
+                case 3:  return STATUS_CODE::BACK;
                 default: throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::SINGLEPLAYER) error.");
             }
 

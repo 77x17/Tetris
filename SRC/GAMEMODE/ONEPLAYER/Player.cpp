@@ -48,15 +48,15 @@ void Player::start() {
 }
 
 void Player::setTimer() {
-    dynamic_cast<MonitorForOnePlayer *>(monitor)->setTimer();
+    monitor->setTimer();
 }
 
 void Player::pauseTimer() {
-    dynamic_cast<MonitorForOnePlayer *>(monitor)->pauseTimer();
+    monitor->pauseTimer();
 }
 
 void Player::unPauseTimer() {
-    dynamic_cast<MonitorForOnePlayer *>(monitor)->unPauseTimer();
+    monitor->unPauseTimer();
 }
 
 void Player::restart() {

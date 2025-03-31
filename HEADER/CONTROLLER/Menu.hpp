@@ -12,6 +12,7 @@ enum class STATUS_CODE {
     CONFIG,
          
     PRACTICE,
+    SURVIVAL,
     VERSUSBOT,
 
     MULTIPLAYER_SERVER,

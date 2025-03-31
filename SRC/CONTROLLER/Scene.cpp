@@ -172,12 +172,6 @@ STATUS_CODE Scene::drawMenu(sf::RenderWindow *window, MENU_CODE menuCode) {
 
 backToMainMenu:
     while (window->isOpen() and mainMenu->notSelected()) {
-        if (notFocus(window)) { 
-            soundManager->pauseMusic("menu");
-            continue; 
-        }
-        soundManager->unPauseMusic("menu");
-
         sf::Event event;
         while (window->pollEvent(event)) {
             mainMenu->processEvents(window, event);
@@ -269,12 +263,6 @@ backToOption:
 
 STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
     while (window->isOpen() and subMenu->notSelected()) {
-        if (notFocus(window)) { 
-            soundManager->pauseMusic("menu");
-            continue; 
-        }
-        soundManager->unPauseMusic("menu");
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             subMenu->processEvents(window, event);
@@ -296,12 +284,6 @@ STATUS_CODE Scene::drawSubMenu(sf::RenderWindow *window, Menu *subMenu) {
 
 STATUS_CODE Scene::drawOption(sf::RenderWindow *window) {
     while (window->isOpen() and option->notSelected()) {
-        if (notFocus(window)) { 
-            soundManager->pauseMusic("menu");
-            continue; 
-        }
-        soundManager->unPauseMusic("menu");
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             option->processEvents(window, event);
@@ -330,8 +312,6 @@ STATUS_CODE Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bo
                             window->getSize().y / 2 - waitingText.getGlobalBounds().height / 2);
 
     while (window->isOpen() && !isFinish) {
-        if (notFocus(window)) { continue; }
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -374,8 +354,6 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
 
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
-        // if (notFocus(window)) { continue; }
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             // Chờ để hủy Restart ngay lập tức
@@ -391,8 +369,6 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     }
 
     while (window->isOpen() and gameOverMenu->notSelected()) {
-        // if (notFocus(window)) { continue; }
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             gameOverMenu->processEvents(window, event);
@@ -425,8 +401,6 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     soundManager->play("selected");
 
     while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
-        if (notFocus(window)) { continue; }
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             // Chờ để hủy resume ngay lập tức
@@ -442,8 +416,6 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     }
 
     while (window->isOpen() and pauseMenu->notSelected()) {
-        if (notFocus(window)) { continue; }
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             pauseMenu->processEvents(window, event);
@@ -466,8 +438,6 @@ STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {
     if (result == STATUS_CODE::RESUME) {
         overlayTimeout.restart(); 
         while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
-            if (notFocus(window)) { continue; }
-        
             sf::Event tempEvent;
             while (window->pollEvent(tempEvent)) {
                 // Không làm gì cả -> Chỉ lấy ra để loại bỏ buffer
@@ -505,14 +475,6 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
 
     int count = 3;
     while (true) {  // count >= 0
-        if (notFocus(window)) { 
-            soundManager->pause("countdown");
-            
-            continue; 
-        }
-        
-        soundManager->unPause("countdown");
-        
         sf::Event event;
         while (window->pollEvent(event)) {
             // clear buffer
@@ -531,7 +493,7 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
         float alpha = 255 * (1 - timeout.getElapsedTime().asSeconds() / TIME_OUT);
         float scaleFactor = 1.0f + 1.0f * timeout.getElapsedTime().asSeconds();  // Tăng scale
 
-        sf::Text countdown(count ? std::to_string(count) : "GO!", font, 40);
+        sf::Text countdown(count ? std::to_string(count) : "GO!", font, Common::BLOCK_SIZE * 2);
 
         countdown.setFillColor(sf::Color(255, 255, 0, alpha)); // Vàng nhưng giảm alpha
         countdown.setScale(scaleFactor, scaleFactor);

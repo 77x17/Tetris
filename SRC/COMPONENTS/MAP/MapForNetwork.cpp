@@ -1,6 +1,7 @@
 #include "MapForNetwork.hpp"
 
 #include "CommonMap.hpp"
+#include "Block.hpp"
 #include <random>
 
 MapForNetwork::MapForNetwork():Map(){}
@@ -37,4 +38,17 @@ void MapForNetwork::add(uint64_t nLinesAdd, int seed) {
         }
         nLinesAdd >>= 1;
     }
+}
+
+uint8_t MapForNetwork::putBlockIntoMap(Block* block, int Y, int X) {
+    uint16_t shape = block->getShape();
+
+    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
+        if (map[Y + i] & (getLine(shape, i) << (X + NUMOFFSET))) {
+            i = -1;
+            Y--;
+        }
+    }
+
+    return Map::putBlockIntoMap(block, Y, X);
 }

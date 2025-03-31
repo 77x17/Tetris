@@ -109,3 +109,15 @@ Map* MonitorForTwoPlayer::getMap() const {
 int MonitorForTwoPlayer::putIntoMap(CurrentBlock* curBlock) {
     return curBlock->putIntoMap(map);
 }
+
+void MonitorForTwoPlayer::setTimer() {
+    infor->setTimer();
+}
+
+void MonitorForTwoPlayer::pauseTimer() {
+    infor->pauseTimer();
+}
+
+void MonitorForTwoPlayer::unPauseTimer() {
+    infor->unPauseTimer();
+}

@@ -26,8 +26,7 @@ private:
     Option       *option;
     Menu         *pauseMenu;
     Menu         *gameOverMenu;
-
-    bool          notFocus(sf::RenderWindow *window);
+    
 public:
     Scene(sf::RenderWindow *window);
     ~Scene();
