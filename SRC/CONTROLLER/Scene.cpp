@@ -76,23 +76,6 @@ Scene::~Scene() {
     delete gameOverMenu;
 }
 
-bool Scene::notFocus(sf::RenderWindow *window) {    
-    if (not window->hasFocus()) {
-        ShowWindow(window->getSystemHandle(), SW_MINIMIZE);
-
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            // nothing
-        }
-
-        sf::sleep(sf::milliseconds(100));
-   
-        return true;
-    }
-
-    return false;
-}
-
 void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
     sf::Texture screenshot;
     sf::Sprite  background;
@@ -106,9 +89,7 @@ void Scene::drawChangeMenu(sf::RenderWindow *window, bool fadeIn) {
     sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
 
     overlayTimeout.restart(); 
-    while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
-        if (notFocus(window)) { continue; }
-
+    while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {        
         sf::Event tempEvent;
         while (window->pollEvent(tempEvent)) {
             // Không làm gì cả -> Chỉ lấy ra để loại bỏ buffer

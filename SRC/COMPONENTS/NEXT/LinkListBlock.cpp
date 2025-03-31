@@ -63,25 +63,25 @@ Block* LinkListBlock::updateNext() {
 }
 
 void LinkListBlock::drawOutline(sf::RenderWindow *window) {
-    sf::Text text("NEXT", font, BLOCK_SIZE - BLOCK_SIZE / 3);
-    text.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
+    sf::Text text("NEXT", font, Common::BLOCK_SIZE - Common::BLOCK_SIZE / 3);
+    text.setPosition(NEXT_POSITION_X, NEXT_POSITION_Y - Common::BLOCK_SIZE - Common::BLOCK_SIZE / 6);
     window->draw(text);
 
     sf::RectangleShape line;
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
 
     // Upper - lower line
-    line.setSize(sf::Vector2f(NEXT_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
-    line.setPosition(NEXT_POSITION_X - WIDTH_BORDER, NEXT_POSITION_Y - WIDTH_BORDER + 0           * BLOCK_SIZE);
+    line.setSize(sf::Vector2f(NEXT_WIDTH * Common::BLOCK_SIZE + Common::WIDTH_BORDER + Common::WIDTH_BORDER, Common::WIDTH_BORDER));
+    line.setPosition(NEXT_POSITION_X - Common::WIDTH_BORDER, NEXT_POSITION_Y - Common::WIDTH_BORDER + 0           * Common::BLOCK_SIZE);
     window->draw(line);
-    line.setPosition(NEXT_POSITION_X - WIDTH_BORDER, NEXT_POSITION_Y + NEXT_HEIGHT * BLOCK_SIZE);
+    line.setPosition(NEXT_POSITION_X - Common::WIDTH_BORDER, NEXT_POSITION_Y + NEXT_HEIGHT * Common::BLOCK_SIZE);
     window->draw(line);
     
     // Left - right line
-    line.setSize(sf::Vector2f(1, NEXT_HEIGHT * BLOCK_SIZE));
-    line.setPosition(NEXT_POSITION_X + 0          * BLOCK_SIZE, NEXT_POSITION_Y);
+    line.setSize(sf::Vector2f(1, NEXT_HEIGHT * Common::BLOCK_SIZE));
+    line.setPosition(NEXT_POSITION_X + 0          * Common::BLOCK_SIZE, NEXT_POSITION_Y);
     window->draw(line);
-    line.setPosition(NEXT_POSITION_X + NEXT_WIDTH * BLOCK_SIZE, NEXT_POSITION_Y);
+    line.setPosition(NEXT_POSITION_X + NEXT_WIDTH * Common::BLOCK_SIZE, NEXT_POSITION_Y);
     window->draw(line);
 }
 

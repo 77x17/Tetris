@@ -11,7 +11,7 @@
 
 CurrentBlock::CurrentBlock() : block(nullptr){}
 
-CurrentBlock::CurrentBlock(Block *a) : block(a), posX(WIDTH_MAP / 2 - BLOCK_EDGE/2), posY(0), spin(false){}
+CurrentBlock::CurrentBlock(Block *a) : block(a), posX(Common::WIDTH_MAP / 2 - BLOCK_EDGE/2), posY(0), spin(false){}
 
 CurrentBlock::~CurrentBlock() { delete block; block = nullptr; }
 
@@ -75,7 +75,7 @@ char CurrentBlock::getTypeBlock() {
 }
 
 void CurrentBlock::resetPosition(Map* map) {
-    posX = WIDTH_MAP / 2 - BLOCK_EDGE / 2; posY = 0;
+    posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2; posY = 0;
     updateShadow(map);
 }
 

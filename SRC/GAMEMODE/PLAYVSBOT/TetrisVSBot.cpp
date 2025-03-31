@@ -8,9 +8,9 @@
 #include <iostream>
 
 TetrisVsBot::TetrisVsBot(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s) {
-    int PLAYER_X_COORDINATE = window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
+    int PLAYER_X_COORDINATE = window->getSize().x / 4 - Common::BLOCK_SIZE * 23 / 2;
     int PLAYER_Y_COORDINATE = 10;
-    int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - BLOCK_SIZE * 23 / 2;
+    int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - Common::BLOCK_SIZE * 23 / 2;
     int COMPETITOR_Y_COORDINATE = 10;
     competitor = new Bot(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE);
     player = new PlayerWithBot(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE);

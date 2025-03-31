@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdio>
 
-const int   FONT_SIZE = BLOCK_SIZE;
+const int   FONT_SIZE = Common::BLOCK_SIZE;
 
 int MESSAGE_FONT_SIZE = FONT_SIZE;
 int   MESSAGE_PADDING = FONT_SIZE;
@@ -376,8 +376,8 @@ void Infor::drawAllClear(sf::RenderWindow *window) {
     text.setScale(scaleFactor, scaleFactor);
     
     text.setPosition(
-        INFOR_POSITION_X + INFOR_WIDTH + 7 * BLOCK_SIZE - text.getGlobalBounds().width / 2, 
-        INFOR_POSITION_Y + 3 * BLOCK_SIZE - text.getGlobalBounds().height / 2
+        INFOR_POSITION_X + INFOR_WIDTH + 7 * Common::BLOCK_SIZE - text.getGlobalBounds().width / 2, 
+        INFOR_POSITION_Y + 3 * Common::BLOCK_SIZE - text.getGlobalBounds().height / 2
     );
 
     window->draw(text);

@@ -38,25 +38,25 @@ void Hold::lock() { holdPosible = false; }
 void Hold::unlock() { holdPosible = true; }
 
 void Hold::drawOutline(sf::RenderWindow* window) {
-    sf::Text text("HOLD", font, BLOCK_SIZE - BLOCK_SIZE / 3);
-    text.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - BLOCK_SIZE - BLOCK_SIZE / 6);
+    sf::Text text("HOLD", font, Common::BLOCK_SIZE - Common::BLOCK_SIZE / 3);
+    text.setPosition(HOLD_POSITION_X, HOLD_POSITION_Y - Common::BLOCK_SIZE - Common::BLOCK_SIZE / 6);
     window->draw(text);
     
     sf::RectangleShape line;
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
 
     // Upper - lower line
-    line.setSize(sf::Vector2f(HOLD_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, WIDTH_BORDER));
-    line.setPosition(HOLD_POSITION_X - WIDTH_BORDER, HOLD_POSITION_Y - WIDTH_BORDER);
+    line.setSize(sf::Vector2f(HOLD_WIDTH * Common::BLOCK_SIZE + Common::WIDTH_BORDER + Common::WIDTH_BORDER, Common::WIDTH_BORDER));
+    line.setPosition(HOLD_POSITION_X - Common::WIDTH_BORDER, HOLD_POSITION_Y - Common::WIDTH_BORDER);
     window->draw(line);
-    line.setPosition(HOLD_POSITION_X - WIDTH_BORDER, HOLD_POSITION_Y + HOLD_HEIGHT * BLOCK_SIZE);
+    line.setPosition(HOLD_POSITION_X - Common::WIDTH_BORDER, HOLD_POSITION_Y + HOLD_HEIGHT * Common::BLOCK_SIZE);
     window->draw(line);
     
     // Left - right line
-    line.setSize(sf::Vector2f(1, HOLD_HEIGHT * BLOCK_SIZE));
+    line.setSize(sf::Vector2f(1, HOLD_HEIGHT * Common::BLOCK_SIZE));
     line.setPosition(HOLD_POSITION_X                          , HOLD_POSITION_Y);
     window->draw(line);
-    line.setPosition(HOLD_POSITION_X + HOLD_WIDTH * BLOCK_SIZE, HOLD_POSITION_Y);
+    line.setPosition(HOLD_POSITION_X + HOLD_WIDTH * Common::BLOCK_SIZE, HOLD_POSITION_Y);
     window->draw(line);
 }
 

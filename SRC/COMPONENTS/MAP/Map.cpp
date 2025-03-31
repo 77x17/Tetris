@@ -9,11 +9,11 @@
 
 Map::Map() {
     texture.loadFromFile("ASSETS/blocks/blocks.png");
-    map = new uint64_t[HEIGHT_MAP + 1]();
-    for (int i = 0; i < HEIGHT_MAP; i++) {
+    map = new uint64_t[Common::HEIGHT_MAP + 1]();
+    for (int i = 0; i < Common::HEIGHT_MAP; i++) {
         map[i] = EMPTYLINE;
     }
-    map[HEIGHT_MAP] = FULLMASK(REALWIDTH);
+    map[Common::HEIGHT_MAP] = FULLMASK(REALWIDTH);
 }
 
 void Map::setPosition(int x, int y, int w, int h) { GRID_POSITION_X = x; GRID_POSITION_Y = y; GRID_WIDTH = w; GRID_HEIGHT = h; }
@@ -23,57 +23,57 @@ Map::~Map() {
 }
 
 void Map::reset() {
-    for (int i = 0; i < HEIGHT_MAP; i++) {
+    for (int i = 0; i < Common::HEIGHT_MAP; i++) {
         map[i] = EMPTYLINE;
     }
-    map[HEIGHT_MAP] = FULLMASK(REALWIDTH);
+    map[Common::HEIGHT_MAP] = FULLMASK(REALWIDTH);
 }
 
 void Map::drawOutline(sf::RenderWindow* window) {
     sf::RectangleShape line;
 
     // Grid
-    line.setSize(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE, 1));
+    line.setSize(sf::Vector2f(GRID_WIDTH * Common::BLOCK_SIZE, 1));
     line.setFillColor(sf::Color(100, 100, 100, 100)); // Gray
     for (int i = 4; i <= GRID_HEIGHT; i++) {
-        line.setPosition(GRID_POSITION_X, GRID_POSITION_Y + i * BLOCK_SIZE);
+        line.setPosition(GRID_POSITION_X, GRID_POSITION_Y + i * Common::BLOCK_SIZE);
         window->draw(line);
     }
 
     // Grid
-    line.setSize(sf::Vector2f(1, (GRID_HEIGHT - 4) * BLOCK_SIZE));
+    line.setSize(sf::Vector2f(1, (GRID_HEIGHT - 4) * Common::BLOCK_SIZE));
     line.setFillColor(sf::Color(100, 100, 100, 100)); // Gray
     for (int i = 0; i <= GRID_WIDTH; i++) {
-        line.setPosition(GRID_POSITION_X + i * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
+        line.setPosition(GRID_POSITION_X + i * Common::BLOCK_SIZE, 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
         window->draw(line);
     }
 
     // Lower line
-    line.setSize(sf::Vector2f(GRID_WIDTH * BLOCK_SIZE + WIDTH_BORDER + WIDTH_BORDER, 5));
+    line.setSize(sf::Vector2f(GRID_WIDTH * Common::BLOCK_SIZE + Common::WIDTH_BORDER + Common::WIDTH_BORDER, 5));
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setPosition(GRID_POSITION_X - WIDTH_BORDER, GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE);
+    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER, GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE);
     window->draw(line);
     
     // Left - right line
-    line.setSize(sf::Vector2f(WIDTH_BORDER, (GRID_HEIGHT - 4) * BLOCK_SIZE));
+    line.setSize(sf::Vector2f(Common::WIDTH_BORDER, (GRID_HEIGHT - 4) * Common::BLOCK_SIZE));
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setPosition(GRID_POSITION_X - WIDTH_BORDER                          , 4 * BLOCK_SIZE + GRID_POSITION_Y);
+    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER                          , 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
     window->draw(line);
-    line.setPosition(GRID_POSITION_X                + GRID_WIDTH * BLOCK_SIZE, 4 * BLOCK_SIZE + GRID_POSITION_Y);
+    line.setPosition(GRID_POSITION_X                + GRID_WIDTH * Common::BLOCK_SIZE, 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
     window->draw(line);
 
     // Draw for garbage
 
     // Lower line
-    line.setSize(sf::Vector2f(BLOCK_SIZE, 5));
+    line.setSize(sf::Vector2f(Common::BLOCK_SIZE, 5));
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setPosition(GRID_POSITION_X - WIDTH_BORDER - BLOCK_SIZE, GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE);
+    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER - Common::BLOCK_SIZE, GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE);
     window->draw(line);
     
     // Left line
-    line.setSize(sf::Vector2f(WIDTH_BORDER, (GRID_HEIGHT - 4) * BLOCK_SIZE));
+    line.setSize(sf::Vector2f(Common::WIDTH_BORDER, (GRID_HEIGHT - 4) * Common::BLOCK_SIZE));
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setPosition(GRID_POSITION_X - WIDTH_BORDER - BLOCK_SIZE , 4 * BLOCK_SIZE + GRID_POSITION_Y);
+    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER - Common::BLOCK_SIZE , 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
     window->draw(line);
 }
 
@@ -85,11 +85,11 @@ void Map::remove(uint8_t pos) {
 
 void Map::draw(sf::RenderWindow *window) {
     sf::RectangleShape block;
-    block.setSize(sf::Vector2f(BLOCK_SIZE - 1, BLOCK_SIZE - 1));
+    block.setSize(sf::Vector2f(Common::BLOCK_SIZE - 1, Common::BLOCK_SIZE - 1));
     block.setTexture(&texture);
-    for (int i = 0; i < HEIGHT_MAP; i++) {
-        for (int j = 0; j < WIDTH_MAP; j++) if (getBit(map[i], j + NUMOFFSET)) {
-            block.setPosition(GRID_POSITION_X + j * BLOCK_SIZE + 1, GRID_POSITION_Y + i * BLOCK_SIZE + 1);
+    for (int i = 0; i < Common::HEIGHT_MAP; i++) {
+        for (int j = 0; j < Common::WIDTH_MAP; j++) if (getBit(map[i], j + NUMOFFSET)) {
+            block.setPosition(GRID_POSITION_X + j * Common::BLOCK_SIZE + 1, GRID_POSITION_Y + i * Common::BLOCK_SIZE + 1);
             uint8_t shapeID = ((map[i] >> (j * COLORWIDTH + REALWIDTH)) & FULLMASK(4));
             block.setTextureRect(sf::IntRect(shapeID * 25, 0, 25, 25));
             window->draw(block);
@@ -106,7 +106,7 @@ uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {
     uint16_t shape = block->getShape();
     uint64_t color = block->getShapeID();
 
-    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT_MAP) {
+    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
         if (((map[Y + i] & FULLMASK(REALWIDTH)) ^ FULLMASK(REALWIDTH)) == 0) {
             remove(Y + i);
@@ -123,11 +123,11 @@ uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {
 }
 
 bool Map::isValid(uint16_t shape, int Y, int X) {
-    if (X < -NUMOFFSET || X + BLOCK_EDGE > WIDTH_MAP + NUMOFFSET) return false;
+    if (X < -NUMOFFSET || X + BLOCK_EDGE > Common::WIDTH_MAP + NUMOFFSET) return false;
     for (int i = 0; i < BLOCK_EDGE; i++)
         if (((getMask(map[i + Y], X + NUMOFFSET) ^ getLine(shape, i)) & getMask(map[i + Y], X + NUMOFFSET)) != getMask(map[i + Y], X + NUMOFFSET))
             return false;
     return true;
 }
 
-bool Map::isAllClear() { return map[HEIGHT_MAP - 1] == EMPTYLINE; }
+bool Map::isAllClear() { return map[Common::HEIGHT_MAP - 1] == EMPTYLINE; }

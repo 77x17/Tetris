@@ -128,20 +128,20 @@ void InforForNetwork::drawGarbage(sf::RenderWindow *window) {
 
     int nLines = __builtin_popcount(tmp);
     sf::RectangleShape garbageBar;
-    garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), nLines * BLOCK_SIZE));
+    garbageBar.setSize(sf::Vector2f(GARBAGE_WIDTH * (Common::BLOCK_SIZE - Common::WIDTH_BORDER), nLines * Common::BLOCK_SIZE));
     garbageBar.setFillColor(sf::Color(255, 0, 0, 100));
-    garbageBar.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
+    garbageBar.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * Common::BLOCK_SIZE);
 
     window->draw(garbageBar);
 
     sf::RectangleShape line;
     line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setSize(sf::Vector2f(GARBAGE_WIDTH * (BLOCK_SIZE - WIDTH_BORDER), 2));
+    line.setSize(sf::Vector2f(GARBAGE_WIDTH * (Common::BLOCK_SIZE - Common::WIDTH_BORDER), 2));
     
     nLines = 0;
     while(tmp) {
         if (!getBit(tmp, 0)) {
-            line.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * BLOCK_SIZE);
+            line.setPosition(GARBAGE_POSITION_X, GARBAGE_POSITION_Y - nLines * Common::BLOCK_SIZE);
             window->draw(line);
         } else nLines++;
         tmp >>= 1;
@@ -150,8 +150,8 @@ void InforForNetwork::drawGarbage(sf::RenderWindow *window) {
 
 void InforForNetwork::drawGarbageSent(sf::RenderWindow *window) {
     sf::Text text(std::to_string(garbageSent), font, 50);
-    text.setPosition(sf::Vector2f(GARBAGE_POSITION_X - text.getGlobalBounds().width - BLOCK_SIZE, 
-                                  GARBAGE_POSITION_Y - text.getGlobalBounds().height - BLOCK_SIZE / 2));
+    text.setPosition(sf::Vector2f(GARBAGE_POSITION_X - text.getGlobalBounds().width - Common::BLOCK_SIZE, 
+                                  GARBAGE_POSITION_Y - text.getGlobalBounds().height - Common::BLOCK_SIZE / 2));
 
     float alpha = 255 * (1 - garbageSentTimeout.getElapsedTime().asSeconds() / TIME_OUT);
     text.setFillColor(sf::Color(255, 255, 255, alpha));

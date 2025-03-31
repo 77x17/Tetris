@@ -1,6 +1,5 @@
 #include "Monitor.hpp"
 
-#include "Common.hpp"
 #include "Hold.hpp"
 #include "LinkListBlock.hpp"
 #include "Block.hpp"

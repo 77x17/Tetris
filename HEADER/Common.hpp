@@ -12,10 +12,14 @@
 
 #define SIZEBLOCK 16
 
-const int BLOCK_SIZE   = 20;
-const int WIDTH_BORDER = 5;
+class Common {
+public:
+    static int BLOCK_SIZE;
+    static int WIDTH_BORDER;
 
-const int WIDTH_MAP  = 10;
-const int HEIGHT_MAP = 24;
+    static int WIDTH_MAP;
+    static int HEIGHT_MAP;
+
+};
 
 #endif

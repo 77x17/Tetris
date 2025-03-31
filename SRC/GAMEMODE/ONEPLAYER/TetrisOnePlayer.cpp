@@ -7,7 +7,7 @@
 #include "SoundManager.hpp"
 
 TetrisOnePlayer::TetrisOnePlayer(sf::RenderWindow* win, Scene* s):TetrisBaseMode(win, s) {
-    X_COORDINATE = window->getSize().x / 2 - BLOCK_SIZE * 23 / 2 - BLOCK_SIZE;
+    X_COORDINATE = window->getSize().x / 2 - Common::BLOCK_SIZE * 23 / 2 - Common::BLOCK_SIZE;
     Y_COORDINATE = 10;
     player = new Player(X_COORDINATE, Y_COORDINATE);;
 }
@@ -43,12 +43,12 @@ restartGameOnePlayer:
         
     //     int GRID_WIDTH         = 10;
     //     int GRID_HEIGHT        = 24;
-    //     int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * BLOCK_SIZE + BLOCK_SIZE + BLOCK_SIZE;
+    //     int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
     //     int GRID_POSITION_Y    = Y_COORDINATE;
         
     //     scene->drawCountdown(window, 
-    //         (GRID_POSITION_X + GRID_WIDTH  * BLOCK_SIZE / 2 - WIDTH_BORDER),
-    //         (GRID_POSITION_Y + GRID_HEIGHT * BLOCK_SIZE / 2 - WIDTH_BORDER),
+    //         (GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER),
+    //         (GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER),
     //         -1,
     //         -1
     //     );
