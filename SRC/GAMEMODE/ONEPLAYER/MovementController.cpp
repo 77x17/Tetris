@@ -159,7 +159,7 @@ void MovementController::processEvents(const sf::Event &eventFromKeyboard) {
         
         case ROTATE_CLOCKWISE: {
             if (eventFromKeyboard.type == sf::Event::KeyPressed)
-                handleRotateLeft();
+                handleRotateLeft();   
         } break;
 
         case ROTATE_COUNTERCLOCKWISE: {
@@ -214,16 +214,22 @@ void MovementController::autoDown() {
         collision = false;
     }
 
-    if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : DROP_TIME)) {
-        if (not curBlock->fallDown()) {
-            handlePut();
+    if (clock.getElapsedTime().asSeconds() >= DROP_TIME) {
+        if (curBlock->fallDown()) {
+            clock.restart();
         }
-        
-        clock.restart();
+        else {
+            // if (clock.getElapsedTime().asSeconds() >= (collision ? COLLISION_DROP_TIME : COLLISION_TIME)) {
+            if (clock.getElapsedTime().asSeconds() >= COLLISION_TIME) {
+                handlePut();
+
+                clock.restart();
+            }
+        }
     }
 }
 
 void MovementController::speedUp() {
-    DROP_TIME -= 0.5 / 20;
+    DROP_TIME -= 0.5 / 5;
     std::cout << DROP_TIME << '\n';
 }
