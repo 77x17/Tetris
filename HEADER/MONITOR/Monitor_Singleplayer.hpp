@@ -12,7 +12,7 @@ private:
     Infor        *infor;
 public:
     Monitor_Singleplayer(int X_COORDINATE, int Y_COORDINATE);
-    void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    void createMonitor(int X_COORDINATE, int Y_COORDINATE);
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
 
     void draw(sf::RenderWindow* window, CurrentBlock* currentBlock) const;

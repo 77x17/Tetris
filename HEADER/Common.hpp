@@ -8,7 +8,7 @@
 #define FULLMASK(x)    (MASK(x) - 1)
 
 #define getMask(mask, i) (((mask) >> (i)) & FULLMASK(BLOCK_EDGE))
-#define getLine(shape, i) getMask(shape, (3 - i) * BLOCK_EDGE)
+#define getLine(shape, i) getMask(shape, (3-(i)) * BLOCK_EDGE)
 
 #define SIZEBLOCK 16
 

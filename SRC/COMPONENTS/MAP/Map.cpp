@@ -61,20 +61,6 @@ void Map::drawOutline(sf::RenderWindow* window) {
     window->draw(line);
     line.setPosition(GRID_POSITION_X                + GRID_WIDTH * Common::BLOCK_SIZE, 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
     window->draw(line);
-
-    // Draw for garbage
-
-    // Lower line
-    line.setSize(sf::Vector2f(Common::BLOCK_SIZE, 5));
-    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER - Common::BLOCK_SIZE, GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE);
-    window->draw(line);
-    
-    // Left line
-    line.setSize(sf::Vector2f(Common::WIDTH_BORDER, (GRID_HEIGHT - 4) * Common::BLOCK_SIZE));
-    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
-    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER - Common::BLOCK_SIZE , 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
-    window->draw(line);
 }
 
 void Map::remove(uint8_t pos) {
@@ -105,13 +91,6 @@ uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {
     uint8_t cnt = 0;
     uint16_t shape = block->getShape();
     uint64_t color = block->getShapeID();
-
-    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
-        if (map[Y + i] & (getLine(shape, i) << (X + NUMOFFSET))) {
-            i = -1;
-            Y--;
-        }
-    }
 
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));

@@ -11,16 +11,15 @@ class CurrentBlock;
 
 class Map {
 private:
-    int GRID_POSITION_X;
-    int GRID_POSITION_Y;
-    int GRID_WIDTH;
-    int GRID_HEIGHT;
-    
     sf::Texture texture;
     
     void remove(uint8_t pos);
 
 protected:
+    int GRID_POSITION_X;
+    int GRID_POSITION_Y;
+    int GRID_WIDTH;
+    int GRID_HEIGHT;
     uint64_t* map;
     
 public:
@@ -32,7 +31,7 @@ public:
 
     void draw(sf::RenderWindow* window);
     void drawCurrentBlock(sf::RenderWindow* window, CurrentBlock *curBlock);
-    void drawOutline(sf::RenderWindow* window);
+    virtual void drawOutline(sf::RenderWindow* window);
 
     virtual uint8_t putBlockIntoMap(Block* block, int Y, int X);
     bool isValid(uint16_t shape, int Y, int X);

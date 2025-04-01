@@ -10,13 +10,13 @@ class Infor_Multiplayer;
 class CurrentBlock;
 
 class Monitor_Multiplayer: public Monitor {
-private:
+protected:
     Map_Multiplayer     *map;
     Infor_Multiplayer   *infor;
 public:
     Monitor_Multiplayer(int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor_Multiplayer();
-    virtual void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE);
     
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
 

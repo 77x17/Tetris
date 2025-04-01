@@ -27,6 +27,8 @@ public:
     CurrentBlockController(Map* map);
     virtual ~CurrentBlockController();
 
+    virtual void createCurrentBlock();
+
     bool isEmpty();
     void setter(Block* p);
 
@@ -52,8 +54,8 @@ public:
 
     bool gameOver();
 
-    void compress(sf::Packet &packet);
-    void compressWithSpin(sf::Packet &packet);
+    // void compress(sf::Packet &packet);
+    // void compressWithSpin(sf::Packet &packet);
 
     bool isAllClear();
 };

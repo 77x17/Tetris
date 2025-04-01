@@ -10,11 +10,9 @@
 
 #include <iostream>
 
-Monitor_Multiplayer::Monitor_Multiplayer(int x, int y):Monitor(x, y) {
-    CreateMonitor(x, y);
-}
+Monitor_Multiplayer::Monitor_Multiplayer(int x, int y):Monitor(x, y) {}
 
-void Monitor_Multiplayer::CreateMonitor(int x, int y) {
+void Monitor_Multiplayer::createMonitor(int x, int y) {
     hold = new Hold();
     map  = new Map_Multiplayer();
     next = new LinkListBlock();

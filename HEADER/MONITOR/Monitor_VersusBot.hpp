@@ -2,12 +2,13 @@
 
 #include "Monitor_Multiplayer.hpp"
 
-class CurrentBlock;
+class CurrentBlock_Bot;
 
 class Monitor_VersusBot: public Monitor_Multiplayer {
 private:
 public:
     Monitor_VersusBot(int X_COORDINATE, int Y_COORDINATE); // Constructor
     ~Monitor_VersusBot(); // Destructor
-    void findPath(CurrentBlock*);
+    virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE);
+    void findPath(int8_t &X, CurrentBlock_Bot*);
 };

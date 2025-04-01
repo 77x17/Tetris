@@ -22,7 +22,7 @@ public:
     void setPosition(int INFOR_POSITION_X, int INFOR_POSITION_Y, int INFOR_WIDTH, 
         int GARBAGE_POSITION_X, int GARBAGE_POSITION_Y, int GARBAGE_WIDTH, int GARBAGE_HEIGHT);
     
-    ~Infor_Multiplayer();
+    virtual ~Infor_Multiplayer();
         
     void reset();
     uint8_t removeLine(uint8_t lines);
@@ -32,8 +32,7 @@ public:
     void drawGarbage(sf::RenderWindow *window);
     void drawGarbageSent(sf::RenderWindow *window);
 
-    void draw(sf::RenderWindow *window);
-    void compress(sf::Packet &packet);
+    virtual void draw(sf::RenderWindow *window);
 };
 
 #endif // INFORFORNETWORK_HPP

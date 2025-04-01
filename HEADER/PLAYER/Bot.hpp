@@ -3,13 +3,14 @@
 
 #include <unistd.h>
 #include <mutex>
+#include <atomic>
 #include <queue>
 #include <SFML/Graphics.hpp>
 
 class Monitor;
 class Monitor_VersusBot;
 class MovementController_VersusBot;
-class CurrentBlockController;
+class CurrentBlockController_Bot;
 class Player_VersusBot;
 
 class Bot {
@@ -18,9 +19,10 @@ private:
     int Y_COORDINATE;
     Monitor_VersusBot* monitor;
     MovementController_VersusBot *movementController;
-    CurrentBlockController* curBlock;
+    CurrentBlockController_Bot* curBlock;
 
     std::mutex mtx;
+    std::atomic<bool> finish;
     std::queue<sf::Event> event;
 
 public:
@@ -32,7 +34,7 @@ public:
 
     void setCompetitor(Monitor*);
 
-    void addEvent();
+    void addEvent(const sf::Keyboard::Key &e);
 
     void start(uint32_t seed, Player_VersusBot*);
 

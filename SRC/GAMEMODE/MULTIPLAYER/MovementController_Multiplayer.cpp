@@ -7,7 +7,7 @@
 #include "Map.hpp"
 #include "Hold.hpp"
 #include "LinkListBlock.hpp"
-#include "CurrentBlockController.hpp"
+#include "CurrentBlockController_Multiplayer.hpp"
 #include "CurrentBlock_Multiplayer.hpp"
 
 MovementController_Multiplayer::MovementController_Multiplayer(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket* sock)
@@ -26,7 +26,7 @@ void MovementController_Multiplayer::handlePut() {
     int nLines = monitor->putIntoMap(curBlock->getCurrentBlock());
 
     sf::Packet packet; packet << PUT;
-    curBlock->compressWithSpin(packet);
+    dynamic_cast<CurrentBlockController_Multiplayer*>(curBlock)->compressWithSpin(packet);
     if (nLines == 0) {
         std::random_device rd; int seed = rd();
         packet << seed;

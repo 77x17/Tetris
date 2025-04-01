@@ -48,45 +48,45 @@ void Game::start() {
     bool isFullscreen = false;
     
     while (true) {
-        while (not run) {
-            sf::Event event;
-            while (window->pollEvent(event)) {
-                if (event.type == sf::Event::KeyPressed) {
-                    if (event.key.code == sf::Keyboard::F11) {
-                        delete window;
-                        delete scene;
+    //     while (not run) {
+    //         sf::Event event;
+    //         while (window->pollEvent(event)) {
+    //             if (event.type == sf::Event::KeyPressed) {
+    //                 if (event.key.code == sf::Keyboard::F11) {
+    //                     delete window;
+    //                     delete scene;
                         
-                        if (isFullscreen) {
-                            window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Game", sf::Style::Close);
-                            scene  = new Scene(window);
+    //                     if (isFullscreen) {
+    //                         window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Game", sf::Style::Close);
+    //                         scene  = new Scene(window);
     
-                            Common::BLOCK_SIZE = 20;
+    //                         Common::BLOCK_SIZE = 20;
                             
-                            isFullscreen = false;
-                        }
-                        else {
-                            sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
-                            window = new sf::RenderWindow(desktop, "Game", sf::Style::None); // Không viền
-                            scene  = new Scene(window);
+    //                         isFullscreen = false;
+    //                     }
+    //                     else {
+    //                         sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    //                         window = new sf::RenderWindow(desktop, "Game", sf::Style::None); // Không viền
+    //                         scene  = new Scene(window);
                             
-                            Common::BLOCK_SIZE = 25;
+    //                         Common::BLOCK_SIZE = 25;
     
-                            isFullscreen = true;
-                        }
+    //                         isFullscreen = true;
+    //                     }
     
-                        window->setFramerateLimit(60);
-                    }
-                    else if (event.key.code == sf::Keyboard::Escape) {
-                        run = true;
-                    }
-                }
-            }
-        }
+    //                     window->setFramerateLimit(60);
+    //                 }
+    //                 else if (event.key.code == sf::Keyboard::Escape) {
+    //                     run = true;
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        run = false;
+    //     run = false;
 
-        STATUS_CODE gameType = scene->drawMenu(window, menuCode);
-        // STATUS_CODE gameType = STATUS_CODE::PRACTICE;
+    //     STATUS_CODE gameType = scene->drawMenu(window, menuCode);
+        STATUS_CODE gameType = STATUS_CODE::VERSUSBOT;
 
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {

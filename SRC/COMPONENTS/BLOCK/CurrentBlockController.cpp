@@ -9,8 +9,7 @@
 #include "SoundManager.hpp"
 
 CurrentBlockController::CurrentBlockController(Map* map) : map(map) {
-    soundManager = new SoundManager();
-    block = new CurrentBlock();
+    soundManager = new SoundManager(); block = nullptr;
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
     soundManager->loadSound("hold"    , "ASSETS/sfx/hold.mp3");
     soundManager->loadSound("move"    , "ASSETS/sfx/move.mp3");
@@ -19,7 +18,9 @@ CurrentBlockController::CurrentBlockController(Map* map) : map(map) {
     soundManager->loadSound("topout"  , "ASSETS/sfx/topout.mp3");
 }
 
-// CurrentBlockController::CurrentBlockController(CurrentBlock *a) : block(a){ block = nullptr; }
+void CurrentBlockController::createCurrentBlock() {
+    block = new CurrentBlock();
+}
 
 CurrentBlockController::~CurrentBlockController() {
     delete block; block = nullptr;
@@ -142,18 +143,15 @@ bool CurrentBlockController::rotate(int8_t times) {
 }
 
 bool CurrentBlockController::rotateLeft() {
-    rotate(1);
-    return true;
+    return rotate(1);
 }
 
 bool CurrentBlockController::rotateRight() {
-    rotate(3);
-    return true;
+    return rotate(3);
 }
 
 bool CurrentBlockController::rotate180() {
-    rotate(2);
-    return true;
+    return rotate(2);;
 }
 
 void CurrentBlockController::swap(Hold* hold) {
@@ -177,13 +175,13 @@ bool CurrentBlockController::gameOver() {
     return isGameOver;
 }
 
-void CurrentBlockController::compress(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
-}
+// void CurrentBlockController::compress(sf::Packet &packet) {
+//     packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
+// }
 
-void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin();
-}
+// void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
+//     packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin();
+// }
 
 bool CurrentBlockController::isAllClear() {
     return map->isAllClear();
