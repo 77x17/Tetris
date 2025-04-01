@@ -143,18 +143,15 @@ bool CurrentBlockController::rotate(int8_t times) {
 }
 
 bool CurrentBlockController::rotateLeft() {
-    rotate(1);
-    return true;
+    return rotate(1);
 }
 
 bool CurrentBlockController::rotateRight() {
-    rotate(3);
-    return true;
+    return rotate(3);
 }
 
 bool CurrentBlockController::rotate180() {
-    rotate(2);
-    return true;
+    return rotate(2);;
 }
 
 void CurrentBlockController::swap(Hold* hold) {
