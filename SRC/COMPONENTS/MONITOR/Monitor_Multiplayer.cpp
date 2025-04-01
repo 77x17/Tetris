@@ -75,8 +75,8 @@ void Monitor_Multiplayer::exchangeCurrentBlock(CurrentBlock* curBlock) {
 }
 
 void Monitor_Multiplayer::draw(sf::RenderWindow* window, CurrentBlock* block) const {
-    map ->drawOutline(window);
-    map     ->draw(window);
+    map->drawOutline(window);
+    map->draw(window);
     map->drawCurrentBlock(window, block);
     infor->draw(window);
     Monitor::draw(window, block);

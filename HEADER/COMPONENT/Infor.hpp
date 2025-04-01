@@ -72,7 +72,7 @@ public:
     void drawMissingB2B(sf::RenderWindow *window);
     void drawSpin      (sf::RenderWindow *window);
     void drawPPS       (sf::RenderWindow *window);
-    void drawLines     (sf::RenderWindow *window);
+    void drawLevel     (sf::RenderWindow *window);
     void drawTimer     (sf::RenderWindow *window);
     void drawAllClear  (sf::RenderWindow *window);
 

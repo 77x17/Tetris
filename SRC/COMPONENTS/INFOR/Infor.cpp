@@ -23,7 +23,7 @@ int    SPIN_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
 int     PPS_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
 int       PPS_PADDING = FONT_SIZE * 7;
 
-int   LINES_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+int   LEVEL_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
 int     LINES_PADDING = FONT_SIZE * 9;
 
 int   TIMER_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
@@ -295,37 +295,45 @@ void Infor::drawSpin(sf::RenderWindow *window) {
 }
 
 void Infor::drawPPS(sf::RenderWindow *window) {  
-    sf::Text title("PPS:", font, PPS_FONT_SIZE);
+    sf::Text title("PIECES:", font, PPS_FONT_SIZE);
+    
     title.setPosition(
         INFOR_POSITION_X + INFOR_WIDTH - title.getGlobalBounds().width,
         INFOR_POSITION_Y + PPS_PADDING
     );
     
     int milliseconds = lastElapsed.asMilliseconds() + runningTime.getElapsedTime().asMilliseconds();
-
+    
     float pps = piece * 1000.0 / milliseconds;
-
+    
     char ppsStr[10]; // Đủ để chứa giá trị float và null-terminator
     sprintf(ppsStr, "%.2f", pps);
+    
+    sf::Text text(ppsStr + (std::string)"/sec", font, LEVEL_FONT_SIZE);
+    sf::Text number(std::to_string(nLine), font, LEVEL_FONT_SIZE * 2);
 
-    sf::Text text(ppsStr, font, LINES_FONT_SIZE);
     text.setPosition(
         INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
         INFOR_POSITION_Y + PPS_PADDING + FONT_SIZE
     );
+    number.setPosition(
+        text.getPosition().x - number.getGlobalBounds().width - 15, 
+        text.getPosition().y - number.getGlobalBounds().height / 2
+    );
 
     window->draw(title);
     window->draw(text);
+    window->draw(number);
 }
 
-void Infor::drawLines(sf::RenderWindow *window) {   
-    sf::Text title("LINES:", font, LINES_FONT_SIZE);
+void Infor::drawLevel(sf::RenderWindow *window) {   
+    sf::Text title("LEVEL:", font, LEVEL_FONT_SIZE);
     title.setPosition(
         INFOR_POSITION_X + INFOR_WIDTH - title.getGlobalBounds().width,
         INFOR_POSITION_Y + LINES_PADDING
     );
     
-    sf::Text text(std::to_string(nLine), font, LINES_FONT_SIZE);
+    sf::Text text(std::to_string(nLine / 10), font, LEVEL_FONT_SIZE);
     text.setPosition(
         INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
         INFOR_POSITION_Y + LINES_PADDING + FONT_SIZE
@@ -419,7 +427,7 @@ void Infor::draw(sf::RenderWindow *window) {
     
     drawPPS(window);
 
-    drawLines(window);
+    drawLevel(window);
 
     drawTimer(window);
 
