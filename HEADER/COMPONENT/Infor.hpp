@@ -64,7 +64,7 @@ public:
 
     virtual uint8_t removeLine(uint8_t lines);
 
-    void update        (uint8_t lines, bool spin, char typeBlock, bool isAllClear);
+    virtual void update(uint8_t lines, bool spin, char typeBlock, bool isAllClear);
     void playSound     (uint8_t lines, bool spin, char typeBlock, bool isAllClear);
     void drawMessage   (sf::RenderWindow *window, const std::string text);
     void drawCombo     (sf::RenderWindow *window, const std::string text);

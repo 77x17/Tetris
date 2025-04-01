@@ -173,8 +173,3 @@ void Infor_Multiplayer::draw(sf::RenderWindow *window) {
         garbageSent = 0;
     }
 }
-
-// Guarantee inorder.
-void Infor_Multiplayer::compress(sf::Packet &packet) {
-    packet << spin << B2B << count;
-}

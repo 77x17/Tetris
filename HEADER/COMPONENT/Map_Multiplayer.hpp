@@ -11,7 +11,7 @@ public:
     void drawOutline(sf::RenderWindow* window);
 
     bool addPosible(uint64_t nLines);
-    void add(uint64_t nLines, int seed);
+    virtual void add(uint64_t nLines, int seed);
 
     uint8_t putBlockIntoMap(Block* block, int Y, int X);
 };
