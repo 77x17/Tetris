@@ -20,7 +20,7 @@ protected:
 public:
     CurrentBlock();
     CurrentBlock(Block *p);
-    ~CurrentBlock();
+    virtual ~CurrentBlock();
 
     bool isJustSpin();
     void setSpin();
@@ -43,9 +43,6 @@ public:
     char getTypeBlock();
 
     void resetPosition(Map*);
-
-    // void compress(sf::Packet &packet);
-    // void compressWithSpin(sf::Packet &packet);
 
     friend class CurrentBlockController;
 };

@@ -1,6 +1,6 @@
 #include "Player_Multiplayer.hpp"
 
-#include "CurrentBlockController.hpp"
+#include "CurrentBlockController_Multiplayer.hpp"
 #include "LinkListBlock.hpp"
 #include "Map.hpp"
 #include "Monitor_Multiplayer.hpp"
@@ -32,8 +32,8 @@ Player_Multiplayer::Player_Multiplayer(int x, int y, const char* ipv4, int port)
 }
 
 void Player_Multiplayer::initialize() {
-    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE);
-    curBlock = new CurrentBlockController(monitor->getMap());
+    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE); monitor->CreateMonitor(X_COORDINATE, Y_COORDINATE);
+    curBlock = new CurrentBlockController_Multiplayer(monitor->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController_Multiplayer(monitor, curBlock, &socket);
 }
 

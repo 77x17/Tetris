@@ -10,8 +10,8 @@
 #include <iostream>
 
 Bot::Bot(int x, int y): X_COORDINATE(x), Y_COORDINATE(y) {
-    monitor = new Monitor_VersusBot(x, y);
-    curBlock = new CurrentBlockController(monitor->getMap());
+    monitor = new Monitor_VersusBot(x, y); monitor->CreateMonitor(x, y);
+    curBlock = new CurrentBlockController(monitor->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController_VersusBot(monitor, curBlock);
 }
 

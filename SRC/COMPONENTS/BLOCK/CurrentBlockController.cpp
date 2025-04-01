@@ -10,7 +10,6 @@
 
 CurrentBlockController::CurrentBlockController(Map* map) : map(map) {
     soundManager = new SoundManager();
-    block = new CurrentBlock();
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
     soundManager->loadSound("hold"    , "ASSETS/sfx/hold.mp3");
     soundManager->loadSound("move"    , "ASSETS/sfx/move.mp3");
@@ -19,7 +18,9 @@ CurrentBlockController::CurrentBlockController(Map* map) : map(map) {
     soundManager->loadSound("topout"  , "ASSETS/sfx/topout.mp3");
 }
 
-// CurrentBlockController::CurrentBlockController(CurrentBlock *a) : block(a){ block = nullptr; }
+void CurrentBlockController::createCurrentBlock() {
+    block = new CurrentBlock();
+}
 
 CurrentBlockController::~CurrentBlockController() {
     delete block; block = nullptr;

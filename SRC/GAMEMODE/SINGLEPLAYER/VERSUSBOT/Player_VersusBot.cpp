@@ -15,7 +15,7 @@ Player_VersusBot::Player_VersusBot(int x, int y): Player(x, y) {
 
 void Player_VersusBot::initialize() {
     monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE);
-    curBlock = new CurrentBlockController(monitor->getMap());
+    curBlock = new CurrentBlockController(monitor->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController_VersusBot(monitor, curBlock);
 }
 

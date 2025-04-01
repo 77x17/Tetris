@@ -10,7 +10,7 @@ class Infor_Multiplayer;
 class CurrentBlock;
 
 class Monitor_Multiplayer: public Monitor {
-private:
+protected:
     Map_Multiplayer     *map;
     Infor_Multiplayer   *infor;
 public:

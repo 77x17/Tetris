@@ -27,6 +27,8 @@ public:
     CurrentBlockController(Map* map);
     virtual ~CurrentBlockController();
 
+    virtual void createCurrentBlock();
+
     bool isEmpty();
     void setter(Block* p);
 

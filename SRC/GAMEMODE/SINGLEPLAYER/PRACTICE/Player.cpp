@@ -21,7 +21,7 @@ Player::Player(int x, int y): volume(50.0f), X_COORDINATE(x), Y_COORDINATE(y){
 
 void Player::initialize() {
     monitor = new Monitor_Singleplayer(X_COORDINATE, Y_COORDINATE);
-    curBlock = new CurrentBlockController(dynamic_cast<Monitor_Singleplayer*>(monitor)->getMap());
+    curBlock = new CurrentBlockController(dynamic_cast<Monitor_Singleplayer*>(monitor)->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController(monitor, curBlock);
 }
 

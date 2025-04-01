@@ -87,12 +87,3 @@ void CurrentBlock::updateShadow(Map* map) {
         shadowPosY++;
     }
 }
-
-
-// void CurrentBlock::compress(sf::Packet &packet) {
-//     packet << block->getStateID() << posY << posX << shadowPosY;
-// }
-
-// void CurrentBlock::compressWithSpin(sf::Packet &packet) {
-//     packet << block->getStateID() << posY << posX << shadowPosY << spin << (uint8_t)getTypeBlock();
-// }
