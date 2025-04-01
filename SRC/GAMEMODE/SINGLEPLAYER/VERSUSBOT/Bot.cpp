@@ -35,6 +35,7 @@ void Bot::addEvent(const sf::Keyboard::Key &e) {
     fakeEvent.type = sf::Event::KeyReleased;
     event.push(fakeEvent);
     mtx.unlock();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void Bot::start(uint32_t seed, Player_VersusBot* player) {
@@ -43,18 +44,19 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
     movementController->resetComponent();
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
+    finish.store(true);
     std::thread thinking([this](Player_VersusBot* &player) {
         while (!monitor->isGameOver()) {
-            int8_t target_X, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
+            while(!finish);
+            finish.store(false);
+
+            int8_t target_X = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
             monitor->findPath(target_X, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
             while (posX != target_X) {
                 if (target_X < posX) { addEvent(sf::Keyboard::Left); posX--; }
                 if (target_X > posX) { addEvent(sf::Keyboard::Right); posX++; }
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
             addEvent(sf::Keyboard::Space);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            // sleep(1);
         }
     }, std::ref(player));
     thinking.detach();
@@ -72,9 +74,11 @@ void Bot::update() {
     mtx.lock();
     while (!event.empty()) {
         movementController->processEvents(event.front());
+        if (event.front().type == sf::Event::KeyReleased && event.front().key.code == sf::Keyboard::Space)
+            finish.store(true);
         event.pop();
-        // std::cout << "HERE!\n";
     }
+
     mtx.unlock();
     // movementController->autoDown();
 }

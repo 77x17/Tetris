@@ -20,11 +20,20 @@ int Map_Bot::getScore(uint16_t shape, int X, int Y) {
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
     }
+    uint16_t prevLine = EMPTYLINE;
 
     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
-        if ((map[i] & FULLMASK(REALWIDTH)) == EMPTYLINE) cnt += 20 * i;
-        else if ((map[i] & FULLMASK(REALWIDTH)) == FULLMASK(REALWIDTH)) cnt += 1000;
-        else cnt -= (REALWIDTH - __builtin_popcount(map[i] & FULLMASK(REALWIDTH))) * i;
+        uint16_t line = (map[i] & FULLMASK(REALWIDTH));
+        for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
+            if (getBit(line, j) && !getBit(line, j - 1))
+                cnt -= i;
+            if (getBit(prevLine, j) && !getBit(line, j))
+                cnt -= 100;
+        }
+
+        if (line == FULLMASK(REALWIDTH)) cnt += 1000;
+
+        prevLine = line;
     }
     
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {

@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include <mutex>
+#include <atomic>
 #include <queue>
 #include <SFML/Graphics.hpp>
 
@@ -21,6 +22,7 @@ private:
     CurrentBlockController_Bot* curBlock;
 
     std::mutex mtx;
+    std::atomic<bool> finish;
     std::queue<sf::Event> event;
 
 public:
