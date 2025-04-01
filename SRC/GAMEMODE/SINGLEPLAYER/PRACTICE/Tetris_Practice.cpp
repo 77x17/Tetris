@@ -6,7 +6,7 @@
 #include "Menu.hpp"
 #include "SoundManager.hpp"
 
-Tetris_Practice::Tetris_Practice(sf::RenderWindow* win, Scene* s):Tetris_BaseMode(win, s) {
+Tetris_Practice::Tetris_Practice(sf::RenderWindow* win, Scene* s):Tetris(win, s) {
     X_COORDINATE = window->getSize().x / 2 - Common::BLOCK_SIZE * 23 / 2 - Common::BLOCK_SIZE;
     Y_COORDINATE = 10;
     player = new Player(X_COORDINATE, Y_COORDINATE);;

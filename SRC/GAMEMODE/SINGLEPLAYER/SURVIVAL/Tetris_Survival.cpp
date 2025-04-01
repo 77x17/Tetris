@@ -6,7 +6,7 @@
 #include "Menu.hpp"
 #include "SoundManager.hpp"
 
-Tetris_Survival::Tetris_Survival(sf::RenderWindow* win, Scene* s):Tetris_BaseMode(win, s) {
+Tetris_Survival::Tetris_Survival(sf::RenderWindow* win, Scene* s):Tetris(win, s) {
     X_COORDINATE = window->getSize().x / 2 - Common::BLOCK_SIZE * 23 / 2 - Common::BLOCK_SIZE;
     Y_COORDINATE = 10;
     player = new Player_Survival(X_COORDINATE, Y_COORDINATE);
@@ -100,7 +100,6 @@ restartGameSurvival:
         player->autoDown();
 
         if (timer.getElapsedTime().asSeconds() >= 10) {
-            
             // sent 4 lines
             player->putGarbage();
             player->receiveGarbage(4);

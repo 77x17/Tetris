@@ -5,12 +5,12 @@
 #include <SFML/Audio.hpp>
 #include <random>
 
-#include "Tetris_BaseMode.hpp"
+#include "Tetris.hpp"
 
 class Player_VersusBot;
 class Bot;
 
-class Tetris_VersusBot: public Tetris_BaseMode {
+class Tetris_VersusBot: public Tetris {
 private:
     Player_VersusBot* player;
     Bot* competitor;

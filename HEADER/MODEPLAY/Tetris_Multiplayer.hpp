@@ -4,14 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Tetris_BaseMode.hpp"
+#include "Tetris.hpp"
 
 #include <atomic>
 
 class Player_Multiplayer;
 class Competitor;
 
-class Tetris_Multiplayer: public Tetris_BaseMode {
+class Tetris_Multiplayer: public Tetris {
 private:
     Player_Multiplayer* player;
     Competitor* competitor;

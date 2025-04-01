@@ -1,5 +1,5 @@
-#ifndef TETRISBASEMODE_HPP
-#define TETRISBASEMODE_HPP
+#ifndef TETRIS_HPP
+#define TETRIS_HPP
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -10,13 +10,13 @@ class Scene;
 
 enum class STATUS_CODE;
 
-class Tetris_BaseMode {
+class Tetris {
 protected:
     sf::RenderWindow *window;    
     Scene            *scene;
 public:
-    Tetris_BaseMode(sf::RenderWindow*, Scene*);
-    ~Tetris_BaseMode();
+    Tetris(sf::RenderWindow*, Scene*);
+    ~Tetris();
     void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite);
     virtual STATUS_CODE start() = 0;
 };

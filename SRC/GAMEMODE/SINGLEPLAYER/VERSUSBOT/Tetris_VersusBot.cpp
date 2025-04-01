@@ -7,7 +7,7 @@
 #include "Menu.hpp"
 #include <iostream>
 
-Tetris_VersusBot::Tetris_VersusBot(sf::RenderWindow* win, Scene* s):Tetris_BaseMode(win, s) {
+Tetris_VersusBot::Tetris_VersusBot(sf::RenderWindow* win, Scene* s):Tetris(win, s) {
     int PLAYER_X_COORDINATE = window->getSize().x / 4 - Common::BLOCK_SIZE * 23 / 2;
     int PLAYER_Y_COORDINATE = 10;
     int COMPETITOR_X_COORDINATE = 3 * window->getSize().x / 4 - Common::BLOCK_SIZE * 23 / 2;

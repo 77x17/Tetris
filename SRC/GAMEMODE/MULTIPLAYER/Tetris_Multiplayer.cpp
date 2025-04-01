@@ -10,7 +10,7 @@
 #include "Scene.hpp"
 #include "Menu.hpp"
 #include <iostream>
-Tetris_Multiplayer::Tetris_Multiplayer(sf::RenderWindow* win, Scene* s, bool isHost):Tetris_BaseMode(win, s), isHost(isHost) {
+Tetris_Multiplayer::Tetris_Multiplayer(sf::RenderWindow* win, Scene* s, bool isHost):Tetris(win, s), isHost(isHost) {
     player = nullptr; competitor = nullptr;
 }
 

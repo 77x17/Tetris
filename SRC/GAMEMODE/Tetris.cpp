@@ -1,13 +1,13 @@
-#include "Tetris_BaseMode.hpp"
+#include "Tetris.hpp"
 
 #include "Menu.hpp"
 #include "Scene.hpp"
 
-Tetris_BaseMode::Tetris_BaseMode(sf::RenderWindow* win, Scene* s): window(win), scene(s){}
+Tetris::Tetris(sf::RenderWindow* win, Scene* s): window(win), scene(s){}
 
-Tetris_BaseMode::~Tetris_BaseMode(){}
+Tetris::~Tetris(){}
 
-void Tetris_BaseMode::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite) {
+void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite) {
     backgroundTexture.loadFromFile("ASSETS/background.png");
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setColor(sf::Color(255, 255, 255, 50));

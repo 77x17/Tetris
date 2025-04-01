@@ -4,11 +4,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Tetris_BaseMode.hpp"
+#include "Tetris.hpp"
 
 class Player;
 
-class Tetris_Practice: public Tetris_BaseMode {
+class Tetris_Practice: public Tetris {
 private:
     int X_COORDINATE;
     int Y_COORDINATE;
