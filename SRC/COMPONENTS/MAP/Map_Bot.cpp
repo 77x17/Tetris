@@ -28,12 +28,13 @@ int Map_Bot::getScore(uint16_t shape, int X, int Y) {
 
         for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
             if (getBit(line, j) && !getBit(line, j - 1))
-                cnt -= i;
+                cnt -= 500;
             if (getBit(prevLine, j) && !getBit(line, j))
-                cnt -= 100;
+                cnt -= 1200;
         }
 
-        if (line == FULLMASK(REALWIDTH)) cnt += 1000;
+        if (line == FULLMASK(REALWIDTH)) cnt += 2000;
+        if (line != EMPTYLINE) cnt -= MASK((60-i*2)/5);
 
         prevLine = line;
     }
@@ -43,16 +44,17 @@ int Map_Bot::getScore(uint16_t shape, int X, int Y) {
 void Map_Bot::findPath(int8_t &X, CurrentBlock_Bot* curBlock) {
     uint8_t timeRotate = 0;
     int maxScore = 0;
+    int MID = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
 
-    for (int i = -2; i <= REALWIDTH; i++)
-        for (int j = 0; j < 4; j++) {
-            int tmp = getScore(curBlock->getShape(j), i, 0);
+    for (int i = 0; i <= 5; i++) {
+        for (int j = 0; j < 4; j++) for (int t: {-1, 1}) {
+            int tmp = getScore(curBlock->getShape(j), MID + i*t, 0);
             if (maxScore < tmp) {
                 maxScore = tmp;
-                X = i; timeRotate = j;
+                X = MID + i*t; timeRotate = j;
             }
         }
-    std::cout << (int)X << " " << (int)timeRotate << " " << maxScore << '\n';
+    }
     curBlock->rotate(timeRotate); // -22 + 4
     curBlock->updateShadow(this);
 }

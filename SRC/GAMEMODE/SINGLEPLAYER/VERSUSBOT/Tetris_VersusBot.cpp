@@ -56,6 +56,7 @@ STATUS_CODE Tetris_VersusBot::start() {
             window->display();
         }
         else {
+            competitor->setGameOver();
             STATUS_CODE option = scene->drawGameOver(window);
             if (option == STATUS_CODE::RESTART) {
                 int tmp = gen();

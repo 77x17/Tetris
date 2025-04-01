@@ -35,7 +35,7 @@ void Bot::addEvent(const sf::Keyboard::Key &e) {
     fakeEvent.type = sf::Event::KeyReleased;
     event.push(fakeEvent);
     mtx.unlock();
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
 void Bot::start(uint32_t seed, Player_VersusBot* player) {
@@ -45,6 +45,8 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
     finish.store(true);
+    while(!event.empty()) event.pop();
+    
     std::thread thinking([this](Player_VersusBot* &player) {
         while (!monitor->isGameOver()) {
             while(!finish);
@@ -58,6 +60,7 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
             }
             addEvent(sf::Keyboard::Space);
         }
+        std::cout << "FINISH!\n";
     }, std::ref(player));
     thinking.detach();
 }
