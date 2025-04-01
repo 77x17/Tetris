@@ -10,6 +10,6 @@ uint16_t CurrentBlock_Bot::getShape(int times) {
     return block->getRotate(times);
 }
 
-void CurrentBlock_Bot::setState(int stateID) {
-    block->setStateID(stateID);
+void CurrentBlock_Bot::rotate(int x) {
+    block->rotate(x);
 }

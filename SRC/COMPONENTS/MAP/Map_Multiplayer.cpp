@@ -68,5 +68,7 @@ uint8_t Map_Multiplayer::putBlockIntoMap(Block* block, int Y, int X) {
         }
     }
 
+    if (isValid(shape, Y + 1, X)) throw std::runtime_error("AHA!");
+
     return Map::putBlockIntoMap(block, Y, X);
 }

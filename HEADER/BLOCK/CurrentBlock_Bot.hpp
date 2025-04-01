@@ -13,7 +13,7 @@ public:
     ~CurrentBlock_Bot();
 
     uint16_t getShape(int timesRotate);
-    void setState(int stateID);
+    void rotate(int timesRotate);
 
 };
 

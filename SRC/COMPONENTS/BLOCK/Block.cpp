@@ -95,7 +95,7 @@ uint16_t Block::getRotate(int8_t times) {
 }
 
 void Block::rotate(int8_t times) {
-    if (times <= 0 || times >= 4) throw std::runtime_error("Have some problem with rotate times!");
+    if (times < 0 || times >= 4) throw std::runtime_error("Have some problem with rotate times!");
     stateID = (stateID + 4 - times) % 4; 
 }
 

@@ -41,7 +41,7 @@ int Map_Bot::getScore(uint16_t shape, int X, int Y) {
 }
 
 void Map_Bot::findPath(int8_t &X, CurrentBlock_Bot* curBlock) {
-    uint8_t stateID = 0;
+    uint8_t timeRotate = 0;
     int maxScore = 0;
 
     for (int i = -2; i <= REALWIDTH; i++)
@@ -49,9 +49,10 @@ void Map_Bot::findPath(int8_t &X, CurrentBlock_Bot* curBlock) {
             int tmp = getScore(curBlock->getShape(j), i, 0);
             if (maxScore < tmp) {
                 maxScore = tmp;
-                X = i; stateID = j;
+                X = i; timeRotate = j;
             }
         }
-    std::cout << (int)X << " " << (int)stateID << " " << maxScore << '\n';
-    curBlock->setState(stateID); // -22 + 4
+    std::cout << (int)X << " " << (int)timeRotate << " " << maxScore << '\n';
+    curBlock->rotate(timeRotate); // -22 + 4
+    curBlock->updateShadow(this);
 }

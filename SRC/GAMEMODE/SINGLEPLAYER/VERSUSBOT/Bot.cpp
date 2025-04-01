@@ -28,9 +28,9 @@ bool Bot::isGameOver() { return monitor->isGameOver(); }
 
 void Bot::addEvent(const sf::Keyboard::Key &e) {
     sf::Event fakeEvent;
-    mtx.lock();
     fakeEvent.type = sf::Event::KeyPressed;
     fakeEvent.key.code = e;
+    mtx.lock();
     event.push(fakeEvent);
     fakeEvent.type = sf::Event::KeyReleased;
     event.push(fakeEvent);
