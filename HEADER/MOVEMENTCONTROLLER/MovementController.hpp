@@ -22,12 +22,18 @@ private:
     sf::Clock clock;
     sf::Clock movingClock;
     KeyConfiguration* key;
-protected:
-    bool  collision;        // collision bottom (extra time to move and rotate)
 
-    bool  moveLeftSignal;
-    bool  moveRightSignal;
-    bool  moveDownSignal;
+    bool canRotateClockwise;
+    bool canRotateCounterClockwise;
+    bool canRotate180;
+
+    bool canHarddrop;
+protected:
+    bool collision;        // collision bottom (extra time to move and rotate)
+
+    bool moveLeftSignal;
+    bool moveRightSignal;
+    bool moveDownSignal;
 
 protected:
     Monitor* monitor; // dont't delete share pointer

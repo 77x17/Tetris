@@ -8,7 +8,7 @@
 #include "SoundManager.hpp"
 #include "Monitor.hpp"
 
-#include "MonitorForOnePlayer.hpp"
+#include "Monitor_Singleplayer.hpp"
 #include "CurrentBlockController.hpp"
 #include "MovementController.hpp"
 
@@ -20,8 +20,8 @@ Player::Player(int x, int y): volume(50.0f), X_COORDINATE(x), Y_COORDINATE(y){
 }
 
 void Player::initialize() {
-    monitor = new MonitorForOnePlayer(X_COORDINATE, Y_COORDINATE);
-    curBlock = new CurrentBlockController(dynamic_cast<MonitorForOnePlayer*>(monitor)->getMap());
+    monitor = new Monitor_Singleplayer(X_COORDINATE, Y_COORDINATE);
+    curBlock = new CurrentBlockController(dynamic_cast<Monitor_Singleplayer*>(monitor)->getMap());
     movementController = new MovementController(monitor, curBlock);
 }
 

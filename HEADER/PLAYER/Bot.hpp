@@ -7,17 +7,17 @@
 #include <SFML/Graphics.hpp>
 
 class Monitor;
-class MonitorForBot;
-class MovementControllerWithBot;
+class Monitor_VersusBot;
+class MovementController_VersusBot;
 class CurrentBlockController;
-class PlayerWithBot;
+class Player_VersusBot;
 
 class Bot {
 private:
     int X_COORDINATE;
     int Y_COORDINATE;
-    MonitorForBot* monitor;
-    MovementControllerWithBot *movementController;
+    Monitor_VersusBot* monitor;
+    MovementController_VersusBot *movementController;
     CurrentBlockController* curBlock;
 
     std::mutex mtx;
@@ -34,7 +34,7 @@ public:
 
     void addEvent();
 
-    void start(uint32_t seed, PlayerWithBot*);
+    void start(uint32_t seed, Player_VersusBot*);
 
     void handleAddLine(uint8_t nLines);
 

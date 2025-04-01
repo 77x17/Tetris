@@ -4,13 +4,13 @@
 #include <random>
 
 class Block;
-class BlockEle;
+class BlockElement;
 
 class BlockFactory {
 public:
     static Block* createRandomBlock();
     static Block* getBlockType(int x);
-    static void createBag(BlockEle* &head, BlockEle* &tail, std::mt19937 &gen);
+    static void createBag(BlockElement* &head, BlockElement* &tail, std::mt19937 &gen);
 };
 
 #endif

@@ -2,17 +2,17 @@
 
 #include "CurrentBlock.hpp"
 #include "CurrentBlockController.hpp"
-#include "MovementControllerWithBot.hpp"
-#include "MonitorForBot.hpp"
-#include "PlayerWithBot.hpp"
+#include "MovementController_VersusBot.hpp"
+#include "Monitor_VersusBot.hpp"
+#include "Player_VersusBot.hpp"
 
 #include <thread>
 #include <iostream>
 
 Bot::Bot(int x, int y): X_COORDINATE(x), Y_COORDINATE(y) {
-    monitor = new MonitorForBot(x, y);
+    monitor = new Monitor_VersusBot(x, y);
     curBlock = new CurrentBlockController(monitor->getMap());
-    movementController = new MovementControllerWithBot(monitor, curBlock);
+    movementController = new MovementController_VersusBot(monitor, curBlock);
 }
 
 Bot::~Bot() {
@@ -33,14 +33,14 @@ void Bot::addEvent() {
     mtx.unlock();
 }
 
-void Bot::start(uint32_t seed, PlayerWithBot* player) {
+void Bot::start(uint32_t seed, Player_VersusBot* player) {
     player->setCompetitor(monitor);
     monitor->resetMonitor(seed);
     movementController->resetComponent();
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
 
-    std::thread thinking([this](PlayerWithBot* &player) {
+    std::thread thinking([this](Player_VersusBot* &player) {
         while (!monitor->isGameOver()) {
             addEvent();
             sleep(1);
@@ -68,5 +68,5 @@ void Bot::update() {
 }
 
 void Bot::setCompetitor(Monitor* mon) {
-    dynamic_cast<MovementControllerWithBot*>(movementController)->setCompetitor(mon);
+    dynamic_cast<MovementController_VersusBot*>(movementController)->setCompetitor(mon);
 }

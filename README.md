@@ -1,13 +1,5 @@
-Để bật lại hiệu ứng thì tìm "Skip" và tắt comment
+## Quy ước code và đặt tên file.
+- Dùng camelCase cho têm hàm, têm biến.
+- Dùng Snake_Case cho tên file với tiền tố là tên chương trình, hậu tố là chế độ đang sử dụng.
+ex: <Tetris>_<Survival>.cpp/hpp
 
-todo list:
-
-HQH
-1. Viết lại 3 monitor 
-2. Cài delay khi gửi garbage
-3. Fix I shape
-4. Fix spin garbage
-3. Làm nạp code vào và chạy bot xem bot nào tối ưu hơn!.
-
-77x17
-- Làm lại màn hình chờ cho Waiting ...

@@ -6,7 +6,7 @@
 #include <random>
 
 class Block;
-class BlockEle;
+class BlockElement;
 
 class LinkListBlock {
 private:
@@ -16,8 +16,8 @@ private:
     int NEXT_HEIGHT;
 
     uint8_t   nEle;
-    BlockEle *head;
-    BlockEle *tail;
+    BlockElement *head;
+    BlockElement *tail;
     sf::Font  font;
 
     std::mt19937 gen;

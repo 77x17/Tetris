@@ -1,7 +1,7 @@
 #include "LinkListBlock.hpp"
 
 #include "Block.hpp"
-#include "BlockEle.hpp"
+#include "BlockElement.hpp"
 #include "BlockFactory.hpp"
 #include "CurrentBlock.hpp"
 #include "Common.hpp"
@@ -13,9 +13,9 @@ void LinkListBlock::addBag() {
 }
 
 void LinkListBlock::addNode(Block *block) {
-    if (tail == nullptr) head = tail = new BlockEle(block);
+    if (tail == nullptr) head = tail = new BlockElement(block);
     else {
-        tail->next = new BlockEle(block);
+        tail->next = new BlockElement(block);
         tail = tail->next;
     }
     nEle++;
@@ -32,7 +32,7 @@ void LinkListBlock::setPosition(int x, int y, int w, int h) {
 
 LinkListBlock::~LinkListBlock() {
     while (head) {
-        BlockEle* tmp = head; head = head->next;
+        BlockElement* tmp = head; head = head->next;
         delete tmp->block; // this is a block create in factory and it is not automatically deleted.
         delete tmp;
     }
@@ -41,7 +41,7 @@ LinkListBlock::~LinkListBlock() {
 
 void LinkListBlock::reset(uint32_t seed) {
     while (head) {
-        BlockEle* tmp = head; head = head->next;
+        BlockElement* tmp = head; head = head->next;
         delete tmp->block;
         delete tmp;
     }
@@ -56,7 +56,7 @@ void LinkListBlock::setSeed(int seed) {
 Block* LinkListBlock::updateNext() {
     if (nEle < 7) addBag();
     Block* cur = head->block; 
-    BlockEle* p = head;
+    BlockElement* p = head;
     head = head->next;
     nEle--; delete p;
     return cur;
@@ -86,7 +86,7 @@ void LinkListBlock::drawOutline(sf::RenderWindow *window) {
 }
 
 void LinkListBlock::draw(sf::RenderWindow *window) {
-    BlockEle *p = head;
+    BlockElement *p = head;
     for (int i = 0; i < 5; i++) {
         p->block->drawPadding(window, i * 3, 0, NEXT_POSITION_Y, NEXT_POSITION_X);
         p = p->next;

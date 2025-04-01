@@ -2,7 +2,7 @@
 
 #include "Player.hpp"
 
-#include "MonitorForTwoPlayer.hpp"
+#include "Monitor_Multiplayer.hpp"
 #include "LinkListBlock.hpp"
 #include "Map.hpp"
 #include "Hold.hpp"
@@ -10,7 +10,7 @@
 #include "Infor.hpp"
 #include "SoundManager.hpp"
 #include "MessageCode.hpp"
-#include "PlayerWithNetwork.hpp"
+#include "Player_Multiplayer.hpp"
 
 #include <SFML/Network.hpp>
 #include <SFML/Window/Event.hpp>
@@ -20,7 +20,7 @@
 Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed) {
     listenner.accept(socket);
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
-    monitor = new MonitorForTwoPlayer(X_COORDINATE, Y_COORDINATE);
+    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlock();
     soundManager = new SoundManager();
     soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
@@ -37,7 +37,7 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int
     }
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
     
-    monitor = new MonitorForTwoPlayer(X_COORDINATE, Y_COORDINATE);
+    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlock();
     soundManager = new SoundManager();
 
@@ -58,9 +58,9 @@ void Competitor::draw(sf::RenderWindow* window) {
     mtx.unlock();
 }
 
-void Competitor::start(PlayerWithNetwork* &player) { // Player
+void Competitor::start(Player_Multiplayer* &player) { // Player
     curBlock->freeAndSetter(monitor->getNext());
-    std::thread th([this](PlayerWithNetwork* &player){
+    std::thread th([this](Player_Multiplayer* &player){
         while (!monitor->isGameOver()) {
             sf::Packet packet;
             if (socket.receive(packet) != sf::Socket::Done)
@@ -86,7 +86,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                     int nLinesRemove = monitor->putIntoMap(curBlock);
                     if (nLinesRemove == 0) {
                         int seed; packet >> seed;
-                        dynamic_cast<MonitorForTwoPlayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
+                        dynamic_cast<Monitor_Multiplayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
                     }
 
                     // AllClearBUG ở đây
@@ -103,7 +103,7 @@ void Competitor::start(PlayerWithNetwork* &player) { // Player
                 case RECVLINE: {
                     uint8_t nLines;
                     packet >> nLines;
-                    dynamic_cast<MonitorForTwoPlayer*>(monitor)->inforReceiveLineFromCompetitor(nLines);
+                    dynamic_cast<Monitor_Multiplayer*>(monitor)->inforReceiveLineFromCompetitor(nLines);
                 }
                 break;
 

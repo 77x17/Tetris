@@ -26,9 +26,18 @@ MovementController::~MovementController() {
 }
 
 void MovementController::resetComponent() {
-    collision = false; moveLeftSignal = false;
-    moveRightSignal = false; moveDownSignal = false;
-    movingTime = DELAY_MOVING_TIME;
+    canRotateClockwise        = true;
+    canRotateCounterClockwise = true;
+    canRotate180              = true;
+
+    canHarddrop               = true;
+
+    collision                 = false; 
+    moveLeftSignal            = false;
+    moveRightSignal           = false; 
+    moveDownSignal            = false;
+    
+    movingTime                = DELAY_MOVING_TIME;
 }
 
 void MovementController::handleLeft() {
@@ -113,6 +122,10 @@ void MovementController::handleHold() {
 }
 
 void MovementController::processEvents(const sf::Event &eventFromKeyboard) {
+    if (eventFromKeyboard.type != sf::Event::KeyPressed and eventFromKeyboard.type != sf::Event::KeyReleased) {
+        return;
+    }
+
     switch (key->getEvent(eventFromKeyboard.key.code)) {
         case MOVE_LEFT: {
             if (eventFromKeyboard.type == sf::Event::KeyPressed) {
@@ -158,23 +171,61 @@ void MovementController::processEvents(const sf::Event &eventFromKeyboard) {
         } break;
         
         case ROTATE_CLOCKWISE: {
-            if (eventFromKeyboard.type == sf::Event::KeyPressed)
-                handleRotateLeft();   
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (canRotateClockwise) {
+                    handleRotateLeft();   
+
+                    canRotateClockwise        = false;
+                    canRotateCounterClockwise = true;
+                    canRotate180              = true;
+                }
+            }
+            else {
+                canRotateClockwise = true;
+            }
         } break;
 
         case ROTATE_COUNTERCLOCKWISE: {
-            if (eventFromKeyboard.type == sf::Event::KeyPressed)
-                handleRotateRight();
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (canRotateCounterClockwise) {
+                    handleRotateRight();
+                    
+                    canRotateClockwise        = true;
+                    canRotateCounterClockwise = false;
+                    canRotate180              = true;
+                }
+            }
+            else {
+                canRotateCounterClockwise = true;
+            }
         } break;
 
         case ROTATE_180: {
-            if (eventFromKeyboard.type == sf::Event::KeyPressed)
-                handleRotate180();
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (canRotate180) {
+                    handleRotate180();
+                    
+                    canRotateClockwise        = true;
+                    canRotateCounterClockwise = true;
+                    canRotate180              = false;
+                }
+            }
+            else {
+                canRotate180 = true;
+            }
         } break;
 
         case HARD_DROP: {
-            if (eventFromKeyboard.type == sf::Event::KeyPressed)
-                handleHardDrop();
+            if (eventFromKeyboard.type == sf::Event::KeyPressed) {
+                if (canHarddrop) {
+                    handleHardDrop();
+                    
+                    canHarddrop = false;
+                }
+            }
+            else {
+                canHarddrop = true;
+            }
         } break;
 
         case HOLD_PIECE: {

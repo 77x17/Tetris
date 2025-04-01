@@ -1,7 +1,7 @@
-#include "Tetris.hpp"
+#include "Game.hpp"
 
 int main(int argc, char **argv) {    
-    Tetris tetris;
+    Game tetris;
     
     tetris.start();
 
