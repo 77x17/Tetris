@@ -7,6 +7,9 @@ class Map_Multiplayer: public Map {
 public:
     Map_Multiplayer();
     virtual ~Map_Multiplayer();
+
+    void drawOutline(sf::RenderWindow* window);
+
     bool addPosible(uint64_t nLines);
     void add(uint64_t nLines, int seed);
 

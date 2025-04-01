@@ -40,6 +40,24 @@ void Map_Multiplayer::add(uint64_t nLinesAdd, int seed) {
     }
 }
 
+void Map_Multiplayer::drawOutline(sf::RenderWindow* window) {
+    Map::drawOutline(window);
+    sf::RectangleShape line;
+    // Draw for garbage
+    // Lower line
+    line.setSize(sf::Vector2f(Common::BLOCK_SIZE, 5));
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER - Common::BLOCK_SIZE, GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE);
+    window->draw(line);
+    
+    // Left line
+    line.setSize(sf::Vector2f(Common::WIDTH_BORDER, (GRID_HEIGHT - 4) * Common::BLOCK_SIZE));
+    line.setFillColor(sf::Color(255, 255, 255, 200)); // White
+    line.setPosition(GRID_POSITION_X - Common::WIDTH_BORDER - Common::BLOCK_SIZE , 4 * Common::BLOCK_SIZE + GRID_POSITION_Y);
+    window->draw(line);
+}
+
+
 uint8_t Map_Multiplayer::putBlockIntoMap(Block* block, int Y, int X) {
     uint16_t shape = block->getShape();
 
