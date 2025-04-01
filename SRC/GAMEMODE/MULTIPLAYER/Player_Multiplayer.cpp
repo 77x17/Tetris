@@ -45,7 +45,7 @@ void Player_Multiplayer::setGameOver() {
 
 void Player_Multiplayer::sendCurBlock() {
     sf::Packet packet; packet << CURBLOCK;
-    curBlock->compress(packet);
+    dynamic_cast<CurrentBlockController_Multiplayer*>(curBlock)->compress(packet);
     
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");

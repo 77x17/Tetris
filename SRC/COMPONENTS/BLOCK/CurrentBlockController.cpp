@@ -178,13 +178,13 @@ bool CurrentBlockController::gameOver() {
     return isGameOver;
 }
 
-void CurrentBlockController::compress(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
-}
+// void CurrentBlockController::compress(sf::Packet &packet) {
+//     packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY;
+// }
 
-void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
-    packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin();
-}
+// void CurrentBlockController::compressWithSpin(sf::Packet &packet) {
+//     packet << (block->block)->getStateID() << block->posY << block->posX << block->shadowPosY << isJustSpin();
+// }
 
 bool CurrentBlockController::isAllClear() {
     return map->isAllClear();
