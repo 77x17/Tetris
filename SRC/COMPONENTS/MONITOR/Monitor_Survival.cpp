@@ -10,7 +10,7 @@ Monitor_Survival::Monitor_Survival(int x, int y): Monitor_Multiplayer(x, y) {}
 
 Monitor_Survival::~Monitor_Survival() {}
 
-void Monitor_Survival::CreateMonitor(int x, int y) {
+void Monitor_Survival::createMonitor(int x, int y) {
     hold = new Hold();
     map  = new Map_Multiplayer();
     next = new LinkListBlock();

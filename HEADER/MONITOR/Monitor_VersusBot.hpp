@@ -9,6 +9,6 @@ private:
 public:
     Monitor_VersusBot(int X_COORDINATE, int Y_COORDINATE); // Constructor
     ~Monitor_VersusBot(); // Destructor
-    virtual void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE);
     void findPath(CurrentBlock*);
 };

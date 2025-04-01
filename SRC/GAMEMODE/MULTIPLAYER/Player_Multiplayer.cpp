@@ -32,7 +32,7 @@ Player_Multiplayer::Player_Multiplayer(int x, int y, const char* ipv4, int port)
 }
 
 void Player_Multiplayer::initialize() {
-    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE); monitor->CreateMonitor(X_COORDINATE, Y_COORDINATE);
+    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE); monitor->createMonitor(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlockController_Multiplayer(monitor->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController_Multiplayer(monitor, curBlock, &socket);
 }

@@ -9,7 +9,7 @@
 class Monitor;
 class Monitor_VersusBot;
 class MovementController_VersusBot;
-class CurrentBlockController;
+class CurrentBlockController_Bot;
 class Player_VersusBot;
 
 class Bot {
@@ -18,7 +18,7 @@ private:
     int Y_COORDINATE;
     Monitor_VersusBot* monitor;
     MovementController_VersusBot *movementController;
-    CurrentBlockController* curBlock;
+    CurrentBlockController_Bot* curBlock;
 
     std::mutex mtx;
     std::queue<sf::Event> event;

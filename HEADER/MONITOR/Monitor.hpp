@@ -25,7 +25,7 @@ protected:
 
 public:
     Monitor(int X_COORDINATE, int Y_COORDINATE);
-    virtual void CreateMonitor(int X_COORDINATE, int Y_COORDINATE) = 0;
+    virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE) = 0;
 
     virtual ~Monitor();
     

@@ -16,7 +16,7 @@ protected:
 public:
     Monitor_Multiplayer(int X_COORDINATE, int Y_COORDINATE);
     virtual ~Monitor_Multiplayer();
-    virtual void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE);
     
     void setPosition(int X_COORDINATE, int Y_COORDINATE);
 

@@ -9,7 +9,7 @@
 #include "SoundManager.hpp"
 
 CurrentBlockController::CurrentBlockController(Map* map) : map(map) {
-    soundManager = new SoundManager();
+    soundManager = new SoundManager(); block = nullptr;
     soundManager->loadSound("hardDrop", "ASSETS/sfx/harddrop.mp3");
     soundManager->loadSound("hold"    , "ASSETS/sfx/hold.mp3");
     soundManager->loadSound("move"    , "ASSETS/sfx/move.mp3");

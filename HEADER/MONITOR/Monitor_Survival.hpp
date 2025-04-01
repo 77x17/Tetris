@@ -9,7 +9,7 @@ public:
     Monitor_Survival(int X_COORDINATE, int Y_COORDINATE); // Constructor
     ~Monitor_Survival(); // Destructor
 
-    void CreateMonitor(int X_COORDINATE, int Y_COORDINATE);
+    void createMonitor(int X_COORDINATE, int Y_COORDINATE);
 };
 
 #endif // MONITOR_SURVIVAL_HPP

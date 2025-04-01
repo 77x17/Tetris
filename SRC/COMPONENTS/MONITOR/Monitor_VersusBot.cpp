@@ -10,7 +10,7 @@ Monitor_VersusBot::Monitor_VersusBot(int x, int y): Monitor_Multiplayer(x, y) {}
 
 Monitor_VersusBot::~Monitor_VersusBot() {}
 
-void Monitor_VersusBot::CreateMonitor(int x, int y) {
+void Monitor_VersusBot::createMonitor(int x, int y) {
     hold = new Hold();
     map  = new Map_Bot();
     next = new LinkListBlock();

@@ -11,10 +11,10 @@
 #include <iostream>
 
 Monitor_Singleplayer::Monitor_Singleplayer(int x, int y):Monitor(x, y) {
-    CreateMonitor(x, y);
+    createMonitor(x, y);
 }
 
-void Monitor_Singleplayer::CreateMonitor(int x, int y) {
+void Monitor_Singleplayer::createMonitor(int x, int y) {
     map          = new Map();
     infor        = new Infor();
     hold         = new Hold();
