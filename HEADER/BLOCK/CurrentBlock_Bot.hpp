@@ -12,6 +12,9 @@ public:
     CurrentBlock_Bot();
     ~CurrentBlock_Bot();
 
+    uint16_t getShape(int timesRotate);
+    void setState(int stateID);
+
 };
 
-#endif // CURRENTBLOCK_BOT_HPP
+#endif 

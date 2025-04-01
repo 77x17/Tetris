@@ -32,7 +32,7 @@ public:
 
     void setCompetitor(Monitor*);
 
-    void addEvent();
+    void addEvent(const sf::Keyboard::Key &e);
 
     void start(uint32_t seed, Player_VersusBot*);
 

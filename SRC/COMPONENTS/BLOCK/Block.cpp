@@ -90,7 +90,7 @@ void Block::drawBrownHold(sf::RenderWindow* window, int8_t y, int8_t x, int offs
 }
 
 uint16_t Block::getRotate(int8_t times) {
-    if (times <= 0 || times >= 4) throw std::runtime_error("Have some problem with rotate times!");
+    if (times < 0 || times >= 4) throw std::runtime_error("Have some problem with rotate times!");
     return state[(stateID + 4 - times) % 4]; 
 }
 

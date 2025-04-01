@@ -93,13 +93,6 @@ uint8_t Map::putBlockIntoMap(Block* block, int Y, int X) {
     uint64_t color = block->getShapeID();
 
     for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
-        if (map[Y + i] & (getLine(shape, i) << (X + NUMOFFSET))) {
-            i = -1;
-            Y--;
-        }
-    }
-
-    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
         map[Y + i] ^= (getLine(shape, i) << (X + NUMOFFSET));
         if (((map[Y + i] & FULLMASK(REALWIDTH)) ^ FULLMASK(REALWIDTH)) == 0) {
             remove(Y + i);

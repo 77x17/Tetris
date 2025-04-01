@@ -1,6 +1,6 @@
 #include "Monitor_VersusBot.hpp"
 
-#include "CurrentBlock.hpp"
+#include "CurrentBlock_Bot.hpp"
 #include "Map_Bot.hpp"
 #include "Hold.hpp"
 #include "Infor_Multiplayer.hpp"
@@ -19,6 +19,6 @@ void Monitor_VersusBot::createMonitor(int x, int y) {
 }
 
 
-void Monitor_VersusBot::findPath(CurrentBlock* curBlock) {
-    // curBlock->
+void Monitor_VersusBot::findPath(int8_t &X, CurrentBlock_Bot* curBlock) {
+    dynamic_cast<Map_Bot*>(map)->findPath(X, curBlock);
 }

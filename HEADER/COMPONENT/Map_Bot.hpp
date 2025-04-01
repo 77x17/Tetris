@@ -3,14 +3,15 @@
 
 #include "Map_Multiplayer.hpp"
 
-class CurrentBlock;
+class CurrentBlock_Bot;
 
 class Map_Bot: public Map_Multiplayer {
 public:
     Map_Bot();
     ~Map_Bot();
 
-    int getScore(CurrentBlock*);
+    int getScore(uint16_t shape, int X, int Y);
+    void findPath(int8_t &X, CurrentBlock_Bot* curBlock);
 };
 
 #endif
