@@ -47,8 +47,6 @@ STATUS_CODE Tetris_VersusBot::start() {
         }
         if (!player->isGameOver()) {
             player->autoDown();
-            competitor->update();
-            
             window->clear();
             window->draw(backgroundSprite); // Draw background
             player->draw(window);
