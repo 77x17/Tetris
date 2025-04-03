@@ -1,6 +1,7 @@
 #include "Block.hpp"
 
 #include "Common.hpp"
+#include "CommonMap.hpp"
 
 sf::Texture texture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/blocks.png"); return t; }() };
 sf::Texture ghostTexture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/ghostBlocks.png"); return t; }() };

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Common.hpp"
+#include "CommonMap.hpp"
 #include "CurrentBlock.hpp"
 #include "Block.hpp"
 #include "Map.hpp"

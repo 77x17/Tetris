@@ -1,5 +1,6 @@
 #include "Infor_Multiplayer.hpp"
 
+#include "CommonMap.hpp"
 #include "Common.hpp"
 
 Infor_Multiplayer::Infor_Multiplayer():Infor(), nLinesAdd(0), garbageSent(0) {}
