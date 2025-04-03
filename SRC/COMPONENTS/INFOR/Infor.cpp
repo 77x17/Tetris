@@ -1,33 +1,9 @@
 #include "Infor.hpp"
 
 #include "SoundManager.hpp"
-#include "Common.hpp"
 
 #include <iostream>
 #include <cstdio>
-
-const int   FONT_SIZE = Common::BLOCK_SIZE;
-
-int MESSAGE_FONT_SIZE = FONT_SIZE;
-int   MESSAGE_PADDING = FONT_SIZE;
-
-int   COMBO_FONT_SIZE = FONT_SIZE * 2;
-int     COMBO_PADDING = FONT_SIZE * 3;
-int   N_COMBO_PADDING = FONT_SIZE * 2 + FONT_SIZE / 2;
-
-int     B2B_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int       B2B_PADDING = FONT_SIZE * 2;
-
-int    SPIN_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-
-int     PPS_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int       PPS_PADDING = FONT_SIZE * 7;
-
-int   LEVEL_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int     LINES_PADDING = FONT_SIZE * 9;
-
-int   TIMER_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-int     TIMER_PADDING = FONT_SIZE * 11;
 
 const std::string clearMessage[5] = { std::string(), "SINGLE", "DOUBLE", "TRIPLE", "QUAD" };
 
@@ -310,20 +286,14 @@ void Infor::drawPPS(sf::RenderWindow *window) {
     sprintf(ppsStr, "%.2f", pps);
     
     sf::Text text(ppsStr + (std::string)"/sec", font, LEVEL_FONT_SIZE);
-    sf::Text number(std::to_string(nLine), font, LEVEL_FONT_SIZE * 2);
 
     text.setPosition(
         INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
         INFOR_POSITION_Y + PPS_PADDING + FONT_SIZE
     );
-    number.setPosition(
-        text.getPosition().x - number.getGlobalBounds().width - 15, 
-        text.getPosition().y - number.getGlobalBounds().height / 2
-    );
 
     window->draw(title);
     window->draw(text);
-    window->draw(number);
 }
 
 void Infor::drawLevel(sf::RenderWindow *window) {   
@@ -339,8 +309,15 @@ void Infor::drawLevel(sf::RenderWindow *window) {
         INFOR_POSITION_Y + LINES_PADDING + FONT_SIZE
     );
 
+    sf::Text number(std::to_string(nLine), font, LEVEL_FONT_SIZE * 2);
+    number.setPosition(
+        title.getPosition().x - number.getGlobalBounds().width - 15, 
+        text.getPosition().y - number.getGlobalBounds().height / 2
+    );
+
     window->draw(title);
     window->draw(text);
+    window->draw(number);
 }
 
 void Infor::drawTimer(sf::RenderWindow *window) {
@@ -391,7 +368,7 @@ void Infor::drawAllClear(sf::RenderWindow *window) {
     window->draw(text);
 }
 
-void Infor::draw(sf::RenderWindow *window) {
+void Infor::draw(sf::RenderWindow *window, int mode = 0) {
     if (message != std::string() and timeout.getElapsedTime().asSeconds() < TIME_OUT) {
         drawMessage(window, message);
     }
@@ -427,8 +404,10 @@ void Infor::draw(sf::RenderWindow *window) {
     
     drawPPS(window);
 
-    drawLevel(window);
-
+    if (mode == 0) {
+        drawLevel(window);
+    }
+    
     drawTimer(window);
 
     if (isAllClear and allClearTimeout.getElapsedTime().asSeconds() < TIME_OUT) {

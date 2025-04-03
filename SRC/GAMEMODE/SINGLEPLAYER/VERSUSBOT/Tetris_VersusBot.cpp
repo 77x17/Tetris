@@ -32,6 +32,17 @@ STATUS_CODE Tetris_VersusBot::start() {
     sf::Sprite  backgroundSprite;
     loadPlayground(backgroundTexture, backgroundSprite);
 
+    int playerScore = 0, competitorScore = 0;
+    
+    int HOLD_WIDTH         = 5;
+
+    int GRID_WIDTH         = 10;
+    int GRID_HEIGHT        = 24;
+    int GRID_POSITION_X    = PLAYER_X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
+    int GRID_POSITION_Y    = PLAYER_Y_COORDINATE;
+    int GRID_COMPETITOR_POSITION_X    = COMPETITOR_X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
+    int GRID_COMPETITOR_POSITION_Y    = COMPETITOR_Y_COORDINATE;
+
 restartVersusBot:
     int tmp = gen();
     player->start(tmp, competitor);
@@ -52,15 +63,6 @@ restartVersusBot:
 
     // Countdown:
     // {
-    //     int HOLD_WIDTH         = 5;
-        
-    //     int GRID_WIDTH         = 10;
-    //     int GRID_HEIGHT        = 24;
-    //     int GRID_POSITION_X    = PLAYER_X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
-    //     int GRID_POSITION_Y    = PLAYER_Y_COORDINATE;
-    //     int GRID_COMPETITOR_POSITION_X    = COMPETITOR_X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
-    //     int GRID_COMPETITOR_POSITION_Y    = COMPETITOR_Y_COORDINATE;
-        
     //     scene->drawCountdown(window, 
     //         GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
     //         GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
@@ -125,19 +127,41 @@ restartVersusBot:
             window->clear();
             window->display();
 
+            playerScore++;
+            
+            scene->drawScore(window, 
+                playerScore, 
+                GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+                GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+                competitorScore,
+                GRID_COMPETITOR_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+                GRID_COMPETITOR_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER
+            );
+
             screenStatus = scene->drawVictory(window);
         }
         else if (player->isGameOver()) { // Game over
             competitor->setGameOver();
-
+            
             window->clear();
             window->display();
+            
+            competitorScore++;
+
+            scene->drawScore(window, 
+                playerScore, 
+                GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+                GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+                competitorScore,
+                GRID_COMPETITOR_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+                GRID_COMPETITOR_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER
+            );
 
             screenStatus = scene->drawGameOver(window);
         }
     }
-
-quitVersusBot:
+    
+    quitVersusBot:
     if (screenStatus == STATUS_CODE::RESTART) {
         goto restartVersusBot;
     }

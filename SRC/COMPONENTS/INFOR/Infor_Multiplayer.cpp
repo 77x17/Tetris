@@ -6,6 +6,10 @@
 Infor_Multiplayer::Infor_Multiplayer():Infor(), nLinesAdd(0), garbageSent(0) {}
 Infor_Multiplayer::~Infor_Multiplayer() {}
 
+// const int   FONT_SIZE = Common::BLOCK_SIZE;
+// int   LEVEL_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+// int     LINES_PADDING = FONT_SIZE * 9;
+
 void Infor_Multiplayer::setPosition(int x, int y, int w, int gX, int gY, int gW, int gH) {
     Infor::setPosition(x, y, w);
     GARBAGE_POSITION_X = gX;
@@ -16,6 +20,7 @@ void Infor_Multiplayer::setPosition(int x, int y, int w, int gX, int gY, int gW,
 
 void Infor_Multiplayer::reset() {
     nLinesAdd = 0;
+    attactPoint = 0;
     Infor::reset();
 }
 
@@ -91,6 +96,8 @@ uint8_t Infor_Multiplayer::removeLine(uint8_t lines) {
     nLine += lines;
     int realAddLines = garbageSent;
 
+    attactPoint += garbageSent;
+
     mtx.lock();
     uint8_t nLinesAddCurrent = __builtin_popcount(nLinesAdd);
 
@@ -160,8 +167,40 @@ void Infor_Multiplayer::drawGarbageSent(sf::RenderWindow *window) {
     window->draw(text);
 }
 
-void Infor_Multiplayer::draw(sf::RenderWindow *window) {
-    Infor::draw(window);
+void Infor_Multiplayer::drawAPM(sf::RenderWindow *window) {  
+    sf::Text title("APM:", font, LEVEL_FONT_SIZE);
+    
+    title.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - title.getGlobalBounds().width,
+        INFOR_POSITION_Y + LINES_PADDING
+    );
+    
+    int milliseconds = lastElapsed.asMilliseconds() + runningTime.getElapsedTime().asMilliseconds();
+    
+    float pps = 60000.0 / milliseconds * attactPoint;
+    
+    char apmStr[10]; // Đủ để chứa giá trị float và null-terminator
+    sprintf(apmStr, "%.2f", pps);
+    
+    sf::Text text(apmStr + (std::string)"/min", font, LEVEL_FONT_SIZE);
+    sf::Text number(std::to_string(attactPoint), font, LEVEL_FONT_SIZE * 2);
+
+    text.setPosition(
+        INFOR_POSITION_X + INFOR_WIDTH - text.getGlobalBounds().width,
+        INFOR_POSITION_Y + LINES_PADDING + FONT_SIZE
+    );
+    number.setPosition(
+        text.getPosition().x - number.getGlobalBounds().width - 15, 
+        text.getPosition().y - number.getGlobalBounds().height / 2
+    );
+
+    window->draw(title);
+    window->draw(text);
+    window->draw(number);
+}
+
+void Infor_Multiplayer::draw(sf::RenderWindow *window, int mode = 1) {
+    Infor::draw(window, mode);
 
     drawGarbage(window);
 
@@ -173,4 +212,6 @@ void Infor_Multiplayer::draw(sf::RenderWindow *window) {
     else {
         garbageSent = 0;
     }
+
+    drawAPM(window);
 }

@@ -48,4 +48,5 @@ public:
     STATUS_CODE waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
     
     void drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCenterY, int otherGridCenterX, int otherGridCenterY);
+    void drawScore(sf::RenderWindow *window, int playerScore, int gridCenterX, int gridCenterY, int competitorScore, int otherGridCenterX, int otherGridCenterY);
 };

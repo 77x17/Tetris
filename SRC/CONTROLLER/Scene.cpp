@@ -569,3 +569,53 @@ void Scene::drawCountdown(sf::RenderWindow *window, int gridCenterX, int gridCen
         window->display();
     }
 }
+
+void Scene::drawScore(sf::RenderWindow *window, int playerScore, int gridCenterX, int gridCenterY, int competitorScore, int otherGridCenterX, int otherGridCenterY) {
+    sf::Texture screenshot;
+    screenshot.create(window->getSize().x, window->getSize().y);
+    screenshot.update(*window);
+    sf::Sprite background;
+    background.setTexture(screenshot);
+    
+    overlayTimeout.restart();
+    sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
+
+    soundManager->play("selected");
+
+    while (overlayTimeout.getElapsedTime().asSeconds() <= 1) {  // count >= 0
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            // clear buffer
+        }
+
+        float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+        overlay.setFillColor(sf::Color(60, 60, 60, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
+        
+            //   alpha = 255 * (1 - overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+        float scaleFactor = 1.0f + 1.0f * overlayTimeout.getElapsedTime().asSeconds();  // Tăng scale
+        
+        sf::Text playerScoreText(std::to_string(playerScore), font, Common::BLOCK_SIZE * 2 * scaleFactor);
+        
+        playerScoreText.setFillColor(sf::Color(255, 255, 0, alpha)); // Vàng nhưng giảm alpha
+        // playerScoreText.setScale(scaleFactor, scaleFactor);
+        playerScoreText.setPosition(sf::Vector2f(
+            gridCenterX - playerScoreText.getGlobalBounds().width / 2,
+            gridCenterY - playerScoreText.getGlobalBounds().height / 2
+        ));
+        
+        sf::Text competitorScoreText(std::to_string(competitorScore), font, Common::BLOCK_SIZE * 2 * scaleFactor);
+        competitorScoreText.setFillColor(sf::Color(255, 255, 0, alpha)); // Vàng nhưng giảm alpha
+        competitorScoreText.setPosition(sf::Vector2f(
+            otherGridCenterX - competitorScoreText.getGlobalBounds().width / 2,
+            otherGridCenterY - competitorScoreText.getGlobalBounds().height / 2
+        ));
+        
+        window->clear();
+        window->draw(background);
+        window->draw(overlay);
+        window->draw(playerScoreText);
+        window->draw(competitorScoreText);
+
+        window->display();
+    }
+}

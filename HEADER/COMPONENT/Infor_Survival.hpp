@@ -9,7 +9,7 @@ public:
     ~Infor_Survival();
 
     void update (uint8_t lines, bool spin, char typeBlock, bool isAllClear);
-    void draw(sf::RenderWindow *window);
+    void draw(sf::RenderWindow *window, int mode);
 
 };
 

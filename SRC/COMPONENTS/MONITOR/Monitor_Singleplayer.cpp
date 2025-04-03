@@ -64,7 +64,7 @@ void Monitor_Singleplayer::draw(sf::RenderWindow* window, CurrentBlock* block) c
     map->drawOutline(window);
     map->draw(window);
     map->drawCurrentBlock(window, block);
-    infor->draw(window);
+    infor->draw(window, 0);
     Monitor::draw(window, block);
 }
 

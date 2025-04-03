@@ -16,6 +16,7 @@ private:
     uint64_t nLinesAdd;
 
     int garbageSent;
+    int attactPoint;
     int getGarbage(int lines, bool spin, int B2B, int count);
 public:
     Infor_Multiplayer();
@@ -32,7 +33,9 @@ public:
     void drawGarbage(sf::RenderWindow *window);
     void drawGarbageSent(sf::RenderWindow *window);
 
-    virtual void draw(sf::RenderWindow *window);
+    void drawAPM(sf::RenderWindow *window);
+
+    virtual void draw(sf::RenderWindow *window, int mode);
 };
 
 #endif // INFORFORNETWORK_HPP

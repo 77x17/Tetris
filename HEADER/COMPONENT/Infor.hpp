@@ -1,18 +1,39 @@
 #ifndef INFOR_HPP
 #define INFOR_HPP
 
+#include "Common.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <mutex>
 
 class SoundManager;
 
+const int   FONT_SIZE = Common::BLOCK_SIZE;
+
+const int MESSAGE_FONT_SIZE = FONT_SIZE;
+const int   MESSAGE_PADDING = FONT_SIZE;
+
+const int   COMBO_FONT_SIZE = FONT_SIZE * 2;
+const int     COMBO_PADDING = FONT_SIZE * 3;
+const int   N_COMBO_PADDING = FONT_SIZE * 2 + FONT_SIZE / 2;
+
+const int     B2B_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+const int       B2B_PADDING = FONT_SIZE * 2;
+
+const int    SPIN_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+
+const int     PPS_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+const int       PPS_PADDING = FONT_SIZE * 7;
+
+const int   LEVEL_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+const int     LINES_PADDING = FONT_SIZE * 9;
+
+const int   TIMER_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
+const int     TIMER_PADDING = FONT_SIZE * 11;
+
 class Infor {
 private:
-    int INFOR_POSITION_X;
-    int INFOR_POSITION_Y;
-    int INFOR_WIDTH;
-
     int GARBAGE_POSITION_X;
     int GARBAGE_POSITION_Y;
     int GARBAGE_WIDTH;
@@ -28,13 +49,17 @@ private:
     std::string   combo;
     SoundManager *soundManager;
 
+    
+    
+protected:
+    int INFOR_POSITION_X;
+    int INFOR_POSITION_Y;
+    int INFOR_WIDTH;
+    
     sf::Clock     runningTime;
     sf::Time      lastElapsed;
     bool          startTimer;
-
     bool          isAllClear;
-
-protected:
 
     static constexpr float TIME_OUT = 2.0f;
 
@@ -78,7 +103,7 @@ public:
 
     int getSecond();
 
-    virtual void draw(sf::RenderWindow *window);
+    virtual void draw(sf::RenderWindow *window, int mode);
 };
 
 #endif

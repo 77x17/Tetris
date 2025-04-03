@@ -76,7 +76,7 @@ void Monitor_Multiplayer::draw(sf::RenderWindow* window, CurrentBlock* block) co
     map->drawOutline(window);
     map->draw(window);
     map->drawCurrentBlock(window, block);
-    infor->draw(window);
+    infor->draw(window, 1);
     Monitor::draw(window, block);
 }
 
