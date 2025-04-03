@@ -10,7 +10,7 @@ public:
     Map_Bot();
     ~Map_Bot();
 
-    int getScore(uint16_t shape, int X, int Y);
+    int getHeuristicScore(uint16_t shape, int X, int Y);
     void findPath(int8_t &X, CurrentBlock_Bot* curBlock);
 };
 

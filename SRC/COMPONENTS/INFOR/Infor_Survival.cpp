@@ -9,9 +9,11 @@ void Infor_Survival::update(uint8_t lines, bool spin, char typeBlock, bool isAll
     Infor::update(lines, spin, typeBlock, isAllClear);
     // check whether have player finishesd challenge!
     // ... continue write here
+    
 }
 
 void Infor_Survival::draw(sf::RenderWindow *window) {
     Infor_Multiplayer::draw(window);
     // add draw question or something here!
+    // ... addLines(...);
 }
