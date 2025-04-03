@@ -6,6 +6,8 @@
 #include "Infor_Multiplayer.hpp"
 #include "LinkListBlock.hpp"
 
+#include "BotBrain.hpp"
+
 Monitor_VersusBot::Monitor_VersusBot(int x, int y): Monitor_Multiplayer(x, y) {}
 
 Monitor_VersusBot::~Monitor_VersusBot() {}
@@ -18,6 +20,9 @@ void Monitor_VersusBot::createMonitor(int x, int y) {
     setPosition(x, y);
 }
 
+void Monitor_VersusBot::updateScoreForBrainBot() {
+    // infor->
+}
 
 void Monitor_VersusBot::findPath(int8_t &X, CurrentBlock_Bot* curBlock) {
     dynamic_cast<Map_Bot*>(map)->findPath(X, curBlock);

@@ -439,3 +439,10 @@ void Infor::draw(sf::RenderWindow *window) {
         allClearTimeout.restart();
     }
 }
+
+int Infor::getSecond() {
+    int milliseconds = lastElapsed.asMilliseconds() + runningTime.getElapsedTime().asMilliseconds();
+
+    int seconds = milliseconds / 1000;
+    return seconds;
+}

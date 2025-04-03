@@ -24,7 +24,10 @@ Bot::~Bot() {
     delete curBlock; monitor = nullptr;
 }
 
-void Bot::setGameOver() { monitor->setGameOver(); }
+void Bot::setGameOver() { 
+    monitor->setGameOver();
+    monitor->updateScoreForBrainBot();
+}
 bool Bot::isGameOver() { return monitor->isGameOver(); }
 
 void Bot::addEvent(const sf::Keyboard::Key &e) {

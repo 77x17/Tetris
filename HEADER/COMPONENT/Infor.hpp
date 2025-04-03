@@ -76,6 +76,8 @@ public:
     void drawTimer     (sf::RenderWindow *window);
     void drawAllClear  (sf::RenderWindow *window);
 
+    int getSecond();
+
     virtual void draw(sf::RenderWindow *window);
 };
 
