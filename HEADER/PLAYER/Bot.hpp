@@ -23,6 +23,7 @@ private:
 
     std::mutex mtx;
     std::atomic<bool> finish;
+    std::atomic<bool> pauseGame;
     std::queue<sf::Event> event;
 
     void update(); // Cập nhật trạng thái bot

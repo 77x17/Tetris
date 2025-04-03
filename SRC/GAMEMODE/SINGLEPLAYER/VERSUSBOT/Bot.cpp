@@ -44,12 +44,12 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
     movementController->resetComponent();
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
-    finish.store(true);
     while(!event.empty()) event.pop();
-    
+    finish.store(true); pauseGame.store(true);
+
     std::thread thinking([this](Player_VersusBot* &player) {
         while (!monitor->isGameOver()) {
-            while(!finish);
+            while(!finish || pauseGame);
             finish.store(false);
 
             int8_t target_X = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
@@ -68,15 +68,19 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
 }
 
 void Bot::setTimer() {
+    pauseGame.store(true);
     monitor->setTimer();
+    pauseGame.store(false);
 }
 
 void Bot::pauseTimer() {
     monitor->pauseTimer();
+    pauseGame.store(true);
 }
 
 void Bot::unPauseTimer() {
     monitor->unPauseTimer();
+    pauseGame.store(false);
 }
 
 
