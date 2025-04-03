@@ -60,10 +60,22 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
             }
             addEvent(sf::Keyboard::Space);
         }
-        std::cout << "FINISH!\n";
     }, std::ref(player));
     thinking.detach();
 }
+
+void Bot::setTimer() {
+    monitor->setTimer();
+}
+
+void Bot::pauseTimer() {
+    monitor->pauseTimer();
+}
+
+void Bot::unPauseTimer() {
+    monitor->unPauseTimer();
+}
+
 
 void Bot::draw(sf::RenderWindow *window) {
     monitor->draw(window, curBlock->getCurrentBlock());

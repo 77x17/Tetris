@@ -37,7 +37,9 @@ enum class MENU_CODE {
 
     PAUSE,
 
-    GAMEOVER
+    GAMEOVER,
+
+    VICTORY
 };
 
 class Menu;

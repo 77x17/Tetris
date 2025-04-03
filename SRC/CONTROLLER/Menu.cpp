@@ -130,6 +130,17 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
 
             break;
         }
+        case MENU_CODE::VICTORY: {
+            menuTitle = sf::Text("VICTORY", font, Common::BLOCK_SIZE * 2.5);
+            menuTitle.setPosition(window->getSize().x / 2 - menuTitle.getGlobalBounds().width / 2, OPTION_PADDING);
+            menuTitleBar = sf::RectangleShape(sf::Vector2f(window->getSize().x, 2 * menuTitle.getGlobalBounds().height));
+            menuTitleBar.setFillColor(MENU_TITLE_BAR_COLOR);
+            menuTitleBar.setPosition(0, OPTION_PADDING);
+            menuTitleBar.setOutlineColor(sf::Color::White);
+            menuTitleBar.setOutlineThickness(3);
+
+            break;
+        }
         default: 
             throw std::invalid_argument("[Menu.cpp] cannot find MENU_CODE");
     }
@@ -196,7 +207,8 @@ Menu::Menu(sf::RenderWindow *window, const std::vector<std::string> &menuItems, 
             break;
         }
         case MENU_CODE::PAUSE: 
-        case MENU_CODE::GAMEOVER: {
+        case MENU_CODE::GAMEOVER: 
+        case MENU_CODE::VICTORY: {
             menuBars = new sf::RectangleShape[menuSize];
 
             gradient = new sf::VertexArray[menuSize];
@@ -298,7 +310,8 @@ Menu::~Menu() {
             break;
         }
         case MENU_CODE::PAUSE:
-        case MENU_CODE::GAMEOVER: {
+        case MENU_CODE::GAMEOVER: 
+        case MENU_CODE::VICTORY: {
             delete[] menuBars;
 
             delete[] gradient;
@@ -330,7 +343,8 @@ bool Menu::notSelected() {
             }
         }
         case MENU_CODE::PAUSE:
-        case MENU_CODE::GAMEOVER: {
+        case MENU_CODE::GAMEOVER: 
+        case MENU_CODE::VICTORY: {
             return not selected; 
         }
         default: 
@@ -398,6 +412,16 @@ STATUS_CODE Menu::getSelectedItem() {
             break;
         }
         case MENU_CODE::GAMEOVER: {
+            switch (cloneSelectedItem) {
+                case 0:  return STATUS_CODE::RESTART;
+                case 1:  return STATUS_CODE::MENU;
+                case 2:  return STATUS_CODE::QUIT;
+                default: throw std::invalid_argument("[Menu.cpp] - getSelectedItem() : STATUS_CODE (MENU_CODE::GAMEOVER) error.");
+            }
+            
+            break;
+        }
+        case MENU_CODE::VICTORY: {
             switch (cloneSelectedItem) {
                 case 0:  return STATUS_CODE::RESTART;
                 case 1:  return STATUS_CODE::MENU;
@@ -551,7 +575,8 @@ void Menu::update(sf::RenderWindow *window) {
             break;
         }
         case MENU_CODE::PAUSE:
-        case MENU_CODE::GAMEOVER: {
+        case MENU_CODE::GAMEOVER: 
+        case MENU_CODE::VICTORY: {
             for (int i = 0; i < menuSize; i++) {
                 if (i == selectedItem) {
                     menuTexts[i].setFillColor(SELECTED_COLOR);
@@ -595,7 +620,8 @@ void Menu::draw(sf::RenderWindow *window) {
             break;
         }
         case MENU_CODE::PAUSE:
-        case MENU_CODE::GAMEOVER: {
+        case MENU_CODE::GAMEOVER: 
+        case MENU_CODE::VICTORY: {
             window->draw(menuTitleBar);
             window->draw(menuTitle);
             

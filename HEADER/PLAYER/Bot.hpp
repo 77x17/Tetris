@@ -37,7 +37,9 @@ public:
     void addEvent(const sf::Keyboard::Key &e);
 
     void start(uint32_t seed, Player_VersusBot*);
-
+    void setTimer();
+    void pauseTimer();
+    void unPauseTimer();
     void handleAddLine(uint8_t nLines);
 
     void update(); // Cập nhật trạng thái bot theo thời gian

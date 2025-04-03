@@ -66,6 +66,12 @@ Scene::Scene(sf::RenderWindow *window) {
         "MENU",
         "QUIT"
     }, MENU_CODE::GAMEOVER);
+
+    victoryMenu = new Menu(window, {
+        "RESTART",
+        "MENU",
+        "QUIT"
+    }, MENU_CODE::VICTORY);
 }
 
 Scene::~Scene() {
@@ -253,7 +259,6 @@ backToOption:
         }
     }
 
-    // Skip
     drawChangeMenu(window, false);
 
     soundManager->stopMusic("menu");
@@ -386,6 +391,51 @@ STATUS_CODE Scene::drawGameOver(sf::RenderWindow *window) {
     drawChangeMenu(window, false);
 
     return gameOverMenu->getSelectedItem();
+}
+
+STATUS_CODE Scene::drawVictory(sf::RenderWindow *window) {
+    sf::Texture screenshot;
+    screenshot.create(window->getSize().x, window->getSize().y);
+    screenshot.update(*window);
+    sf::Sprite background;
+    background.setTexture(screenshot);
+
+    overlayTimeout.restart();
+    sf::RectangleShape overlay(sf::Vector2f(window->getSize().x, window->getSize().y));
+
+    while (overlayTimeout.getElapsedTime().asSeconds() <= TIME_OUT) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            // Chờ để hủy Restart ngay lập tức
+        }
+
+        float alpha = 255 * (overlayTimeout.getElapsedTime().asSeconds() / TIME_OUT);
+        overlay.setFillColor(sf::Color(60, 60, 60, std::min(alpha, 200.0f)));        // 200.0f để mờ mờ nhìn thấy background
+        
+        window->clear();
+        window->draw(background); // Draw background
+        window->draw(overlay);
+        window->display();
+    }
+
+    while (window->isOpen() and victoryMenu->notSelected()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            victoryMenu->processEvents(window, event);
+        }
+
+        victoryMenu->update(window);
+
+        window->clear();
+        window->draw(background); // Draw background
+        window->draw(overlay);    
+        victoryMenu->draw(window);
+        window->display();
+    }
+    
+    drawChangeMenu(window, false);
+
+    return victoryMenu->getSelectedItem();
 }
 
 STATUS_CODE Scene::drawPause(sf::RenderWindow *window) {

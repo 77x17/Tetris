@@ -26,7 +26,6 @@ restartGameSurvival:
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
     
-    // Skip
     // Fade in: change menu
     {
         window->clear();
@@ -37,7 +36,7 @@ restartGameSurvival:
         scene->drawChangeMenu(window, true);
     }
     
-    // Countdown: Skip
+    // Countdown: 
     {
         int HOLD_WIDTH         = 5;
         

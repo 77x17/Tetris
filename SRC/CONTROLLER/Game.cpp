@@ -44,10 +44,10 @@ Game::~Game() {
 
 void Game::start() {
     MENU_CODE menuCode = MENU_CODE::MAIN;
-    bool run = false;
-    bool isFullscreen = false;
+    // bool isFullscreen = false;
     
     while (true) {
+        // bool run = false;
     //     while (not run) {
     //         sf::Event event;
     //         while (window->pollEvent(event)) {
@@ -83,10 +83,7 @@ void Game::start() {
     //         }
     //     }
 
-    //     run = false;
-
-    //     STATUS_CODE gameType = scene->drawMenu(window, menuCode);
-        STATUS_CODE gameType = STATUS_CODE::VERSUSBOT;
+        STATUS_CODE gameType = scene->drawMenu(window, menuCode);
 
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {

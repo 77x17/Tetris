@@ -12,6 +12,11 @@ class Bot;
 
 class Tetris_VersusBot: public Tetris {
 private:
+    int PLAYER_X_COORDINATE;
+    int PLAYER_Y_COORDINATE;
+    int COMPETITOR_X_COORDINATE;
+    int COMPETITOR_Y_COORDINATE;
+
     Player_VersusBot* player;
     Bot* competitor;
 

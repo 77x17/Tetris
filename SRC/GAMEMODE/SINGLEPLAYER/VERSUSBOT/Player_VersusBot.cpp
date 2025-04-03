@@ -26,8 +26,9 @@ void Player_VersusBot::setCompetitor(Monitor* mon) {
 }
 
 void Player_VersusBot::setGameOver() {
-    throw std::runtime_error("Not install set gameover yet");
+    // throw std::runtime_error("Not install set gameover yet");
     // dynamic_cast<MovementController_VersusBot*>(movementController)->setGameOver();
+    monitor->setGameOver();
 }
 
 void Player_VersusBot::start(uint32_t seed, Bot* b) {

@@ -21,12 +21,11 @@ STATUS_CODE Tetris_Practice::start() {
     sf::Sprite  backgroundSprite;
     loadPlayground(backgroundTexture, backgroundSprite);
 
-restartGamePractice:
+restartPractice:
     player->start();
 
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
-    
-    // Skip
+
     // Fade in: change menu
     {
         window->clear();
@@ -37,7 +36,7 @@ restartGamePractice:
         scene->drawChangeMenu(window, true);
     }
     
-    // Countdown: Skip
+    // Countdown:
     {
         int HOLD_WIDTH         = 5;
         
@@ -56,41 +55,39 @@ restartGamePractice:
 
     player->setTimer();
 
-    sf::Event event;
     while (not player->isGameOver()) {
+        sf::Event event;
         while (window->pollEvent(event)) {
             
             if (event.type == sf::Event::Closed) {
                 scene->drawChangeMenu(window, false);
                 
-                goto quitStartGamePractice;
+                goto quitPractice;
             }
-            else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape) {
-                    player->pauseTimer();
+            else if (event.type == sf::Event::KeyPressed and event.key.code == sf::Keyboard::Escape) {
+                player->pauseTimer();
 
-                    STATUS_CODE escapeOption = scene->drawPause(window);
+                STATUS_CODE escapeOption = scene->drawPause(window);
 
-                    switch (escapeOption) {
-                        case STATUS_CODE::RESUME:
-                            player->unPauseTimer();
-                            
-                            break;
-                        case STATUS_CODE::RESTART:
-                            screenStatus = STATUS_CODE::RESTART;
-                            
-                            goto quitStartGamePractice;
-                        case STATUS_CODE::MENU:
-                            screenStatus = STATUS_CODE::MENU;
-                            
-                            goto quitStartGamePractice;
-                        case STATUS_CODE::QUIT:
-                            screenStatus = STATUS_CODE::QUIT;
-                            
-                            goto quitStartGamePractice;
-                        default:
-                            throw std::runtime_error("[escapeOption] cannot find STATUS_CODE");
-                    }
+                switch (escapeOption) {
+                    case STATUS_CODE::RESUME:
+                        player->unPauseTimer();
+                        
+                        break;
+                    case STATUS_CODE::RESTART:
+                        screenStatus = STATUS_CODE::RESTART;
+                        
+                        goto quitPractice;
+                    case STATUS_CODE::MENU:
+                        screenStatus = STATUS_CODE::MENU;
+                        
+                        goto quitPractice;
+                    case STATUS_CODE::QUIT:
+                        screenStatus = STATUS_CODE::QUIT;
+                        
+                        goto quitPractice;
+                    default:
+                        throw std::runtime_error("[escapeOption] cannot find STATUS_CODE");
                 }
             }
 
@@ -103,8 +100,8 @@ restartGamePractice:
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
         window->display();
-
-        if (player->isGameOver()) {
+    
+        if (player->isGameOver()) {  // Game over
             window->clear();
             window->draw(backgroundSprite); // Draw background
             player->draw(window);
@@ -114,9 +111,9 @@ restartGamePractice:
         }
     }
 
-quitStartGamePractice:
+quitPractice:
     if (screenStatus == STATUS_CODE::RESTART) {
-        goto restartGamePractice;
+        goto restartPractice;
     }
 
     return screenStatus;

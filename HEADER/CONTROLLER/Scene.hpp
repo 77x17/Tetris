@@ -26,7 +26,8 @@ private:
     Option       *option;
     Menu         *pauseMenu;
     Menu         *gameOverMenu;
-    
+    Menu         *victoryMenu;
+
 public:
     Scene(sf::RenderWindow *window);
     ~Scene();
@@ -42,6 +43,7 @@ public:
     
     STATUS_CODE drawPause(sf::RenderWindow *window);
     STATUS_CODE drawGameOver(sf::RenderWindow *window);
+    STATUS_CODE drawVictory(sf::RenderWindow *window);
     
     STATUS_CODE waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish);
     
