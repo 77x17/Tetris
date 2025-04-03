@@ -4,8 +4,11 @@
 #include "Map_Multiplayer.hpp"
 
 class CurrentBlock_Bot;
+class BotBrain;
 
 class Map_Bot: public Map_Multiplayer {
+private:
+    BotBrain* botBrain;
 public:
     Map_Bot();
     ~Map_Bot();

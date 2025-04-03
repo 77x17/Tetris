@@ -6,6 +6,7 @@
 #include "Monitor_VersusBot.hpp"
 #include "Player_VersusBot.hpp"
 #include "Common.hpp"
+#include "CommonMap.hpp"
 
 #include <thread>
 #include <chrono>
