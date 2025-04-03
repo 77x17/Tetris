@@ -107,18 +107,24 @@ restartVersusBot:
 
             player->processEvents(event);
         }
+
+        player->autoDown();
+        window->clear();
+        window->draw(backgroundSprite); // Draw background
+        player->draw(window);
+        competitor->draw(window);
+        window->display();
+
         if (competitor->isGameOver()) {
             player->setGameOver();
-        }
-        if (!player->isGameOver()) {
-            player->autoDown();
+            
             window->clear();
-            window->draw(backgroundSprite); // Draw background
-            player->draw(window);
-            competitor->draw(window);
             window->display();
+
+            screenStatus = scene->drawVictory(window);
         }
-        else if (player->isGameOver()) { // Game over
+
+        if (player->isGameOver()) { // Game over
             competitor->setGameOver();
 
             window->clear();
