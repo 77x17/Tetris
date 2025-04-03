@@ -62,6 +62,9 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
         }
     }, std::ref(player));
     thinking.detach();
+
+    std::thread handle(&Bot::update, this);
+    handle.detach();
 }
 
 void Bot::setTimer() {
@@ -86,16 +89,16 @@ void Bot::handleAddLine(uint8_t nLines) {
 }
 
 void Bot::update() {
-    mtx.lock();
-    while (!event.empty()) {
-        movementController->processEvents(event.front());
-        if (event.front().type == sf::Event::KeyReleased && event.front().key.code == sf::Keyboard::Space)
-            finish.store(true);
-        event.pop();
+    while (!monitor->isGameOver()) {
+        mtx.lock();
+        while (!event.empty()) {
+            movementController->processEvents(event.front());
+            if (event.front().type == sf::Event::KeyReleased && event.front().key.code == sf::Keyboard::Space)
+                finish.store(true);
+            event.pop();
+        }
+        mtx.unlock();
     }
-
-    mtx.unlock();
-    // movementController->autoDown();
 }
 
 void Bot::setCompetitor(Monitor* mon) {

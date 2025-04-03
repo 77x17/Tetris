@@ -25,6 +25,8 @@ private:
     std::atomic<bool> finish;
     std::queue<sf::Event> event;
 
+    void update(); // Cập nhật trạng thái bot
+
 public:
     Bot(int X_COORDINATE, int Y_COORDINATE);
     ~Bot();
@@ -41,8 +43,6 @@ public:
     void pauseTimer();
     void unPauseTimer();
     void handleAddLine(uint8_t nLines);
-
-    void update(); // Cập nhật trạng thái bot theo thời gian
     void draw(sf::RenderWindow *window);
 
 };
