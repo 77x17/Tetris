@@ -3,7 +3,7 @@
 #include "CurrentBlock_Bot.hpp"
 #include "Map_Bot.hpp"
 #include "Hold.hpp"
-#include "Infor_Multiplayer.hpp"
+#include "Infor_VersusBot.hpp"
 #include "LinkListBlock.hpp"
 
 #include "BotBrain.hpp"
@@ -16,7 +16,7 @@ void Monitor_VersusBot::createMonitor(int x, int y) {
     hold = new Hold();
     map  = new Map_Bot();
     next = new LinkListBlock();
-    infor = new Infor_Multiplayer();
+    infor = new Infor_VersusBot();
     setPosition(x, y);
 }
 

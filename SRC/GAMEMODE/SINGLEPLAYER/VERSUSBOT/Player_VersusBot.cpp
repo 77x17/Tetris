@@ -1,7 +1,7 @@
 #include "Player_VersusBot.hpp"
 
 #include "CurrentBlockController.hpp"
-#include "Monitor_Multiplayer.hpp"
+#include "Monitor_VersusBot.hpp"
 #include "MovementController_VersusBot.hpp"
 #include "Bot.hpp"
 
@@ -14,7 +14,7 @@ Player_VersusBot::Player_VersusBot(int x, int y): Player(x, y) {
 }
 
 void Player_VersusBot::initialize() {
-    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE); monitor->createMonitor(X_COORDINATE, Y_COORDINATE);
+    monitor = new Monitor_VersusBot(X_COORDINATE, Y_COORDINATE); monitor->createMonitor(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlockController(monitor->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController_VersusBot(monitor, curBlock);
 }
