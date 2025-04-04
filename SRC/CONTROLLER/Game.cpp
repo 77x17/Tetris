@@ -84,7 +84,7 @@ void Game::start() {
     //     }
 
         STATUS_CODE gameType = scene->drawMenu(window, menuCode);
-        // STATUS_CODE gameType = STATUS_CODE::VERSUSBOT;
+        // STATUS_CODE gameType = STATUS_CODE::SURVIVAL;
 
         STATUS_CODE screenStatus = STATUS_CODE::QUIT;
         switch (gameType) {

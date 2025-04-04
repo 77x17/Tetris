@@ -3,6 +3,7 @@
 #include "Monitor_Multiplayer.hpp"
 #include "CurrentBlockController.hpp"
 #include "MovementController.hpp"
+#include "MovementController_Multiplayer.hpp"
 #include "CurrentBlock.hpp"
 
 #include <random>
@@ -15,6 +16,16 @@ void Player_Survival::initialize() {
 
     curBlock = new CurrentBlockController(dynamic_cast<Monitor_Multiplayer*>(monitor)->getMap()); curBlock->createCurrentBlock();
     movementController = new MovementController(monitor, curBlock);
+}
+
+void Player_Survival::autoDown() {
+    
+    // T muốn gọi autoDown của multiplayer để khi mà đặt khối xuống thì mới putGarbage()
+    // putGarbage();
+    
+    Player::autoDown();
+    
+    // dynamic_cast<MovementController_Multiplayer *>(movementController)->autoDown();
 }
 
 void Player_Survival::receiveGarbage(int x) {

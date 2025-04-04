@@ -20,6 +20,13 @@ STATUS_CODE Tetris_Survival::start() {
     sf::Texture backgroundTexture;
     sf::Sprite  backgroundSprite;
     loadPlayground(backgroundTexture, backgroundSprite);
+    
+    int HOLD_WIDTH         = 5;
+        
+    int GRID_WIDTH         = 10;
+    int GRID_HEIGHT        = 24;
+    int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
+    int GRID_POSITION_Y    = Y_COORDINATE;
 
 restartGameSurvival:
     player->start();
@@ -38,13 +45,6 @@ restartGameSurvival:
     
     // Countdown: 
     {
-        int HOLD_WIDTH         = 5;
-        
-        int GRID_WIDTH         = 10;
-        int GRID_HEIGHT        = 24;
-        int GRID_POSITION_X    = X_COORDINATE + HOLD_WIDTH * Common::BLOCK_SIZE + Common::BLOCK_SIZE + Common::BLOCK_SIZE;
-        int GRID_POSITION_Y    = Y_COORDINATE;
-        
         scene->drawCountdown(window, 
             (GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER),
             (GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER),
@@ -54,6 +54,7 @@ restartGameSurvival:
     }
 
     player->setTimer();
+    timer.restart();
 
     sf::Event event;
     while (not player->isGameOver()) {
@@ -100,15 +101,31 @@ restartGameSurvival:
 
         if (timer.getElapsedTime().asSeconds() >= 10) {
             // sent 4 lines
-            player->putGarbage();
             player->receiveGarbage(4);
-            
+
             timer.restart();
         }
         
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
+
+        {
+            sf::RectangleShape time(sf::Vector2f(
+                Common::BLOCK_SIZE * 10 * (1 - timer.getElapsedTime().asSeconds() / 10), 
+                Common::BLOCK_SIZE
+            ));
+
+            time.setFillColor(sf::Color(255, 69, 0));
+    
+            time.setPosition(
+                GRID_POSITION_X,
+                GRID_POSITION_Y + Common::HEIGHT_MAP * Common::BLOCK_SIZE + Common::BLOCK_SIZE
+            );
+    
+            window->draw(time);    
+        }
+
         window->display();
 
         if (player->isGameOver()) {

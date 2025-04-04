@@ -8,6 +8,8 @@ public:
 
     void initialize();
 
+    void autoDown();
+
     void receiveGarbage(int x);
 
     void putGarbage();

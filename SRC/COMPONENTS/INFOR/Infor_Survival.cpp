@@ -16,4 +16,6 @@ void Infor_Survival::draw(sf::RenderWindow *window, int mode = 1) {
     Infor_Multiplayer::draw(window, 1);
     // add draw question or something here!
     // ... addLines(...);
+
+    
 }
