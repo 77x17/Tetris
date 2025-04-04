@@ -44,7 +44,7 @@ BotBrain::~BotBrain() {
 }
 
 void BotBrain::updateWeight() {
-    load();
+    // load();
     return;
 
     // if (countSet < 5) return;

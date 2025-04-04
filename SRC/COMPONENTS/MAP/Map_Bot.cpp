@@ -14,6 +14,11 @@ Map_Bot::~Map_Bot(){
     delete botBrain;
 }
 
+void Map_Bot::reset() {
+    Map::reset();
+    botBrain->updateWeight();
+}
+
 #include <iostream>
 #include <unistd.h>
 
