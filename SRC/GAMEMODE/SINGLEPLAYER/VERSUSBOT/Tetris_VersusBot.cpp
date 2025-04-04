@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "BotBrain.hpp"
-uint64_t BotBrain::sumScore = 0;
+int64_t BotBrain::sumScore = 0;
 int8_t BotBrain::countSet = 0;
 
 Tetris_VersusBot::Tetris_VersusBot(sf::RenderWindow* win, Scene* s):Tetris(win, s) {
