@@ -222,7 +222,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
     
     const int limitPos = getHeightMap()/(Common::HEIGHT_MAP/numSpecLimmit);
 
-    uint16_t state = EMPTYLINE, stateAND = EMPTYLINE, endStateHole = EMPTYLINE;
+    uint16_t state = EMPTYLINE, stateAND = EMPTYLINE, endStateHole = EMPTYLINE, prevLine = EMPTYLINE;
 
     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
@@ -230,12 +230,14 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
         }
         line &= FULLMASK(REALWIDTH);
-        for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
-            if (!getBit(state, j) && getBit(line, j)) {
-                endStateHole |= MASK(j);
+        if (line != FULLMASK(REALWIDTH)) {
+            for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
+                if (!getBit(state, j) && getBit(line, j)) {
+                    endStateHole |= MASK(j);
+                }
             }
+            endStateHole &= line;
         }
-        endStateHole &= line;
     }
     endStateHole = ((~endStateHole) & FULLMASK(REALWIDTH));
 
@@ -249,22 +251,24 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
         }
         line &= FULLMASK(REALWIDTH);
 
+        if (line == FULLMASK(REALWIDTH)) {
+            val[limitPos][6] += 1;
+            continue;
+        }
 
         for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
             if (getBit(state, j) && !getBit(state, j - 1)) {
                 val[limitPos][7]++;
             }
             if (!getBit(state, j) && getBit(line, j)) {
-                top[j - NUMOFFSET] = i;
+                top[j - NUMOFFSET] = i - val[limitPos][6];
                 stateAND |= MASK(j);
             }
         }
-
         val[limitPos][2] += nBit1(getStateLine((~state) & line & (((~state) & line) << 1)));
-                
-        val[limitPos][3] += nBit1(getStateLine(state & (~line))) * (Common::HEIGHT_MAP - i);
+        val[limitPos][3] += nBit1(getStateLine(state & (~line) & prevLine)) * (Common::HEIGHT_MAP - i);
 
-        state |= line;
+        state |= line; prevLine = line;
         stateAND &= line;
 
         val[limitPos][0] += nBit1(getStateLine(state));
@@ -273,8 +277,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
         val[limitPos][4] += (state == line && nBit0(getStateLine(state)) == 1);
         val[limitPos][5] += (state == line && nBit0(getStateLine(state)) == 2 && nBit0(getStateLine((state << 1) | state)) == 1);
         
-        val[limitPos][6] += (line == FULLMASK(REALWIDTH));
-        val[limitPos][8] += nBit1(stateAND & endStateHole);
+        if (val[limitPos][3] == 0) val[limitPos][8] += nBit1(stateAND & endStateHole);
     }
 
     int min = 300; 
