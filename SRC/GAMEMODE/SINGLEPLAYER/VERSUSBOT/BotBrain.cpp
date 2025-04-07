@@ -253,6 +253,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
 
         if (line == FULLMASK(REALWIDTH)) {
             val[limitPos][6] += 1;
+            // else (val[limitPos][6] > 1) val[limitPos][6] *= 10;
             continue;
         }
 
@@ -286,6 +287,8 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
     for (int i = 1; i < 10; i++) {
         val[limitPos][9] += (top[i] - min);
     }
+    
+    if (val[limitPos][6] == 4) val[limitPos][6] = 1000;
 
     int heuristicScore = 0;
     for (int i = 0; i < numSpecLimmit; i++) 
