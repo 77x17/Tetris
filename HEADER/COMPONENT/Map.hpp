@@ -27,7 +27,7 @@ public:
     virtual ~Map();
     void setPosition(int GRID_POSITION_X, int GRID_POSITION_Y, int GRID_WIDTH, int GRID_HEIGHT);
     
-    void reset();
+    virtual void reset();
 
     void draw(sf::RenderWindow* window);
     void drawCurrentBlock(sf::RenderWindow* window, CurrentBlock *curBlock);
