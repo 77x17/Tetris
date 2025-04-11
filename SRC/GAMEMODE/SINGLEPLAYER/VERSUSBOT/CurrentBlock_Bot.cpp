@@ -3,6 +3,7 @@
 #include "Block.hpp"
 
 CurrentBlock_Bot::CurrentBlock_Bot():CurrentBlock(){}
+CurrentBlock_Bot::CurrentBlock_Bot(Block* p):CurrentBlock(p){}
 
 CurrentBlock_Bot::~CurrentBlock_Bot(){}
 

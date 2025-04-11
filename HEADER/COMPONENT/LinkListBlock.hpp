@@ -14,18 +14,19 @@ private:
     int NEXT_POSITION_Y;
     int NEXT_WIDTH;
     int NEXT_HEIGHT;
+    sf::Font  font;
 
+protected:
     uint8_t   nEle;
     BlockElement *head;
     BlockElement *tail;
-    sf::Font  font;
-
+    
     std::mt19937 gen;
     void addBag();
 
 public:
     LinkListBlock();
-    ~LinkListBlock();
+    virtual ~LinkListBlock();
     
     void setPosition(int NEXT_POSITION_X, int NEXT_POSITION_Y, int NEXT_WIDTH, int NEXT_HEIGHT);
     

@@ -11,16 +11,15 @@ private:
     int HOLD_POSITION_Y;
     int HOLD_WIDTH;
     int HOLD_HEIGHT;
-    
+protected:
     Block*   block;
     bool     holdPosible;
     sf::Font font;
 
-    
 public:
 
     Hold();
-    ~Hold();
+    virtual ~Hold();
     void setPosition(int HOLD_POSITION_X, int HOLD_POSITION_Y, int HOLD_WIDTH, int HOLD_HEIGHT);
 
     void reset();

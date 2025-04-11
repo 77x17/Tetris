@@ -3,12 +3,21 @@
 #include "Common.hpp"
 #include "CommonMap.hpp"
 
+#include <iostream>
+
 sf::Texture texture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/blocks.png"); return t; }() };
 sf::Texture ghostTexture{ [] { sf::Texture t; t.loadFromFile("ASSETS/blocks/ghostBlocks.png"); return t; }() };
 
 Block::Block() {
-    stateID = 2;
+    stateID = 2; shapeID = 0;
     state = new uint16_t[4]();
+}
+
+Block::Block(const Block &a) {
+    stateID = a.stateID; shapeID = a.shapeID;
+    state = new uint16_t[4]();
+    for (int i = 0; i < 4; i++)
+        state[i] = a.state[i];
 }
 
 Block::~Block() {

@@ -13,6 +13,7 @@ protected:
 
 public:
     Block();
+    Block(const Block &a);
     ~Block();
 
     void draw(sf::RenderWindow* window, int8_t y, int8_t x, int offsetY, int offsetX);

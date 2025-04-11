@@ -12,5 +12,5 @@ public:
 
     void updateScoreForBrainBot();
     virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE);
-    void findPath(int8_t &X, CurrentBlock_Bot*);
+    void findPath(int8_t &X, int8_t &timeRotate,  bool &isHold, CurrentBlock_Bot*);
 };

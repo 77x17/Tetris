@@ -11,6 +11,7 @@ public:
     BlockElement();
     BlockElement(Block* p);
     friend class LinkListBlock;
+    friend class LinkListBlock_Bot;
     friend class BlockFactory;
 };
 

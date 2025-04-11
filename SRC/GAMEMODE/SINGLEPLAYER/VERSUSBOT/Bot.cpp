@@ -56,8 +56,13 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
             while(!finish || pauseGame);
             finish.store(false);
 
-            int8_t target_X = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
-            monitor->findPath(target_X, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
+            int8_t target_X = 0, timeRotate = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
+            bool isHold = false;
+            monitor->findPath(target_X, timeRotate, isHold, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
+            if (isHold) addEvent(sf::Keyboard::C);
+            dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock())->rotate(timeRotate);
+            dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock())->updateShadow(monitor->getMap());
+            
             while (posX != target_X) {
                 if (target_X < posX) { addEvent(sf::Keyboard::Left); posX--; }
                 if (target_X > posX) { addEvent(sf::Keyboard::Right); posX++; }

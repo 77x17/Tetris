@@ -16,7 +16,7 @@ public:
     void reset();
 
     int getHeuristicScore(uint16_t shape, int X, int Y);
-    void findPath(int8_t &X, CurrentBlock_Bot* curBlock);
+    void findPath(int8_t &X, int8_t &timeRotate, bool &isHold, CurrentBlock_Bot* CurrentBlock, CurrentBlock_Bot* tmp);
 };
 
 #endif
