@@ -39,7 +39,7 @@ void Bot::addEvent(const sf::Keyboard::Key &e) {
     fakeEvent.type = sf::Event::KeyReleased;
     event.push(fakeEvent);
     mtx.unlock();
-    // std::this_thread::sleep_for(std::chrono::milliseconds(0));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void Bot::start(uint32_t seed, Player_VersusBot* player) {
@@ -58,7 +58,7 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
             int8_t target_X = 0, timeRotate = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
             bool isHold = false;
             monitor->findPath(target_X, timeRotate, isHold, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
-            
+
             if (isHold) addEvent(sf::Keyboard::C);
             switch (timeRotate) {
                 case 1:
