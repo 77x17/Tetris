@@ -39,7 +39,7 @@ void Bot::addEvent(const sf::Keyboard::Key &e) {
     fakeEvent.type = sf::Event::KeyReleased;
     event.push(fakeEvent);
     mtx.unlock();
-    std::this_thread::sleep_for(std::chrono::milliseconds(80));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(0));
 }
 
 void Bot::start(uint32_t seed, Player_VersusBot* player) {
@@ -55,14 +55,25 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
         while (!monitor->isGameOver()) {
             while(!finish || pauseGame);
             finish.store(false);
-
             int8_t target_X = 0, timeRotate = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
             bool isHold = false;
             monitor->findPath(target_X, timeRotate, isHold, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
-            if (isHold) addEvent(sf::Keyboard::C);
-            dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock())->rotate(timeRotate);
-            dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock())->updateShadow(monitor->getMap());
             
+            if (isHold) addEvent(sf::Keyboard::C);
+            switch (timeRotate) {
+                case 1:
+                    addEvent(sf::Keyboard::Up);
+                    break;
+                case 2:
+                    addEvent(sf::Keyboard::A);
+                    break;
+                case 3:
+                    addEvent(sf::Keyboard::Z);
+                    break;
+                default:
+                    break;
+            }
+
             while (posX != target_X) {
                 if (target_X < posX) { addEvent(sf::Keyboard::Left); posX--; }
                 if (target_X > posX) { addEvent(sf::Keyboard::Right); posX++; }
