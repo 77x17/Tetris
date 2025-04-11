@@ -11,13 +11,14 @@ class BotBrain {
 private:
     int numWeight, numSpecLimmit;
     int64_t **weight;
+    int64_t *shapeWeight;
 
     static int8_t countSet;
     static int64_t sumScore;
     
     uint64_t* map; // share pointer!
 
-    uint8_t getHeightMap();
+    uint8_t typeWeight(uint16_t shape, int X, int Y);
 
     int sizeOfPupulation;
     uint8_t mutationRateInver; // mutationRate = 1/mutationRateInver;
@@ -42,7 +43,7 @@ public:
 
     static void setScore(int val);
     int getScore();
-    int getHeuristicScore(uint16_t shape, int X, int Y);
+    int getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y);
 };
 
 #endif

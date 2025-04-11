@@ -15,6 +15,7 @@ public:
     CurrentBlock_Bot(Block* p);
     ~CurrentBlock_Bot();
 
+    uint8_t getShapeID();
     uint16_t getShape(int timesRotate);
     void rotate(int timesRotate);
 

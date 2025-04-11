@@ -23,6 +23,7 @@ BotBrain::BotBrain(uint64_t* map) : map(map) {
     weight = new int64_t* [numSpecLimmit]();
     for (int i = 0; i < numSpecLimmit; i++)
         weight[i] = new int64_t[numWeight]();
+    shapeWeight = new int64_t[7]();
     load();
     // sizeOfPupulation = 40;
     // generatePopulation();
@@ -59,6 +60,9 @@ void BotBrain::load() {
         for (int j = 0; j < numWeight; j++)
             f >> weight[i][j];
 
+    for (int i = 0; i < 7; i++)
+        f >> shapeWeight[i];
+
     f.close();
 }
 
@@ -77,10 +81,29 @@ BotBrain::~BotBrain() {
     delete[] weight;
 }
 
-uint8_t BotBrain::getHeightMap() {
+uint8_t BotBrain::typeWeight(uint16_t shape, int X, int Y) {
+    // uint8_t ans = Y;
+    // vector<int> tmp;
+    // for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
+    //     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
+    //         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
+    //         if (i >= Y && i < Y + BLOCK_EDGE) {
+    //             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
+    //         }
+    //         if (line == FULLMASK(REALWIDTH)) continue;
+    //         line &= FULLMASK(REALWIDTH);
+
+    //         if (getBit(line, j)) {
+    //             // ans += i;
+    //             tmp.push_back(i);
+    //             break;
+    //         }
+    //     }
+    // }
+    // ans /= (Common::WIDTH_MAP + 1);
     uint8_t ans = 0;
     while (map[ans] == EMPTYLINE) ans++;
-    return ans;
+    return ans/(Common::HEIGHT_MAP/numSpecLimmit);
 }
 
 vector<int> BotBrain::crossover(vector<int> &a, vector<int> &b) {
@@ -218,9 +241,9 @@ void BotBrain::setScore(int val) {
 //     return heuristicScore;
 // }
 
-int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
+int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
     
-    const int limitPos = getHeightMap()/(Common::HEIGHT_MAP/numSpecLimmit);
+    const int limitPos = typeWeight(shape, X, Y);
 
     uint16_t state = EMPTYLINE, stateAND = EMPTYLINE, endStateHole = EMPTYLINE, prevLine = EMPTYLINE;
 
@@ -242,7 +265,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
     endStateHole = ((~endStateHole) & FULLMASK(REALWIDTH));
 
     int val[numSpecLimmit][numWeight] = {};
-    int top[10] = {};  for (int i = 0; i < 10; i++) top[i] = 24;
+    int top[10] = {};  for (int i = 0; i < 10; i++) top[i] = Common::HEIGHT_MAP;
 
     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
@@ -256,10 +279,10 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
             // else (val[limitPos][6] > 1) val[limitPos][6] *= 10;
             continue;
         }
-
+        int cnt = 0;
         for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
             if (getBit(state, j) && !getBit(state, j - 1)) {
-                val[limitPos][7]++;
+                val[limitPos][7]++; cnt++;
             }
             if (!getBit(state, j) && getBit(line, j)) {
                 top[j - NUMOFFSET] = i - val[limitPos][6];
@@ -276,21 +299,22 @@ int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
 
         val[limitPos][1] += (nBit1(((state | (state << 1)) - (state & ((state << 1) | 1))) & FULLMASK(REALWIDTH)) - 2);
         val[limitPos][4] += (state == line && nBit0(getStateLine(state)) == 1);
-        val[limitPos][5] += (state == line && nBit0(getStateLine(state)) == 2 && nBit0(getStateLine((state << 1) | state)) == 1);
+
+        if (cnt == 1 && state == line && nBit0(getStateLine(state)) > 1) val[limitPos][5]++;
         
         if (val[limitPos][3] == 0) val[limitPos][8] += nBit1(stateAND & endStateHole);
     }
 
-    int min = 300; 
+    int min = Common::HEIGHT_MAP; 
     for (int i = 0; i < 10; i++) min = std::min(min, top[i]);
 
     for (int i = 1; i < 10; i++) {
         val[limitPos][9] += (top[i] - min);
     }
     
-    if (val[limitPos][6] == 4) val[limitPos][6] = 1000;
-
-    int heuristicScore = 0;
+    if (val[limitPos][6] == 4) val[limitPos][6] = 5000;
+    
+    int heuristicScore = shapeWeight[shapeID - 1];
     for (int i = 0; i < numSpecLimmit; i++) 
         for (int j = 0; j < numWeight; j++) {
             heuristicScore += weight[i][j] * val[i][j];

@@ -114,7 +114,7 @@ restartVersusBot:
             player->processEvents(event);
         }
 
-        player->autoDown();
+        // player->autoDown();
         window->clear();
         window->draw(backgroundSprite); // Draw background
         player->draw(window);
