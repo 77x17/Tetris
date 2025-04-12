@@ -217,19 +217,21 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
         val[limitPos][2] += nBit1(getStateLine((~state) & line & (((~state) & line) << 1)));
         val[limitPos][3] += nBit1(getStateLine(state & (~line) & prevLine)) * (Common::HEIGHT_MAP - i);
 
-        state |= line; prevLine = line;
+        state |= line;
         stateAND &= line;
 
         val[limitPos][0] += nBit1(getStateLine(state));
 
         val[limitPos][1] += (nBit1(((state | (state << 1)) - (state & ((state << 1) | 1))) & FULLMASK(REALWIDTH)) - 2);
         val[limitPos][4] += (nBit0(getStateLine(state)) == 1);
-        if (nBit0(getStateLine(state)) == 1 && state != line)
-            val[limitPos][4] = 0;
+        if (nBit0(getStateLine(state)) == 1 && state != line && line != prevLine)
+            val[limitPos][4] >>= 1;
 
         if (cnt == 1 && state == line && nBit0(getStateLine(state)) > 1) val[limitPos][5]++;
         
         if (val[limitPos][3] == 0) val[limitPos][8] += nBit1(stateAND & endStateHole);
+        
+        prevLine = line;
     }
 
     int min = Common::HEIGHT_MAP;
