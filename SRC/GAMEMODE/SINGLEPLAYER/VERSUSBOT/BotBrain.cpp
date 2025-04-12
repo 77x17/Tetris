@@ -19,11 +19,15 @@ int BotBrain::random(int L, int R) {
 }
 
 BotBrain::BotBrain(uint64_t* map) : map(map) {
-    numWeight = 10; numSpecLimmit = 4; mutationRateInver = 1;
+    mutationRateInver = 1;
+    numWeight = 10; numSpecLimmit = 4;
+
     weight = new int64_t* [numSpecLimmit]();
     for (int i = 0; i < numSpecLimmit; i++)
         weight[i] = new int64_t[numWeight]();
     shapeWeight = new int64_t[7]();
+    lineLimit = new uint8_t[numSpecLimmit]();
+
     load();
     // sizeOfPupulation = 40;
     // generatePopulation();
@@ -55,7 +59,12 @@ vector<int> BotBrain::generateIndividual() {
 
 void BotBrain::load() {
     std::fstream f("./ASSETS/BotBrain.txt");
-    
+     
+    for (int i = 0; i < numSpecLimmit; i++) {
+        uint32_t t = 0; f >> t;
+        lineLimit[i] = t; // đọc theo dạng kí tự do uint8_t define của char!!!!
+    }
+
     for (int i = 0; i < numSpecLimmit; i++)
         for (int j = 0; j < numWeight; j++)
             f >> weight[i][j];
@@ -79,31 +88,20 @@ BotBrain::~BotBrain() {
     for (int i = 0; i < numSpecLimmit; i++)
         delete[] weight[i];
     delete[] weight;
+    delete[] shapeWeight;
+    delete[] lineLimit;
 }
 
-uint8_t BotBrain::typeWeight(uint16_t shape, int X, int Y) {
-    // uint8_t ans = Y;
-    // vector<int> tmp;
-    // for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
-    //     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
-    //         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
-    //         if (i >= Y && i < Y + BLOCK_EDGE) {
-    //             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
-    //         }
-    //         if (line == FULLMASK(REALWIDTH)) continue;
-    //         line &= FULLMASK(REALWIDTH);
-
-    //         if (getBit(line, j)) {
-    //             // ans += i;
-    //             tmp.push_back(i);
-    //             break;
-    //         }
-    //     }
-    // }
-    // ans /= (Common::WIDTH_MAP + 1);
-    uint8_t ans = 0;
-    while (map[ans] == EMPTYLINE) ans++;
-    return ans/(Common::HEIGHT_MAP/numSpecLimmit);
+uint8_t BotBrain::getLineLimit(uint8_t Y) {
+    uint8_t h = 0;
+    while (map[h] == EMPTYLINE) h++;
+    if (h > Y) h = Y;
+    uint8_t ans = 0; while (ans < numSpecLimmit &&  lineLimit[ans] <= h) ans++;
+    if (ans == numSpecLimmit) {
+        std::cout << (int)ans << " " << (int)h << " " << (int)lineLimit[numSpecLimmit - 1] << '\n';
+        throw std::out_of_range("ans is larger than numSpecLimit! " + std::to_string(ans));
+    }
+    return ans;
 }
 
 vector<int> BotBrain::crossover(vector<int> &a, vector<int> &b) {
@@ -129,7 +127,7 @@ void BotBrain::updateWeight() {
 
     std::fstream f("./err.txt", std::ios_base::app);
     f << "SCORE: " << sumScore << '\n';
-    for (auto x: individual) f << x << " "; f<< '\n';
+    for (auto x: individual) f << x << " "; f << '\n';
     f.close();
 
     individual = population[score.size()];
@@ -168,82 +166,9 @@ void BotBrain::setScore(int val) {
     std::cout << val << '\n';
 }
 
-
-// int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
-    
-//     uint16_t state = EMPTYLINE, stateAND = EMPTYLINE, endStateHole = EMPTYLINE;
-
-//     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
-//         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
-//         if (i >= Y && i < Y + BLOCK_EDGE) {
-//             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
-//         }
-//         line &= FULLMASK(REALWIDTH);
-//         for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
-//             if (!getBit(state, j) && getBit(line, j)) {
-//                 endStateHole |= MASK(j);
-//             }
-//         }
-//         endStateHole &= line;
-//     }
-//     endStateHole = ((~endStateHole) & FULLMASK(REALWIDTH));
-
-//     int val[numWeight] = {};
-//     int top[10] = {};  for (int i = 0; i < 10; i++) top[i] = 24;
-
-//     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
-//         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
-//         if (i >= Y && i < Y + BLOCK_EDGE) {
-//             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
-//         }
-//         line &= FULLMASK(REALWIDTH);
-
-
-//         for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
-//             if (getBit(state, j) && !getBit(state, j - 1)) {
-//                 val[7]++;
-//             }
-//             if (!getBit(state, j) && getBit(line, j)) {
-//                 top[j - NUMOFFSET] = i;
-//                 stateAND |= MASK(j);
-//             }
-//         }
-
-//         val[2] += nBit1(getStateLine((~state) & line & (((~state) & line) << 1)));
-                
-//         val[3] += nBit1(getStateLine(state & (~line))) * (Common::HEIGHT_MAP - i);
-
-//         state |= line;
-//         stateAND &= line;
-
-//         val[0] += nBit1(getStateLine(state));
-
-//         val[1] += (nBit1(((state | (state << 1)) - (state & ((state << 1) | 1))) & FULLMASK(REALWIDTH)) - 2);
-//         val[4] += (state == line && nBit0(getStateLine(state)) == 1);
-//         val[5] += (state == line && nBit0(getStateLine(state)) == 2 && nBit0(getStateLine((state << 1) | state)) == 1);
-        
-//         val[6] += (line == FULLMASK(REALWIDTH));
-//         val[8] += nBit1(stateAND & endStateHole);
-//     }
-
-//     int min = 300; 
-//     for (int i = 0; i < 10; i++) min = std::min(min, top[i]);
-
-//     for (int i = 1; i < 10; i++) {
-//         val[9] += (top[i] - min);
-//     }
-
-//     int heuristicScore = 0;
-//     for (int j = 0; j < numWeight; j++) {
-//         heuristicScore += individual[j] * val[j];
-//     }
-
-//     return heuristicScore;
-// }
-
 int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
-    
-    const int limitPos = typeWeight(shape, X, Y);
+
+    const int limitPos = getLineLimit();
 
     uint16_t state = EMPTYLINE, stateAND = EMPTYLINE, endStateHole = EMPTYLINE, prevLine = EMPTYLINE;
 
@@ -298,20 +223,22 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
         val[limitPos][0] += nBit1(getStateLine(state));
 
         val[limitPos][1] += (nBit1(((state | (state << 1)) - (state & ((state << 1) | 1))) & FULLMASK(REALWIDTH)) - 2);
-        val[limitPos][4] += (state == line && nBit0(getStateLine(state)) == 1);
+        val[limitPos][4] += (nBit0(getStateLine(state)) == 1);
+        if (nBit0(getStateLine(state)) == 1 && state != line)
+            val[limitPos][4] = 0;
 
         if (cnt == 1 && state == line && nBit0(getStateLine(state)) > 1) val[limitPos][5]++;
         
         if (val[limitPos][3] == 0) val[limitPos][8] += nBit1(stateAND & endStateHole);
     }
 
-    int min = Common::HEIGHT_MAP; 
+    int min = Common::HEIGHT_MAP;
     for (int i = 0; i < 10; i++) min = std::min(min, top[i]);
 
     for (int i = 1; i < 10; i++) {
-        val[limitPos][9] += (top[i] - min);
+        val[getLineLimit(Y)][9] += (top[i] - min);
     }
-    
+
     if (val[limitPos][6] == 4) val[limitPos][6] = 5000;
     
     int heuristicScore = shapeWeight[shapeID - 1];
@@ -322,42 +249,3 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
 
     return heuristicScore;
 }
-
-
-// int BotBrain::getHeuristicScore(uint16_t shape, int X, int Y) {
-//     uint16_t state = EMPTYLINE;
-//     const int NWEIGHT = 6;
-
-//     int weight[NWEIGHT] = {-300, -7000, -100, -75, 300, 1000};
-//     int val[NWEIGHT] = {0};
-
-//     for (int i = 0; i < Common::HEIGHT_MAP; i++) {
-//         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
-//         if (i >= Y && i < Y + BLOCK_EDGE) line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
-//         line &= FULLMASK(REALWIDTH);
-
-//         for (int j = NUMOFFSET; j <= OFFRIGHT; j++) {
-//             if (getBit(state, j) && !getBit(state, j - 1)) {
-//                 val[0]++;
-//             }
-//             if (getBit(state, j) && !getBit(line, j))
-//                 val[1]++;
-//         }
-
-//         state |= line;
-
-//         val[2] += __builtin_popcount((state >> NUMOFFSET) & FULLMASK(10));
-//         // val[3] += __builtin_popcount((((state | (state >> 1)) ^ (state & (state >> 1))) & FULLMASK(OFFRIGHT - 1)) >> NUMOFFSET);
-//         // val[3] += __builtin_popcount((((state | (state << 1)) ^ (state & (state << 1))) & FULLMASK(OFFRIGHT)) >> (NUMOFFSET + 1));
-//         val[3] += __builtin_popcount(((((state >> NUMOFFSET) & FULLMASK(10)) | ((state >> NUMOFFSET) & FULLMASK(10)>>1)) ^ ((state >> NUMOFFSET) & FULLMASK(10) & ((state >> NUMOFFSET) & FULLMASK(10)>>1))));
-//         val[4] += (__builtin_popcount((state & FULLMASK(REALWIDTH))) == REALWIDTH - 1);
-//         val[5] += (line == FULLMASK(REALWIDTH));
-//     }
-
-//     int heuristicScore = 0;
-//     for (int i = 0; i < NWEIGHT; i++) {
-//         heuristicScore += weight[i] * val[i];
-//     }
-
-//     return heuristicScore;
-// }

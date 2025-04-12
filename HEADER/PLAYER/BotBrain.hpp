@@ -12,13 +12,14 @@ private:
     int numWeight, numSpecLimmit;
     int64_t **weight;
     int64_t *shapeWeight;
+    uint8_t *lineLimit;
 
     static int8_t countSet;
     static int64_t sumScore;
     
     uint64_t* map; // share pointer!
 
-    uint8_t typeWeight(uint16_t shape, int X, int Y);
+    uint8_t getLineLimit(uint8_t curY = 25); // curY = default means doesnt need it
 
     int sizeOfPupulation;
     uint8_t mutationRateInver; // mutationRate = 1/mutationRateInver;
