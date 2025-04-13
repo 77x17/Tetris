@@ -1,6 +1,7 @@
 #include "Tetris_Survival.hpp"
 
 #include "Common.hpp"
+#include "CommonMap.hpp"
 #include "Player_Survival.hpp"
 #include "Scene.hpp"
 #include "Menu.hpp"
@@ -120,7 +121,7 @@ restartGameSurvival:
     
             time.setPosition(
                 GRID_POSITION_X,
-                GRID_POSITION_Y + Common::HEIGHT_MAP * Common::BLOCK_SIZE + Common::BLOCK_SIZE
+                GRID_POSITION_Y + HEIGHT_MAP * Common::BLOCK_SIZE + Common::BLOCK_SIZE
             );
     
             window->draw(time);    

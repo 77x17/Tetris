@@ -1,14 +1,9 @@
 #include "Infor_Multiplayer.hpp"
 
 #include "CommonMap.hpp"
-#include "Common.hpp"
 
 Infor_Multiplayer::Infor_Multiplayer():Infor(), nLinesAdd(0), garbageSent(0) {}
 Infor_Multiplayer::~Infor_Multiplayer() {}
-
-// const int   FONT_SIZE = Common::BLOCK_SIZE;
-// int   LEVEL_FONT_SIZE = FONT_SIZE - FONT_SIZE / 4;
-// int     LINES_PADDING = FONT_SIZE * 9;
 
 void Infor_Multiplayer::setPosition(int x, int y, int w, int gX, int gY, int gW, int gH) {
     Infor::setPosition(x, y, w);

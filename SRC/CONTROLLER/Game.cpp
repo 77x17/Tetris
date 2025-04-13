@@ -16,10 +16,6 @@
 int Common::BLOCK_SIZE   = 20;
 int Common::WIDTH_BORDER = 5;
 
-int Common::WIDTH_MAP  = 10;
-int Common::HEIGHT_MAP = 24;
-
-
 const int WINDOW_WIDTH  = 1100;
 const int WINDOW_HEIGHT = 600;
 

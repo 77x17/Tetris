@@ -1,7 +1,6 @@
 #include "Map_Bot.hpp"
 
 #include "CommonMap.hpp"
-#include "Common.hpp"
 #include "Block.hpp"
 #include "CurrentBlock_Bot.hpp"
 #include "BotBrain.hpp"
@@ -33,7 +32,7 @@ void Map_Bot::findPath(int8_t &X, int8_t &timeRotate, bool &hold, CurrentBlock_B
     CurrentBlock_Bot* curBlock[2] = {a, b};
 
     int maxScore = INT_MIN;
-    int MID = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
+    int MID = WIDTH_MAP / 2 - BLOCK_EDGE / 2;
 
     for (bool isHold: {0, 1})
     for (int i = 0; i <= 5; i++) {

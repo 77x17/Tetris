@@ -5,7 +5,6 @@
 #include "MovementController_VersusBot.hpp"
 #include "Monitor_VersusBot.hpp"
 #include "Player_VersusBot.hpp"
-#include "Common.hpp"
 #include "CommonMap.hpp"
 
 #include <thread>
@@ -55,7 +54,7 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
         while (!monitor->isGameOver()) {
             while(!finish || pauseGame);
             finish.store(false);
-            int8_t target_X = 0, timeRotate = 0, posX = Common::WIDTH_MAP / 2 - BLOCK_EDGE / 2;
+            int8_t target_X = 0, timeRotate = 0, posX = WIDTH_MAP / 2 - BLOCK_EDGE / 2;
             bool isHold = false;
             monitor->findPath(target_X, timeRotate, isHold, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
 

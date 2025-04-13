@@ -1,5 +1,6 @@
 #include "Map_Multiplayer.hpp"
 
+#include "Common.hpp"
 #include "CommonMap.hpp"
 #include "Block.hpp"
 #include <random>
@@ -21,19 +22,19 @@ void Map_Multiplayer::add(uint64_t nLinesAdd, int seed) {
     
     int nLines = __builtin_popcount(nLinesAdd);
 
-    for (int i = 1; i + nLines < Common::HEIGHT_MAP; i++)
+    for (int i = 1; i + nLines < HEIGHT_MAP; i++)
         map[i] = map[i + nLines];
-    int p = Common::HEIGHT_MAP;
+    int p = HEIGHT_MAP;
 
     std::mt19937 gen(seed);
-    std::uniform_int_distribution<> dis(0, Common::WIDTH_MAP - 1);
+    std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
     int posException = dis(gen);
 
     while(nLinesAdd && p >= 1) {
         if (getBit(nLinesAdd, 0))
             map[--p] = (FULLMASK(REALWIDTH) ^ MASK(posException + NUMOFFSET));
         else {
-            std::uniform_int_distribution<> dis(0, Common::WIDTH_MAP - 1);
+            std::uniform_int_distribution<> dis(0, WIDTH_MAP - 1);
             posException = dis(gen);
         }
         nLinesAdd >>= 1;
@@ -61,7 +62,7 @@ void Map_Multiplayer::drawOutline(sf::RenderWindow* window) {
 uint8_t Map_Multiplayer::putBlockIntoMap(Block* block, int Y, int X) {
     uint16_t shape = block->getShape();
 
-    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < Common::HEIGHT_MAP) {
+    for (int i = 0; i < BLOCK_EDGE; i++) if (Y + i < HEIGHT_MAP) {
         if (map[Y + i] & (getLine(shape, i) << (X + NUMOFFSET))) {
             i = -1;
             Y--;

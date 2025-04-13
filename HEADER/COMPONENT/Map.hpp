@@ -4,8 +4,6 @@
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 
-#include "Common.hpp"
-
 class Block;
 class CurrentBlock;
 

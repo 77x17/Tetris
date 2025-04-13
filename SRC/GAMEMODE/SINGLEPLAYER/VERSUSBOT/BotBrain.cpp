@@ -4,12 +4,11 @@
 #include <random>
 #include <algorithm>
 
-#include "Common.hpp"
 #include "CommonMap.hpp"
 
-#define getStateLine(x) (((x) >> NUMOFFSET) & FULLMASK(Common::WIDTH_MAP))
+#define getStateLine(x) (((x) >> NUMOFFSET) & FULLMASK(WIDTH_MAP))
 #define nBit1(x) (__builtin_popcount(x))
-#define nBit0(x) (nBit1((~(x)) & FULLMASK(Common::WIDTH_MAP)))
+#define nBit0(x) (nBit1((~(x)) & FULLMASK(WIDTH_MAP)))
 
 int BotBrain::random(int L, int R) {
     std::random_device rd;
@@ -172,7 +171,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
 
     uint16_t state = EMPTYLINE, stateAND = EMPTYLINE, endStateHole = EMPTYLINE, prevLine = EMPTYLINE;
 
-    for (int i = 0; i < Common::HEIGHT_MAP; i++) {
+    for (int i = 0; i < HEIGHT_MAP; i++) {
         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
         if (i >= Y && i < Y + BLOCK_EDGE) {
             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
@@ -190,9 +189,9 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
     endStateHole = ((~endStateHole) & FULLMASK(REALWIDTH));
 
     int val[numSpecLimmit][numWeight] = {};
-    int top[10] = {};  for (int i = 0; i < 10; i++) top[i] = Common::HEIGHT_MAP;
+    int top[10] = {};  for (int i = 0; i < 10; i++) top[i] = HEIGHT_MAP;
 
-    for (int i = 0; i < Common::HEIGHT_MAP; i++) {
+    for (int i = 0; i < HEIGHT_MAP; i++) {
         uint16_t line = (map[i] & FULLMASK(REALWIDTH));
         if (i >= Y && i < Y + BLOCK_EDGE) {
             line ^= (getLine(shape, i - Y) << (X + NUMOFFSET));
@@ -215,7 +214,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
             }
         }
         val[limitPos][2] += nBit1(getStateLine((~state) & line & (((~state) & line) << 1)));
-        val[limitPos][3] += nBit1(getStateLine(state & (~line) & prevLine)) * (Common::HEIGHT_MAP - i);
+        val[limitPos][3] += nBit1(getStateLine(state & (~line) & prevLine)) * (HEIGHT_MAP - i);
 
         state |= line;
         stateAND &= line;
@@ -234,7 +233,7 @@ int BotBrain::getHeuristicScore(uint16_t shape, uint8_t shapeID, int X, int Y) {
         prevLine = line;
     }
 
-    int min = Common::HEIGHT_MAP;
+    int min = HEIGHT_MAP;
     for (int i = 0; i < 10; i++) min = std::min(min, top[i]);
 
     for (int i = 1; i < 10; i++) {
