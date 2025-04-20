@@ -52,10 +52,6 @@ STATUS_CODE Tetris_Multiplayer::makeConnection() {
 
 STATUS_CODE Tetris_Multiplayer::start() {
     STATUS_CODE screenStatus = makeConnection();
-
-    sf::Texture backgroundTexture;
-    sf::Sprite  backgroundSprite;
-    loadPlayground(backgroundTexture, backgroundSprite);
     
     player->setTimer();
     // competitor->setTimer();

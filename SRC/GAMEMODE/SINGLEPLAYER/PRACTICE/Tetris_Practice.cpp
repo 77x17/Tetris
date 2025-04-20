@@ -17,10 +17,7 @@ Tetris_Practice::~Tetris_Practice() {
 }
 
 STATUS_CODE Tetris_Practice::start() {
-    sf::Texture backgroundTexture;
-    sf::Sprite  backgroundSprite;
-    loadPlayground(backgroundTexture, backgroundSprite);
-
+    
 restartPractice:
     player->start();
 

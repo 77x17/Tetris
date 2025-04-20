@@ -28,10 +28,7 @@ Tetris_VersusBot::~Tetris_VersusBot() {
 }
 
 STATUS_CODE Tetris_VersusBot::start() {
-    sf::Texture backgroundTexture;
-    sf::Sprite  backgroundSprite;
-    loadPlayground(backgroundTexture, backgroundSprite);
-
+    
     int playerScore = 0, competitorScore = 0;
     
     int HOLD_WIDTH         = 5;

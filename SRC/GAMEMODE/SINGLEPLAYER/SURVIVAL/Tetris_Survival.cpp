@@ -18,10 +18,7 @@ Tetris_Survival::~Tetris_Survival() {
 }
 
 STATUS_CODE Tetris_Survival::start() {
-    sf::Texture backgroundTexture;
-    sf::Sprite  backgroundSprite;
-    loadPlayground(backgroundTexture, backgroundSprite);
-    
+        
     int HOLD_WIDTH         = 5;
         
     int GRID_WIDTH         = 10;

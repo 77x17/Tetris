@@ -14,10 +14,12 @@ class Tetris {
 protected:
     sf::RenderWindow *window;    
     Scene            *scene;
+    sf::Texture backgroundTexture;
+    sf::Sprite  backgroundSprite;
 public:
     Tetris(sf::RenderWindow*, Scene*);
     ~Tetris();
-    void loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite);
+    void loadPlayground();
     virtual STATUS_CODE start() = 0;
 };
 

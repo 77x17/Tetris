@@ -3,11 +3,13 @@
 #include "Menu.hpp"
 #include "Scene.hpp"
 
-Tetris::Tetris(sf::RenderWindow* win, Scene* s): window(win), scene(s){}
+Tetris::Tetris(sf::RenderWindow* win, Scene* s): window(win), scene(s){
+    loadPlayground();
+}
 
 Tetris::~Tetris(){}
 
-void Tetris::loadPlayground(sf::Texture &backgroundTexture, sf::Sprite &backgroundSprite) {
+void Tetris::loadPlayground() {
     backgroundTexture.loadFromFile("ASSETS/background.png");
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setColor(sf::Color(255, 255, 255, 50));
