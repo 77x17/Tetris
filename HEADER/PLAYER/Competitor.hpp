@@ -4,8 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <mutex>
-#include <queue>
-#include <random>
+#include <thread>
 
 class CurrentBlock;
 class SoundManager;
@@ -16,17 +15,19 @@ class Competitor{
 private:
     Monitor_Multiplayer* monitor;
     sf::TcpSocket socket;
-
-    std::mutex mtx;
     
     CurrentBlock* curBlock;
     SoundManager *soundManager;
+    
+    std::mutex mtx;
+    std::thread play;
 
-    std::mt19937 gen;
+    void playing(Player_Multiplayer* &player);
+
 public:
     // Competitor(int X_COORDINATE, int Y_COORDINATE);
     Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);
-    Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int port);
+    Competitor(int X_COORDINATE, int Y_COORDINATE, char const* ipv4, int port);
     ~Competitor();
     void start(Player_Multiplayer* &player);
     void ready(int& seed);
