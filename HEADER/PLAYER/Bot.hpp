@@ -5,6 +5,7 @@
 #include <mutex>
 #include <atomic>
 #include <queue>
+#include <thread>
 #include <SFML/Graphics.hpp>
 
 class Monitor;
@@ -21,12 +22,16 @@ private:
     MovementController_VersusBot *movementController;
     CurrentBlockController_Bot* curBlock;
 
+    std::thread brain;
+    std::thread handle;
+
     std::mutex mtx;
     std::atomic<bool> finish;
     std::atomic<bool> pauseGame;
     std::queue<sf::Event> event;
 
     void update(); // Cập nhật trạng thái bot
+    void play(Player_VersusBot* &player); // Bot play
 
 public:
     Bot(int X_COORDINATE, int Y_COORDINATE);

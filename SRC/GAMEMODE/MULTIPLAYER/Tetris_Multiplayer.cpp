@@ -65,6 +65,9 @@ STATUS_CODE Tetris_Multiplayer::start() {
     sf::Sprite  backgroundSprite;
     loadPlayground(backgroundTexture, backgroundSprite);
     
+    player->setTimer();
+    // competitor->setTimer();
+
     competitor->start(player);
     while (window->isOpen()) {
         sf::Event event;

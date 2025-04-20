@@ -7,7 +7,6 @@
 #include "Player_VersusBot.hpp"
 #include "CommonMap.hpp"
 
-#include <thread>
 #include <chrono>
 #include <iostream>
 
@@ -18,6 +17,9 @@ Bot::Bot(int x, int y): X_COORDINATE(x), Y_COORDINATE(y) {
 }
 
 Bot::~Bot() {
+    if (brain.joinable()) brain.join();
+    if (handle.joinable()) handle.join();
+
     delete monitor; monitor = nullptr;
     delete movementController; monitor = nullptr;
     delete curBlock; monitor = nullptr;
@@ -42,6 +44,9 @@ void Bot::addEvent(const sf::Keyboard::Key &e) {
 }
 
 void Bot::start(uint32_t seed, Player_VersusBot* player) {
+    if (brain.joinable()) brain.join();
+    if (handle.joinable()) handle.join();
+
     player->setCompetitor(monitor);
     monitor->resetMonitor(seed);
     movementController->resetComponent();
@@ -50,40 +55,8 @@ void Bot::start(uint32_t seed, Player_VersusBot* player) {
     while(!event.empty()) event.pop();
     finish.store(true); pauseGame.store(true);
 
-    std::thread thinking([this](Player_VersusBot* &player) {
-        while (!monitor->isGameOver()) {
-            while(!finish || pauseGame);
-            finish.store(false);
-            int8_t target_X = 0, timeRotate = 0, posX = WIDTH_MAP / 2 - BLOCK_EDGE / 2;
-            bool isHold = false;
-            monitor->findPath(target_X, timeRotate, isHold, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
-
-            if (isHold) addEvent(sf::Keyboard::C);
-            switch (timeRotate) {
-                case 1:
-                    addEvent(sf::Keyboard::Up);
-                    break;
-                case 2:
-                    addEvent(sf::Keyboard::A);
-                    break;
-                case 3:
-                    addEvent(sf::Keyboard::Z);
-                    break;
-                default:
-                    break;
-            }
-
-            while (posX != target_X) {
-                if (target_X < posX) { addEvent(sf::Keyboard::Left); posX--; }
-                if (target_X > posX) { addEvent(sf::Keyboard::Right); posX++; }
-            }
-            addEvent(sf::Keyboard::Space);
-        }
-    }, std::ref(player));
-    thinking.detach();
-
-    std::thread handle(&Bot::update, this);
-    handle.detach();
+    brain = std::thread(&Bot::play, this, std::ref(player));
+    handle = std::thread(&Bot::update, this);
 }
 
 void Bot::setTimer() {
@@ -121,6 +94,37 @@ void Bot::update() {
             event.pop();
         }
         mtx.unlock();
+    }
+}
+
+void Bot::play(Player_VersusBot* &player) {
+    while (!monitor->isGameOver()) {
+        while(!finish || pauseGame);
+        finish.store(false);
+        int8_t target_X = 0, timeRotate = 0, posX = WIDTH_MAP / 2 - BLOCK_EDGE / 2;
+        bool isHold = false;
+        monitor->findPath(target_X, timeRotate, isHold, dynamic_cast<CurrentBlock_Bot*>(curBlock->getCurrentBlock()));
+
+        if (isHold) addEvent(sf::Keyboard::C);
+        switch (timeRotate) {
+            case 1:
+                addEvent(sf::Keyboard::Up);
+                break;
+            case 2:
+                addEvent(sf::Keyboard::A);
+                break;
+            case 3:
+                addEvent(sf::Keyboard::Z);
+                break;
+            default:
+                break;
+        }
+
+        while (posX != target_X) {
+            if (target_X < posX) { addEvent(sf::Keyboard::Left); posX--; }
+            if (target_X > posX) { addEvent(sf::Keyboard::Right); posX++; }
+        }
+        addEvent(sf::Keyboard::Space);
     }
 }
 

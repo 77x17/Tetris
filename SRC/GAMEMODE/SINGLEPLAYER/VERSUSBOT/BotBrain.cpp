@@ -118,7 +118,7 @@ void BotBrain::mutate(vector<int> &a) {
 }
 
 void BotBrain::updateWeight() {
-    load(); std::cout << "Succesfully load!\n";
+    // load(); std::cout << "Succesfully load!\n";
     return;
     std::cout << "SCORE: " << sumScore << '\n';
     for (auto x: individual) std::cout << x << " "; std::cout << '\n';
