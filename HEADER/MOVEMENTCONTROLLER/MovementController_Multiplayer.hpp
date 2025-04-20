@@ -17,6 +17,4 @@ public:
     void handleRotate180();
     void handlePut();
     void handleHold();
-    
-    void setGameOver();
 };

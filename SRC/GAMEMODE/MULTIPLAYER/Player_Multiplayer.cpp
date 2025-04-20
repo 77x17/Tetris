@@ -5,7 +5,6 @@
 #include "Map.hpp"
 #include "Monitor_Multiplayer.hpp"
 #include "MovementController_Multiplayer.hpp"
-#include "MessageCode.hpp"
 #include "SoundManager.hpp"
 
 #include <iostream>
@@ -40,7 +39,19 @@ void Player_Multiplayer::initialize() {
 Player_Multiplayer::~Player_Multiplayer() {}
 
 void Player_Multiplayer::setGameOver() {
-    dynamic_cast<MovementController_Multiplayer*>(movementController)->setGameOver();
+    monitor->setGameOver();
+    sf::Packet packet; packet << GAMEOVER;
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    waitingComfirm(GAMEOVER);
+}
+
+void Player_Multiplayer::setQuitGame() {
+    monitor->setGameOver();
+    sf::Packet packet; packet << QUITGAME;
+    if (socket.send(packet) != sf::Socket::Done)
+        throw std::runtime_error("Failed to send event!");
+    waitingComfirm(QUITGAME);
 }
 
 void Player_Multiplayer::sendCurBlock() {
@@ -77,13 +88,13 @@ void Player_Multiplayer::ready(int& seed) {
     restart(seed);
 }
 
-void Player_Multiplayer::waitingComfirm() {
+void Player_Multiplayer::waitingComfirm(MessageCode code) {
     sf::Packet packet;
     if (socket.receive(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to receive event! FROM competitor handler process");
     int messageCodeInt;
     packet >> messageCodeInt;
-    if (messageCodeInt != GAMEOVER) 
+    if (messageCodeInt != code)
         throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
     else std::cout << "COMFIRM SUCESSFULLY!\n";
 }

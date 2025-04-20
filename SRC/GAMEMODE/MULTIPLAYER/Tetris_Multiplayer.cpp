@@ -84,7 +84,8 @@ STATUS_CODE Tetris_Multiplayer::start() {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window->close();
+                player->setQuitGame();
+                return STATUS_CODE::QUIT;
             }
             player->processEvents(event);
         }
@@ -101,22 +102,16 @@ STATUS_CODE Tetris_Multiplayer::start() {
             window->display();
         }
         else {
-            STATUS_CODE option = scene->drawGameOver(window);
-            player->waitingComfirm();
-
-            if (option == STATUS_CODE::RESTART) {
+            screenStatus = scene->drawGameOver(window);
+            
+            if (screenStatus == STATUS_CODE::RESTART) {
                 screenStatus = restartGame();
                 if (screenStatus != STATUS_CODE::RESUME)
                     return screenStatus;
 
                 competitor->start(player);
             }
-            else if (option == STATUS_CODE::MENU) {     // Menu
-                window->close();
-            }
-            else if (option == STATUS_CODE::QUIT) {    // Quit
-                window->close();
-            }
+            else break;
         }
     }
 

@@ -3,6 +3,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "Player.hpp"
+#include "MessageCode.hpp"
 
 class Infor;
 class Monitor_Multiplayer;
@@ -11,6 +12,8 @@ class MovementController_Multiplayer;
 class Player_Multiplayer: public Player {
 private:
     sf::TcpSocket socket;
+
+    void waitingComfirm(MessageCode code);    
     
 public:
     Player_Multiplayer(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed);
@@ -20,6 +23,7 @@ public:
     void initialize();
 
     void setGameOver();
+    void setQuitGame();
 
     void start(uint32_t seed);
     void restart(uint32_t seed);
@@ -29,6 +33,4 @@ public:
     void handleAddLine(uint8_t nLines);
 
     void ready(int& seed);
-
-    void waitingComfirm();
 };

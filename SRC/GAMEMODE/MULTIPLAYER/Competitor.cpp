@@ -125,6 +125,14 @@ void Competitor::playing(Player_Multiplayer* &player){
                 monitor->setGameOver();
             }
             break;
+
+            case QUITGAME: {
+                sf::Packet packet; packet << QUITGAME;
+                if (socket.send(packet) != sf::Socket::Done)
+                    throw std::runtime_error("Failed to send event!");
+                monitor->setGameOver();
+            }
+            break;
             default: {
                 throw std::runtime_error("Error: Invalid value encountered - " + std::to_string(messageCodeInt));
             }

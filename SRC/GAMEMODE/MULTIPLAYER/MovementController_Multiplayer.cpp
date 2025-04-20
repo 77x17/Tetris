@@ -41,15 +41,18 @@ void MovementController_Multiplayer::handlePut() {
     collision = false;
     curBlock->setter(monitor->getNext());
     monitor->unlockHold();
-    if (curBlock->gameOver())
-        setGameOver();
-}
-
-void MovementController_Multiplayer::setGameOver() {
-    sf::Packet packet; packet << GAMEOVER;
-    if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
-    monitor->setGameOver();
+    if (curBlock->gameOver()) {
+        sf::Packet packet; packet << GAMEOVER;
+        if (socket.send(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to send event!");
+        monitor->setGameOver();
+        if (socket.receive(packet) != sf::Socket::Done)
+            throw std::runtime_error("Failed to receive event! FROM competitor handler process");
+        int messageCodeInt; packet >> messageCodeInt;
+        if (messageCodeInt != GAMEOVER)
+            throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
+        // else std::cout << "COMFIRM SUCESSFULLY!\n";
+    }
 }
 
 void MovementController_Multiplayer::handleRotateLeft() {
