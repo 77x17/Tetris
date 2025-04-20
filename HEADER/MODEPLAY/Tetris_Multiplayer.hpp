@@ -18,6 +18,8 @@ private:
 
     bool isHost;
     STATUS_CODE makeConnection();
+    STATUS_CODE restartGame();
+
 
 public:
     Tetris_Multiplayer(sf::RenderWindow*, Scene*, bool isHost);

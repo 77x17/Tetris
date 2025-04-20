@@ -50,9 +50,32 @@ STATUS_CODE Tetris_Multiplayer::makeConnection() {
     return screenStatus;
 }
 
+
+STATUS_CODE Tetris_Multiplayer::restartGame() {
+    std::atomic<bool> isFinish(false);
+    std::thread RestartGame([this](std::atomic<bool> &isFinish) {
+        int seed = 0;
+        if (isHost) {
+            std::random_device rd; seed = rd();
+            player->ready(seed);
+            competitor->ready(seed);
+        }
+        else {
+            competitor->ready(seed);
+            player->ready(seed);
+        }
+        isFinish.store(true);
+    }, ref(isFinish));
+    STATUS_CODE screenStatus = scene->waitingForConnection(window, isFinish);
+    RestartGame.join();
+    return screenStatus;
+}
+
 STATUS_CODE Tetris_Multiplayer::start() {
     STATUS_CODE screenStatus = makeConnection();
-    
+    if (screenStatus != STATUS_CODE::RESUME)
+        return screenStatus;
+
     player->setTimer();
     // competitor->setTimer();
 
@@ -82,27 +105,10 @@ STATUS_CODE Tetris_Multiplayer::start() {
             player->waitingComfirm();
 
             if (option == STATUS_CODE::RESTART) {
-                std::atomic<bool> isFinish(false);
-                std::thread RestartGame([this](Player_Multiplayer* player, Competitor* competitor, bool isHost, std::atomic<bool> &isFinish) {
-                    int seed = 0;
-                    if (isHost) {
-                        std::random_device rd; seed = rd();
-                        player->ready(seed);
-                        competitor->ready(seed);
-                    }
-                    else {
-                        competitor->ready(seed);
-                        player->ready(seed);
-                    }
-                    isFinish.store(true);
-                }, player, competitor, isHost, ref(isFinish));
-                screenStatus = scene->waitingForConnection(window, isFinish);
-                // if (connectStatus == -1) { // Error - exit
-                //     delete player;
-                //     delete competitor; 
-                //     return STATUS_CODE::MENU;
-                // }
-                RestartGame.join();
+                screenStatus = restartGame();
+                if (screenStatus != STATUS_CODE::RESUME)
+                    return screenStatus;
+
                 competitor->start(player);
             }
             else if (option == STATUS_CODE::MENU) {     // Menu
