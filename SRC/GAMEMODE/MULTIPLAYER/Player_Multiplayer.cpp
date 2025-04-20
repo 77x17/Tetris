@@ -43,7 +43,7 @@ void Player_Multiplayer::setGameOver() {
     sf::Packet packet; packet << GAMEOVER;
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
-    waitingComfirm(GAMEOVER);
+    // waitingComfirm(GAMEOVER);
 }
 
 void Player_Multiplayer::setQuitGame() {
@@ -51,7 +51,7 @@ void Player_Multiplayer::setQuitGame() {
     sf::Packet packet; packet << QUITGAME;
     if (socket.send(packet) != sf::Socket::Done)
         throw std::runtime_error("Failed to send event!");
-    waitingComfirm(QUITGAME);
+    // waitingComfirm(QUITGAME);
 }
 
 void Player_Multiplayer::sendCurBlock() {

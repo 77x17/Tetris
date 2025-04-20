@@ -46,12 +46,12 @@ void MovementController_Multiplayer::handlePut() {
         if (socket.send(packet) != sf::Socket::Done)
             throw std::runtime_error("Failed to send event!");
         monitor->setGameOver();
-        if (socket.receive(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to receive event! FROM competitor handler process");
-        int messageCodeInt; packet >> messageCodeInt;
-        if (messageCodeInt != GAMEOVER)
-            throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
-        // else std::cout << "COMFIRM SUCESSFULLY!\n";
+        // if (socket.receive(packet) != sf::Socket::Done)
+        //     throw std::runtime_error("Failed to receive event! FROM competitor handler process");
+        // int messageCodeInt; packet >> messageCodeInt;
+        // if (messageCodeInt != GAMEOVER)
+        //     throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
+        // // else std::cout << "COMFIRM SUCESSFULLY!\n";
     }
 }
 

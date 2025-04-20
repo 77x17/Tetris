@@ -119,17 +119,17 @@ void Competitor::playing(Player_Multiplayer* &player){
             }
             break;
             case GAMEOVER: {
-                sf::Packet packet; packet << GAMEOVER;
-                if (socket.send(packet) != sf::Socket::Done)
-                    throw std::runtime_error("Failed to send event!");
+                // sf::Packet packet; packet << GAMEOVER;
+                // if (socket.send(packet) != sf::Socket::Done)
+                //     throw std::runtime_error("Failed to send event!");
                 monitor->setGameOver();
             }
             break;
 
             case QUITGAME: {
-                sf::Packet packet; packet << QUITGAME;
-                if (socket.send(packet) != sf::Socket::Done)
-                    throw std::runtime_error("Failed to send event!");
+                // sf::Packet packet; packet << QUITGAME;
+                // if (socket.send(packet) != sf::Socket::Done)
+                //     throw std::runtime_error("Failed to send event!");
                 monitor->setGameOver();
             }
             break;
@@ -139,11 +139,9 @@ void Competitor::playing(Player_Multiplayer* &player){
             break;
         }
     }
-    std::cout << "END TURN!\n";
 }
 
 void Competitor::start(Player_Multiplayer* &player) { // Player
-    if (play.joinable()) play.join();
     curBlock->freeAndSetter(monitor->getNext());
     play = std::thread(&Competitor::playing, this, std::ref(player));
 }
@@ -153,6 +151,7 @@ bool Competitor::isGameOver() {
 }
 
 void Competitor::ready(int &seed) {
+    if (play.joinable()) play.join();
     int code = -1;
     sf::Packet packet;
     if (socket.receive(packet) != sf::Socket::Done)
