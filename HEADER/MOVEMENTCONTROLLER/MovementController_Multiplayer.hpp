@@ -7,9 +7,9 @@ class Map;
 
 class MovementController_Multiplayer: public MovementController{
 private:
-    sf::TcpSocket* socket;
+    sf::TcpSocket& socket;
 public:
-    MovementController_Multiplayer(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket* socket);
+    MovementController_Multiplayer(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket& socket);
     ~MovementController_Multiplayer();
 
     void handleRotateLeft();

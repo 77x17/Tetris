@@ -13,9 +13,6 @@ class SoundManager;
 
 class Monitor {
 private:
-    int X_COORDINATE;
-    int Y_COORDINATE;
-
     bool gameOver;
     
 protected:
@@ -24,7 +21,7 @@ protected:
     SoundManager     *soundManager;
 
 public:
-    Monitor(int X_COORDINATE, int Y_COORDINATE);
+    Monitor();
     virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE) = 0;
 
     virtual ~Monitor();

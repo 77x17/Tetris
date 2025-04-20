@@ -8,7 +8,7 @@
 
 #include "BotBrain.hpp"
 
-Monitor_VersusBot::Monitor_VersusBot(int x, int y): Monitor_Multiplayer(x, y) {}
+Monitor_VersusBot::Monitor_VersusBot(int x, int y): Monitor_Multiplayer() {}
 
 Monitor_VersusBot::~Monitor_VersusBot() {}
 

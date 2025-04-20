@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-Monitor_Singleplayer::Monitor_Singleplayer(int x, int y):Monitor(x, y) {
+Monitor_Singleplayer::Monitor_Singleplayer(int x, int y):Monitor() {
     createMonitor(x, y);
 }
 

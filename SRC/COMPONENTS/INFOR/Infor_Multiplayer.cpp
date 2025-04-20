@@ -2,7 +2,7 @@
 
 #include "CommonMap.hpp"
 
-Infor_Multiplayer::Infor_Multiplayer():Infor(), nLinesAdd(0), garbageSent(0) {}
+Infor_Multiplayer::Infor_Multiplayer():Infor(), nLinesAdd(0), garbageSent(0), attactPoint(0) {}
 Infor_Multiplayer::~Infor_Multiplayer() {}
 
 void Infor_Multiplayer::setPosition(int x, int y, int w, int gX, int gY, int gW, int gH) {
@@ -188,7 +188,6 @@ void Infor_Multiplayer::drawAPM(sf::RenderWindow *window) {
         text.getPosition().x - number.getGlobalBounds().width - 15, 
         text.getPosition().y - number.getGlobalBounds().height / 2
     );
-
     window->draw(title);
     window->draw(text);
     window->draw(number);

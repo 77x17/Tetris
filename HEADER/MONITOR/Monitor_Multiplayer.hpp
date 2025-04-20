@@ -14,7 +14,7 @@ protected:
     Map_Multiplayer     *map;
     Infor_Multiplayer   *infor;
 public:
-    Monitor_Multiplayer(int X_COORDINATE, int Y_COORDINATE);
+    Monitor_Multiplayer();
     virtual ~Monitor_Multiplayer();
     virtual void createMonitor(int X_COORDINATE, int Y_COORDINATE);
     

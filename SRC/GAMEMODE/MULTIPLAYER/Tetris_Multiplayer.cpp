@@ -31,16 +31,15 @@ void Tetris_Multiplayer::makeConnection() {
         listener.listen(55001);
         std::random_device rd;
         int seed = rd();
-        
         player = new Player_Multiplayer(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, listener, seed);
         listener.listen(55000);
         competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, listener, seed);
     }
     else {
-        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
-        // player = new Player_Multiplayer(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
-        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.29.160.118", 55001);
-        player = new Player_Multiplayer(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.29.160.118", 55000);
+        competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "127.0.0.1", 55001);
+        player = new Player_Multiplayer(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "127.0.0.1", 55000);
+        // competitor = new Competitor(COMPETITOR_X_COORDINATE, COMPETITOR_Y_COORDINATE, "10.29.160.118", 55001);
+        // player = new Player_Multiplayer(PLAYER_X_COORDINATE, PLAYER_Y_COORDINATE, "10.29.160.118", 55000);
     }
     isFinish.store(true);
 }
@@ -67,7 +66,6 @@ STATUS_CODE Tetris_Multiplayer::start() {
     loadPlayground(backgroundTexture, backgroundSprite);
     
     competitor->start(player);
-
     while (window->isOpen()) {
         sf::Event event;
         while (window->pollEvent(event)) {

@@ -20,7 +20,7 @@
 Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &listenner, uint32_t seed) {
     listenner.accept(socket);
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
-    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE);
+    monitor = new Monitor_Multiplayer(); monitor->createMonitor(X_COORDINATE, Y_COORDINATE);
     curBlock = new CurrentBlock();
     soundManager = new SoundManager();
     soundManager->loadSound("spin", "ASSETS/sfx/spin.mp3");
@@ -37,7 +37,8 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, const char* ipv4, int
     }
     std::cout << "New client connected: " << socket.getRemoteAddress() << " SEED:" << seed << std::endl;
     
-    monitor = new Monitor_Multiplayer(X_COORDINATE, Y_COORDINATE);
+    monitor = new Monitor_Multiplayer(); monitor->createMonitor(X_COORDINATE, Y_COORDINATE);
+
     curBlock = new CurrentBlock();
     soundManager = new SoundManager();
 

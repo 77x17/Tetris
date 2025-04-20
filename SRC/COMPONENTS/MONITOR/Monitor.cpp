@@ -9,10 +9,8 @@
 
 #include <iostream>
 
-Monitor::Monitor(int x, int y) {
+Monitor::Monitor() {
     soundManager = new SoundManager();
-
-    X_COORDINATE = x; Y_COORDINATE = y;
     gameOver = false;
 }
 

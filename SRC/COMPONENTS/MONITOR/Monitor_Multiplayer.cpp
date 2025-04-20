@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-Monitor_Multiplayer::Monitor_Multiplayer(int x, int y):Monitor(x, y) {}
+Monitor_Multiplayer::Monitor_Multiplayer():Monitor() {}
 
 void Monitor_Multiplayer::createMonitor(int x, int y) {
     hold = new Hold();

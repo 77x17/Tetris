@@ -38,7 +38,7 @@ void Bot::addEvent(const sf::Keyboard::Key &e) {
     fakeEvent.type = sf::Event::KeyReleased;
     event.push(fakeEvent);
     mtx.unlock();
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
 void Bot::start(uint32_t seed, Player_VersusBot* player) {
