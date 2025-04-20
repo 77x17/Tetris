@@ -17,9 +17,7 @@ private:
     Competitor* competitor;
 
     bool isHost;
-
-    std::atomic<bool> isFinish;
-    void makeConnection();
+    STATUS_CODE makeConnection();
 
 public:
     Tetris_Multiplayer(sf::RenderWindow*, Scene*, bool isHost);
