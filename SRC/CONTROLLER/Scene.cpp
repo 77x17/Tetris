@@ -4,6 +4,7 @@
 #include "Option.hpp"
 #include "SoundManager.hpp"
 #include "Common.hpp"
+#include "Competitor.hpp"
 
 #include <iostream>
 #include <windows.h>
@@ -308,7 +309,7 @@ STATUS_CODE Scene::drawOption(sf::RenderWindow *window) {
     return option->getSelectedItem();
 }
 
-STATUS_CODE Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish) {
+STATUS_CODE Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bool> &isFinish, Competitor* competitor) {
     sf::Clock waitingClock;
     uint8_t count = 0;
     std::string waiting = "Waiting for another player"; 
@@ -320,11 +321,15 @@ STATUS_CODE Scene::waitingForConnection(sf::RenderWindow *window, std::atomic<bo
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                window->close();
-                
                 return STATUS_CODE::QUIT;
             }
         }
+
+        if (competitor && competitor->isQuitGame()) {
+            std::cerr << "[STATUS] competitor quit game!\n";
+            return STATUS_CODE::MENU;
+        }
+
 
         window->clear(sf::Color(30, 30, 30));
         if (waitingClock.getElapsedTime().asSeconds() >= 0.5f) {

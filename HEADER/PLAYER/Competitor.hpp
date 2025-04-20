@@ -21,6 +21,8 @@ private:
     
     std::mutex mtx;
     std::thread play;
+    
+    bool quitGame;
 
     void playing(Player_Multiplayer* &player);
 
@@ -33,6 +35,7 @@ public:
     void ready(int& seed);
 
     bool isGameOver();
+    bool isQuitGame();
 
     void draw(sf::RenderWindow* window);
 };

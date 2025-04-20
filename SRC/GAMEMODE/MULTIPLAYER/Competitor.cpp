@@ -28,7 +28,7 @@ Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, sf::TcpListener &list
     socket.send(&seed, sizeof(seed));
 }
 
-Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, char const* ipv4, int port){
+Competitor::Competitor(int X_COORDINATE, int Y_COORDINATE, char const* ipv4, int port) {
     socket.connect(ipv4, port);
     uint32_t seed = 0; std::size_t tmp=0;
     if (socket.receive(&seed, sizeof(seed), tmp) != sf::Socket::Done) {
@@ -62,7 +62,7 @@ void Competitor::playing(Player_Multiplayer* &player){
     while (!monitor->isGameOver()) {
         sf::Packet packet;
         if (socket.receive(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to receive event! FROM competitor handler process");
+            std:: cerr << "[WARNING] Failed to receive event! FROM competitor handler process\n";
 
         int messageCodeInt;
         packet >> messageCodeInt;
@@ -121,7 +121,7 @@ void Competitor::playing(Player_Multiplayer* &player){
             case GAMEOVER: {
                 // sf::Packet packet; packet << GAMEOVER;
                 // if (socket.send(packet) != sf::Socket::Done)
-                //     throw std::runtime_error("Failed to send event!");
+                //     std::cerr << "Error: Failed to send GAMEOVER event!\n";
                 monitor->setGameOver();
             }
             break;
@@ -129,12 +129,13 @@ void Competitor::playing(Player_Multiplayer* &player){
             case QUITGAME: {
                 // sf::Packet packet; packet << QUITGAME;
                 // if (socket.send(packet) != sf::Socket::Done)
-                //     throw std::runtime_error("Failed to send event!");
+                //     std::cerr << "Error: Failed to send GAMEOVER event!\n";
+                quitGame = true;
                 monitor->setGameOver();
             }
             break;
             default: {
-                throw std::runtime_error("Error: Invalid value encountered - " + std::to_string(messageCodeInt));
+                std:: cerr << "[WARNING] Invalid value encountered - " + std::to_string(messageCodeInt) << '\n';
             }
             break;
         }
@@ -143,6 +144,7 @@ void Competitor::playing(Player_Multiplayer* &player){
 
 void Competitor::start(Player_Multiplayer* &player) { // Player
     curBlock->freeAndSetter(monitor->getNext());
+    quitGame = false;
     play = std::thread(&Competitor::playing, this, std::ref(player));
 }
 
@@ -150,15 +152,17 @@ bool Competitor::isGameOver() {
     return monitor->isGameOver();
 }
 
+bool Competitor::isQuitGame() { return quitGame; }
+
 void Competitor::ready(int &seed) {
     if (play.joinable()) play.join();
     int code = -1;
     sf::Packet packet;
     if (socket.receive(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to receive event from Ready signal!");
+        std::cerr << "[WARNING] Failed to receive event from Ready signal!\n";
     packet >> code;
     if (code != RESTART) 
-        throw std::runtime_error("Error: RESTART MESSAGE WRONG! code: " + std::to_string(code));
+        std::cerr << "[WARNING] RESTART MESSAGE WRONG! code: " + std::to_string(code) << '\n';
     packet >> seed;
     monitor->resetMonitor(seed);
 }

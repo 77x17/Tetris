@@ -22,6 +22,7 @@ Tetris_Multiplayer::~Tetris_Multiplayer() {
 
 STATUS_CODE Tetris_Multiplayer::makeConnection() {
     std::atomic<bool> isFinish(false);
+    
     std::thread connectThread([this](std::atomic<bool> &isFinish) {
         int PLAYER_X_COORDINATE = window->getSize().x / 4 - Common::BLOCK_SIZE * 23 / 2;
         int PLAYER_Y_COORDINATE = 10;
@@ -66,7 +67,7 @@ STATUS_CODE Tetris_Multiplayer::restartGame() {
         }
         isFinish.store(true);
     }, ref(isFinish));
-    STATUS_CODE screenStatus = scene->waitingForConnection(window, isFinish);
+    STATUS_CODE screenStatus = scene->waitingForConnection(window, isFinish, competitor);
     RestartGame.join();
     return screenStatus;
 }
@@ -103,17 +104,17 @@ STATUS_CODE Tetris_Multiplayer::start() {
         }
         else {
             screenStatus = scene->drawGameOver(window);
-            
+
             if (screenStatus == STATUS_CODE::RESTART) {
                 screenStatus = restartGame();
                 if (screenStatus != STATUS_CODE::RESUME)
-                    return screenStatus;
+                    break;
 
                 competitor->start(player);
             }
             else break;
         }
     }
-
+    player->setQuitGame();
     return screenStatus;
 }

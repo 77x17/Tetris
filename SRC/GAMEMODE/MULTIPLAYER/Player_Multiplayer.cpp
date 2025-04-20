@@ -42,7 +42,7 @@ void Player_Multiplayer::setGameOver() {
     monitor->setGameOver();
     sf::Packet packet; packet << GAMEOVER;
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
     // waitingComfirm(GAMEOVER);
 }
 
@@ -50,7 +50,7 @@ void Player_Multiplayer::setQuitGame() {
     monitor->setGameOver();
     sf::Packet packet; packet << QUITGAME;
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
     // waitingComfirm(QUITGAME);
 }
 
@@ -59,7 +59,7 @@ void Player_Multiplayer::sendCurBlock() {
     dynamic_cast<CurrentBlockController_Multiplayer*>(curBlock)->compress(packet);
     
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
 } 
 
 void Player_Multiplayer::start(uint32_t seed) {
@@ -78,23 +78,23 @@ void Player_Multiplayer::handleAddLine(uint8_t nLines) {
     sf::Packet packet; packet << RECVLINE << nLines;
 
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
 }
 
 void Player_Multiplayer::ready(int& seed) {
     sf::Packet packet; packet << RESTART << seed;
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
     restart(seed);
 }
 
 void Player_Multiplayer::waitingComfirm(MessageCode code) {
     sf::Packet packet;
     if (socket.receive(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to receive event! FROM competitor handler process");
+        std:: cerr << "[WARNING] Failed to receive event! FROM competitor handler process\n";
     int messageCodeInt;
     packet >> messageCodeInt;
     if (messageCodeInt != code)
-        throw std::runtime_error("I don't understand message confirm! " + std::to_string(messageCodeInt));
-    else std::cout << "COMFIRM SUCESSFULLY!\n";
+        std::cerr << "[WARNING] I don't understand message confirm! " + std::to_string(messageCodeInt) << '\n';
+    else std::cerr << "[SUCESSFULLY] COMFIRM MessageCode!\n";
 }

@@ -10,6 +10,8 @@
 #include "CurrentBlockController_Multiplayer.hpp"
 #include "CurrentBlock_Multiplayer.hpp"
 
+#include <iostream>
+
 MovementController_Multiplayer::MovementController_Multiplayer(Monitor* monitor, CurrentBlockController* controller, sf::TcpSocket& sock)
                                 : MovementController(monitor, controller), socket(sock) {}
 
@@ -18,7 +20,7 @@ MovementController_Multiplayer::~MovementController_Multiplayer(){}
 void MovementController_Multiplayer::handleHold() {
     sf::Packet packet; packet << HOLD;
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
     MovementController::handleHold();
 }
 
@@ -33,7 +35,7 @@ void MovementController_Multiplayer::handlePut() {
         dynamic_cast<Monitor_Multiplayer*>(monitor)->mapReceiveLineFromCompetitor(seed);
     }
     if (socket.send(packet) != sf::Socket::Done)
-        throw std::runtime_error("Failed to send event!");
+        std::cerr << "Error: Failed to send GAMEOVER event!\n";
 
     // AllClearBUG
     monitor->removeNLines(nLines, curBlock->getCurrentBlock(), false);
@@ -44,7 +46,7 @@ void MovementController_Multiplayer::handlePut() {
     if (curBlock->gameOver()) {
         sf::Packet packet; packet << GAMEOVER;
         if (socket.send(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to send event!");
+            std::cerr << "Error: Failed to send GAMEOVER event!\n";
         monitor->setGameOver();
         // if (socket.receive(packet) != sf::Socket::Done)
         //     throw std::runtime_error("Failed to receive event! FROM competitor handler process");
@@ -60,7 +62,7 @@ void MovementController_Multiplayer::handleRotateLeft() {
     if (curBlock->isJustSpin()) {
         sf::Packet packet; packet << SPIN;
         if (socket.send(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to send event!");
+            std::cerr << "Error: Failed to send GAMEOVER event!\n";
     }
 }
 
@@ -69,7 +71,7 @@ void MovementController_Multiplayer::handleRotateRight() {
     if (curBlock->isJustSpin()) {
         sf::Packet packet; packet << SPIN;
         if (socket.send(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to send event!");
+            std::cerr << "Error: Failed to send GAMEOVER event!\n";
     }
 }
 
@@ -78,6 +80,6 @@ void MovementController_Multiplayer::handleRotate180() {
     if (curBlock->isJustSpin()) {
         sf::Packet packet; packet << SPIN;
         if (socket.send(packet) != sf::Socket::Done)
-            throw std::runtime_error("Failed to send event!");
+            std::cerr << "Error: Failed to send GAMEOVER event!\n";
     }
 }
