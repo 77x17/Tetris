@@ -51,25 +51,25 @@ restartVersusBot:
     STATUS_CODE screenStatus = STATUS_CODE::QUIT;
 
     // Fade in: change menu
-    // {
-    //     window->clear();
-    //     window->draw(backgroundSprite); // Draw background
-    //     player->draw(window);
-    //     competitor->draw(window);
-    //     window->display();
+    {
+        window->clear();
+        window->draw(backgroundSprite); // Draw background
+        player->draw(window);
+        competitor->draw(window);
+        window->display();
         
-    //     scene->drawChangeMenu(window, true);
-    // }
+        scene->drawChangeMenu(window, true);
+    }
 
     // Countdown:
-    // {
-    //     scene->drawCountdown(window, 
-    //         GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
-    //         GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
-    //         GRID_COMPETITOR_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
-    //         GRID_COMPETITOR_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER
-    //     );
-    // }
+    {
+        scene->drawCountdown(window, 
+            GRID_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+            GRID_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+            GRID_COMPETITOR_POSITION_X + GRID_WIDTH  * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER,
+            GRID_COMPETITOR_POSITION_Y + GRID_HEIGHT * Common::BLOCK_SIZE / 2 - Common::WIDTH_BORDER
+        );
+    }
 
     player->setTimer();
     competitor->setTimer();
