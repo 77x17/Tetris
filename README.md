@@ -1,8 +1,46 @@
-## Quy ước code và đặt tên file.
-- Dùng camelCase cho têm hàm, têm biến.
-- Dùng Snake_Case cho tên file với tiền tố là tên chương trình, hậu tố là chế độ đang sử dụng.
-ex: <Tetris>_<Survival>.cpp/hpp
+# Tetris++ - Multiplayer Tetris Game in C++ with SFML
 
-Survival:
-- Code task để gửi garbage.
-- Code ẩn màn hình chơi đi.
+Tetris++ is a modern Tetris game developed in C++ using the [SFML](https://www.sfml-dev.org/) multimedia library. It supports both **single-player** and **LAN-based multiplayer** gameplay, offering a smooth and competitive experience inspired by the rules and mechanics of [Tetr.io](https://tetr.io).
+
+## 🎮 Features
+
+### 🧍 Single Player Mode
+- **Classic Mode**: Traditional Tetris gameplay with increasing difficulty.
+- **Bot Mode**: Play against a simple AI bot.
+- **Solo Practice**: Improve your skills with no pressure.
+
+### 👥 Multiplayer Mode (LAN)
+- Two players can compete over a local network.
+- Real-time block exchange and garbage mechanics similar to Tetr.io.
+- Low-latency communication using TCP sockets.
+
+### 📏 Gameplay Rules (Inspired by Tetr.io)
+- 7-bag randomizer for Tetromino generation.
+- T-spin detection, back-to-back bonuses.
+- Combo and garbage line mechanics.
+- Soft drop, hard drop, hold queue, and next pieces preview.
+- Garbage canceling and garbage blocking similar to Tetr.io.
+
+### 🛠️ Built With
+- **C++17**
+- **SFML 2.5+** (Graphics, Window, Audio)
+- **Custom Networking** using TCP (Boost.Asio optional)
+
+## 🖼️ Screenshots
+
+> _Coming soon..._
+
+## 🔧 Installation
+
+### Prerequisites
+- A C++17 compatible compiler
+- SFML 2.5 or later
+- CMake 3.10+
+
+### Build Instructions
+```bash
+git clone https://github.com/your-username/tetris-plusplus.git
+cd tetris-plusplus
+mkdir build && cd build
+cmake ..
+make
