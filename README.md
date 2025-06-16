@@ -35,12 +35,9 @@ Tetris++ is a modern Tetris game developed in C++ using the [SFML](https://www.s
 ### Prerequisites
 - A C++17 compatible compiler
 - SFML 2.5 or later
-- CMake 3.10+
 
 ### Build Instructions
 ```bash
-git clone https://github.com/your-username/tetris-plusplus.git
-cd tetris-plusplus
-mkdir build && cd build
-cmake ..
-make
+git https://github.com/HCMUS-HQHuy/Tetris.git
+cd Tetris
+make run
