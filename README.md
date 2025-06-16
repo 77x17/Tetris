@@ -29,16 +29,13 @@ Tetris++ is a modern Tetris game developed in C++ using the [SFML](https://www.s
 ## 🖼️ Screenshots
 
 <p align="center">
-  <a href="./menu.png">
-    <img src="./menu.png" alt="Menu Screenshot" width="45%" style="border: 1px solid #ccc; border-radius: 6px; margin-left: 2%;" />
-  </a>
+  <img src="./menu.png" alt="Menu Screenshot" width="400"/>
   <br/>
   <em>Menu Screenshot</em>
 </p>
+
 <p align="center">
-  <a href="./image.png">
-    <img src="./image.png" alt="Main Interface" width="45%" style="border: 1px solid #ccc; border-radius: 6px;" />
-  </a>
+  <img src="./image.png" alt="Main Interface" width="400"/>
   <br/>
   <em>Main Interface</em>
 </p>
