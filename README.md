@@ -28,7 +28,20 @@ Tetris++ is a modern Tetris game developed in C++ using the [SFML](https://www.s
 
 ## 🖼️ Screenshots
 
-> _Coming soon..._
+<p align="center">
+  <a href="./menu.png">
+    <img src="./menu.png" alt="Menu Screenshot" width="45%" style="border: 1px solid #ccc; border-radius: 6px; margin-left: 2%;" />
+  </a>
+  <br/>
+  <em>Menu Screenshot</em>
+</p>
+<p align="center">
+  <a href="./image.png">
+    <img src="./image.png" alt="Main Interface" width="45%" style="border: 1px solid #ccc; border-radius: 6px;" />
+  </a>
+  <br/>
+  <em>Main Interface</em>
+</p>
 
 ## 🔧 Installation
 
@@ -41,3 +54,8 @@ Tetris++ is a modern Tetris game developed in C++ using the [SFML](https://www.s
 git https://github.com/HCMUS-HQHuy/Tetris.git
 cd Tetris
 make run
+```
+
+## 👥 Contributors
+* [@HCMUS-HQHuy](https://github.com/HCMUS-HQHuy) - Huỳnh Quốc Huy
+* [@77x17](https://github.com/77x17) - Phan Ngưng
