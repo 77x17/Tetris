@@ -24,7 +24,7 @@ Tetris++ is a modern Tetris game developed in C++ using the [SFML](https://www.s
 ### 🛠️ Built With
 - **C++17**
 - **SFML 2.5+** (Graphics, Window, Audio)
-- **Custom Networking** using TCP (Boost.Asio optional)
+- **Custom Networking** using TCP
 
 ## 🖼️ Screenshots
 
